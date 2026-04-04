@@ -46,47 +46,43 @@ export default function SqueegeeCursor() {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 w-16 h-16 pointer-events-none z-[9999] flex items-center justify-center drop-shadow-2xl"
+      className="fixed top-0 left-0 w-20 h-20 pointer-events-none z-[9999] flex items-center justify-center"
       animate={{
-        // Anclar el centro de la hoja de goma al mouse (asumo centro visual)
-        x: mousePosition.x - 32,
-        y: mousePosition.y - 12,
-        rotate: isHovering ? -15 : 0,
-        scale: isHovering ? 1.2 : 1,
+        x: mousePosition.x - 40,
+        y: mousePosition.y - 20,
+        rotate: isHovering ? -12 : 0,
+        scale: isHovering ? 1.1 : 1,
       }}
       transition={{
         type: "spring",
-        stiffness: 400,
-        damping: 25,
+        stiffness: 500,
+        damping: 28,
         mass: 0.1
       }}
     >
-      <svg width="64" height="64" viewBox="0 0 100 100" className="drop-shadow-lg">
-        {/* Rubber Blade (Black) */}
-        <rect x="5" y="25" width="90" height="8" fill="#111" rx="2" />
+      <svg width="80" height="80" viewBox="0 0 100 100" className="drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
+        {/* Rubber Blade (Deep Black) */}
+        <rect x="5" y="22" width="90" height="6" fill="#000" rx="1" />
         
-        {/* Brass Channel (Gold) */}
-        <rect x="0" y="16" width="100" height="9" fill="#D4AF37" rx="1" />
-        <line x1="0" y1="18" x2="100" y2="18" stroke="#FFEAA7" strokeWidth="1" opacity="0.7"/> {/* Highlight */}
-        <line x1="0" y1="24" x2="100" y2="24" stroke="#8A6C1C" strokeWidth="1" opacity="0.6"/> {/* Shadow */}
+        {/* Titanium Channel (Silver/Grey) */}
+        <rect x="0" y="15" width="100" height="7" fill="#94a3b8" rx="0.5" />
+        <rect x="0" y="15" width="100" height="2" fill="#f1f5f9" opacity="0.4" /> {/* Shine */}
+        <rect x="0" y="21" width="100" height="1" fill="#334155" opacity="0.5" /> {/* Under-shadow */}
 
-        {/* Center Clip (Gold) */}
-        <path d="M 35 25 L 65 25 L 58 45 L 42 45 Z" fill="#B8962E" />
-        <path d="M 37 25 L 63 25 L 57 43 L 43 43 Z" fill="#D4AF37" />
+        {/* Minimalist Center Clip */}
+        <path d="M 38 22 L 62 22 L 56 38 L 44 38 Z" fill="#64748b" />
+        <path d="M 40 22 L 60 22 L 55 36 L 45 36 Z" fill="#94a3b8" />
         
-        {/* Screws */}
-        <circle cx="43" cy="30" r="2" fill="#5A4611" />
-        <circle cx="57" cy="30" r="2" fill="#5A4611" />
-
-        {/* Handle Body (Gold) */}
-        <rect x="40" y="44" width="20" height="50" fill="#D4AF37" rx="4" />
-        <rect x="42" y="46" width="6" height="46" fill="#FFEAA7" opacity="0.6" rx="2" /> {/* Cylindrical shine */}
+        {/* Sleek Handle */}
+        <rect x="42" y="38" width="16" height="42" fill="#94a3b8" rx="2" />
+        <rect x="44" y="40" width="3" height="38" fill="#f1f5f9" opacity="0.3" rx="1" /> {/* Shine */}
         
-        {/* Handle Grip Ribs */}
-        <line x1="40" y1="65" x2="60" y2="65" stroke="#8A6C1C" strokeWidth="2" opacity="0.6"/>
-        <line x1="40" y1="75" x2="60" y2="75" stroke="#8A6C1C" strokeWidth="2" opacity="0.6"/>
-        <line x1="40" y1="85" x2="60" y2="85" stroke="#8A6C1C" strokeWidth="2" opacity="0.6"/>
+        {/* Subtle Grip Details */}
+        {[50, 58, 66].map(y => (
+          <line key={y} x1="44" y1={y} x2="54" y2={y} stroke="#475569" strokeWidth="1.5" opacity="0.4"/>
+        ))}
       </svg>
     </motion.div>
+
   );
 }

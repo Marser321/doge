@@ -23,7 +23,7 @@ const michroma = Michroma({
 });
 
 export const metadata: Metadata = {
-  title: "DOGE Facility | Limpieza de Lujo en Miami, Florida",
+  title: "DOGE.S.M LLC | Cleaning Service & Professional Window Cleaning",
   description: "Servicios de limpieza y mantenimiento corporativo de alto nivel para propiedades exclusivas en Miami y South Florida. Automatización y confianza.",
 };
 

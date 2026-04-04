@@ -84,8 +84,8 @@ export default function StorePage() {
 
   const handleBuy = (productName: string) => {
     // Abrir WhatsApp con mensaje pre-armado
-    const message = encodeURIComponent(`Hola DOGE Facility, quisiera adquirir unidades del equipamiento: ${productName}. ¿Cuál es el proceso?`);
-    window.open(`https://wa.me/59899000000?text=${message}`, '_blank');
+    const message = encodeURIComponent(`Hola DOGE.S.M LLC, quisiera adquirir unidades del equipamiento: ${productName}. ¿Cuál es el proceso?`);
+    window.open(`https://wa.me/17869283948?text=${message}`, '_blank');
   };
 
   return (
@@ -272,7 +272,7 @@ export default function StorePage() {
           <Sparkles className="w-4 h-4 text-red-800" />
           <span className="text-white">Estándar Forense Autorizado</span>
         </div>
-        <p>© 2026 DOGE MANAGEMENT. Despliegue logístico exclusivo en Florida, Miami.</p>
+        <p>© {new Date().getFullYear()} DOGE.S.M LLC. Despliegue logístico exclusivo en Florida, Miami.</p>
       </footer>
     </div>
   )
