@@ -135,14 +135,7 @@ export default function LandingPage() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-800 transition-all group-hover:w-full"></span>
             </a>
           </div>
-          <div className="flex gap-4">
-            <MagneticButton href="/login" className="hidden md:inline-flex items-center justify-center px-5 py-2.5 text-sm font-black text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors cursor-hover-target">
-              Ingresar
-            </MagneticButton>
-            <MagneticButton href="/booking" className="inline-flex items-center justify-center px-6 py-2.5 text-sm font-black text-white bg-red-800 rounded-xl shadow-[0_10px_20px_-10px_rgba(37,99,235,0.5)] hover:shadow-[0_20px_25px_-5px_rgba(37,99,235,0.4)] transition-all cursor-hover-target">
-              Cotizar
-            </MagneticButton>
-          </div>
+
         </div>
       </motion.nav>
 
@@ -164,10 +157,7 @@ export default function LandingPage() {
             variants={staggerContainer}
             className="max-w-xl relative z-10"
           >
-            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50/80 backdrop-blur-sm border border-blue-200 mb-6 md:mb-8 cursor-hover-target shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-red-800 animate-pulse"></span>
-              <span className="text-xs font-black uppercase tracking-widest text-blue-700">Miami & South Florida</span>
-            </motion.div>
+
             
             <h1 className="font-michroma text-5xl md:text-7xl lg:text-7xl text-slate-900 tracking-tighter leading-[1.05] mb-6 md:mb-8">
               <SplitTextReveal text="Confianza" delay={0.1} /> <br className="hidden md:block"/>
@@ -580,7 +570,7 @@ export default function LandingPage() {
                 Cero Riesgos <br className="hidden md:block" /> En Inversiones.
               </h2>
               <p className="text-slate-300 text-lg md:text-xl font-medium mb-8 md:mb-10 leading-relaxed max-w-lg">
-                Cumplimos 100% con la ley uruguaya. Personal registrado, asegurado e incentivado para proteger su inmueble. Nunca delegue su llave a la informalidad.
+                Cumplimos 100% con las leyes y regulaciones de Florida. Personal registrado, asegurado e incentivado para proteger su inmueble. Nunca delegue su llave a la informalidad.
               </p>
               <div className="space-y-4 md:space-y-6">
                 <motion.div whileHover={{ scale: isMobile ? 1 : 1.02 }} className="flex items-center gap-4 md:gap-6 p-4 md:p-6 rounded-[24px] md:rounded-3xl border border-white/5 bg-white/5 backdrop-blur-md cursor-hover-target transition-colors hover:bg-white/10">
