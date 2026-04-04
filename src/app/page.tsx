@@ -115,7 +115,10 @@ export default function LandingPage() {
             >
               <Image src="/doge_logo_premium.png" alt="DOGE Premium Logo" fill className="object-contain" />
             </motion.div>
-            <span className="text-2xl font-black tracking-tighter text-white transition-colors uppercase font-michroma">DOGE</span>
+            <div className="flex flex-col">
+              <span className="text-xl font-black tracking-tighter text-white transition-colors uppercase font-michroma leading-none">DOGE.S.M LLC</span>
+              <span className="text-[9px] font-bold tracking-[0.3em] text-zinc-500 uppercase mt-1">Cleaning Service</span>
+            </div>
           </div>
           <div className="hidden md:flex gap-10 text-[10px] font-black text-zinc-400 tracking-[0.2em] z-50 uppercase">
             <a href="#servicios" className="hover:text-white transition-colors relative group cursor-hover-target">
