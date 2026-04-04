@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Image from 'next/image'
-import { Sparkles, ShieldCheck, Leaf, ArrowRight, Star, Clock, CheckCircle, Home, Award, Building2, ShoppingCart, Store, Hexagon, MapPin } from 'lucide-react'
+import { Sparkles, ShieldCheck, Leaf, ArrowRight, Star, Clock, CheckCircle, Home, Award, Building2, ShoppingCart, Store, Hexagon, MapPin, Sun, Moon } from 'lucide-react'
 
 // SplitText Component for staggered "Apple-like" text reveals
 const SplitTextReveal = ({ text, delay = 0, className = "" }: { text: string, delay?: number, className?: string }) => {
@@ -75,14 +75,32 @@ const staggerContainer = {
 
 export default function LandingPage() {
   const [isMobile, setIsMobile] = useState(false);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const heroRef = useRef<HTMLElement>(null);
   
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    
+    // Initialize theme
+    const savedTheme = localStorage.getItem('doge-theme') as 'dark' | 'light';
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.dataset.theme = savedTheme;
+    } else {
+      document.documentElement.dataset.theme = 'dark';
+    }
+    
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    document.documentElement.dataset.theme = newTheme;
+    localStorage.setItem('doge-theme', newTheme);
+  };
 
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -111,43 +129,53 @@ export default function LandingPage() {
             <motion.div 
               whileHover={{ scale: 0.95 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-10 h-10 flex items-center justify-center invert"
+              className={`relative w-10 h-10 flex items-center justify-center ${theme === 'dark' ? 'invert' : ''}`}
             >
               <Image src="/doge_logo_premium.png" alt="DOGE Premium Logo" fill className="object-contain" />
             </motion.div>
             <div className="flex flex-col">
-              <span className="text-xl font-black tracking-tighter text-white transition-colors uppercase font-michroma leading-none">DOGE.S.M LLC</span>
-              <span className="text-[9px] font-bold tracking-[0.3em] text-zinc-500 uppercase mt-1">Cleaning Service</span>
+              <span className="text-xl font-black tracking-tighter text-foreground transition-colors uppercase font-michroma leading-none">DOGE.S.M LLC</span>
+              <span className="text-[9px] font-bold tracking-[0.3em] text-accent uppercase mt-1">Cleaning Service</span>
             </div>
           </div>
-          <div className="hidden md:flex gap-10 text-[10px] font-black text-zinc-400 tracking-[0.2em] z-50 uppercase">
-            <a href="#servicios" className="hover:text-white transition-colors relative group cursor-hover-target">
+
+          <div className="hidden md:flex gap-10 items-center text-[10px] font-black text-zinc-400 tracking-[0.2em] z-50 uppercase">
+            <a href="#servicios" className="hover:text-foreground transition-colors relative group cursor-hover-target">
               Servicios
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-zinc-400 transition-all group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all group-hover:w-full"></span>
             </a>
-            <a href="#suscripciones" className="hover:text-white transition-colors relative group cursor-hover-target">
+            <a href="#suscripciones" className="hover:text-foreground transition-colors relative group cursor-hover-target">
               Membresías
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-zinc-400 transition-all group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all group-hover:w-full"></span>
             </a>
-            <a href="/store" className="hover:text-white transition-colors relative group cursor-hover-target text-zinc-100">
-              Tienda
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white transition-all group-hover:w-full"></span>
-            </a>
-            <a href="#confianza" className="hover:text-white transition-colors relative group cursor-hover-target">
+            <a href="#confianza" className="hover:text-foreground transition-colors relative group cursor-hover-target">
               Confianza
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-zinc-400 transition-all group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all group-hover:w-full"></span>
             </a>
+            <a href="/store" className="hover:text-foreground transition-colors relative group cursor-hover-target text-foreground">
+              Tienda
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-foreground transition-all group-hover:w-full"></span>
+            </a>
+            
+            {/* Theme Toggle Button */}
+            <button 
+              onClick={toggleTheme}
+              className="p-2 ml-4 rounded-full border border-white/10 hover:bg-white/5 transition-all cursor-hover-target"
+              aria-label="Toggle Theme"
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4 text-white" /> : <Moon className="w-4 h-4 text-black" />}
+            </button>
           </div>
         </div>
       </motion.nav>
 
       {/* 2. HERO SECTION */}
-      <section ref={heroRef} className="relative pt-32 pb-16 md:pt-48 md:pb-32 overflow-hidden min-h-[95vh] md:min-h-[900px] flex items-center">
+      <section ref={heroRef} className="relative pt-32 pb-16 md:pt-48 md:pb-32 overflow-hidden min-h-[95vh] md:min-h-[900px] flex items-center bg-background transition-colors duration-500">
         {/* Deep Titanium Aurora Effect */}
         <motion.div 
           animate={{ x: [0, 40, 0], y: [0, 20, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          className="absolute top-0 left-1/4 w-[600px] md:w-[900px] h-[600px] bg-zinc-800/10 rounded-full blur-[80px] -z-10"
+          className="absolute top-0 left-1/4 w-[600px] md:w-[900px] h-[600px] bg-accent/10 rounded-full blur-[80px] -z-10"
         ></motion.div>
         
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center w-full">
@@ -165,7 +193,7 @@ export default function LandingPage() {
               </span>
             </motion.div>
             
-            <h1 className="font-michroma text-5xl md:text-7xl lg:text-8xl text-white tracking-tighter leading-[1] mb-8 uppercase">
+            <h1 className="font-michroma text-5xl md:text-7xl lg:text-8xl text-foreground tracking-tighter leading-[1] mb-8 uppercase">
               <SplitTextReveal text="Confianza" delay={0.1} /> <br/>
               <span className="silver-text inline-block md:mt-2">
                 <SplitTextReveal text="Absoluta." delay={0.3} />
@@ -263,7 +291,7 @@ export default function LandingPage() {
 
 
       {/* 3. VALUE PROPOSITION (Titanium Cards) */}
-      <section className="py-24 md:py-32 bg-slate-950 relative z-20">
+      <section className="py-24 md:py-32 bg-background relative z-20 transition-colors duration-500">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16">
             {[
@@ -278,14 +306,14 @@ export default function LandingPage() {
                 viewport={{ once: true, margin: isMobile ? "-20px" : "-100px" }}
                 whileHover={{ y: isMobile ? 0 : prop.yOffset - 10, scale: 1.02 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="group relative bg-zinc-900/40 p-10 md:p-12 rounded-2xl border border-white/5 hover:border-white/10 transition-all overflow-hidden cursor-hover-target shadow-2xl"
+                className="group relative bg-zinc-900/40 dark:bg-zinc-900/40 bg-zinc-100/80 p-10 md:p-12 rounded-2xl border border-white/5 dark:border-white/5 border-black/5 hover:border-accent transition-all overflow-hidden cursor-hover-target shadow-2xl"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition-colors duration-700"></div>
-                <div className="relative w-14 h-14 bg-zinc-800 rounded-xl flex items-center justify-center mb-8 group-hover:rotate-6 group-hover:scale-110 transition-transform duration-500 border border-white/5">
-                  <prop.icon className="w-7 h-7 text-zinc-100" />
+                <div className="absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-colors duration-700"></div>
+                <div className="relative w-14 h-14 bg-accent/20 rounded-xl flex items-center justify-center mb-8 group-hover:rotate-6 group-hover:scale-110 transition-transform duration-500 border border-white/5">
+                  <prop.icon className="w-7 h-7 text-foreground" />
                 </div>
-                <h3 className="text-xl md:text-2xl font-black text-white mb-4 tracking-tight uppercase font-michroma">{prop.title}</h3>
-                <p className="text-zinc-400 leading-relaxed font-medium">
+                <h3 className="text-xl md:text-2xl font-black text-foreground mb-4 tracking-tight uppercase font-michroma">{prop.title}</h3>
+                <p className="text-accent leading-relaxed font-medium">
                   {prop.desc}
                 </p>
               </motion.div>
@@ -295,9 +323,9 @@ export default function LandingPage() {
       </section>
 
       {/* 3.1 SERVICIOS (Noir Specialist Menu) */}
-      <section id="servicios" className="py-24 md:py-40 bg-black relative z-20 overflow-hidden">
+      <section id="servicios" className="py-24 md:py-48 bg-background relative z-20 overflow-hidden transition-colors duration-500">
         {/* Background Decorative */}
-        <div className="absolute top-0 right-0 w-full md:w-1/2 h-full bg-zinc-900/20 -skew-x-12 -z-10 origin-top-right"></div>
+        <div className="absolute top-0 right-0 w-full md:w-1/2 h-full bg-accent/5 -skew-x-12 -z-10 origin-top-right transition-colors duration-500"></div>
         
         <div className="max-w-5xl mx-auto px-6">
           <motion.div 
@@ -306,15 +334,15 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="mb-12 text-center md:text-left"
           >
-            <span className="text-zinc-500 font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Especialidades</span>
-            <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase font-michroma">Menú de <br/> Operaciones.</h2>
+            <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Especialidades</span>
+            <h2 className="text-4xl md:text-6xl font-black text-foreground tracking-tighter uppercase font-michroma">Menú de <br/> Operaciones.</h2>
           </motion.div>
           
           <motion.div 
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-zinc-900/50 backdrop-blur-md rounded-2xl overflow-hidden border border-white/5 shadow-titanium"
+            className="glass-panel rounded-2xl overflow-hidden border border-white/5 shadow-titanium"
           >
             {[
               { title: "Limpieza Residencial VIP", desc: "Desinfección de mobiliario y polvo profundo.", icon: Home },
@@ -324,14 +352,14 @@ export default function LandingPage() {
             ].map((service, idx) => (
               <div 
                 key={idx} 
-                className="flex items-center gap-6 py-8 px-8 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors cursor-pointer group"
+                className="flex items-center gap-6 py-8 px-8 border-b border-white/5 last:border-0 hover:bg-foreground/5 transition-colors cursor-pointer group"
               >
-                <service.icon className="w-8 h-8 text-zinc-600 shrink-0 group-hover:text-white transition-colors" strokeWidth={1} />
+                <service.icon className="w-8 h-8 text-accent shrink-0 group-hover:text-foreground transition-colors" strokeWidth={1} />
                 <div className="flex flex-col">
-                  <span className="text-xl md:text-3xl text-white font-black tracking-tighter uppercase group-hover:translate-x-2 transition-transform duration-300">{service.title}</span>
-                  <span className="text-xs md:text-sm text-zinc-500 font-bold uppercase tracking-widest mt-1">{service.desc}</span>
+                  <span className="text-xl md:text-3xl text-foreground font-black tracking-tighter uppercase group-hover:translate-x-2 transition-transform duration-300">{service.title}</span>
+                  <span className="text-xs md:text-sm text-accent font-bold uppercase tracking-widest mt-1">{service.desc}</span>
                 </div>
-                <ArrowRight className="ml-auto w-6 h-6 text-zinc-800 group-hover:text-white transition-colors" />
+                <ArrowRight className="ml-auto w-6 h-6 text-accent group-hover:text-foreground transition-colors" />
               </div>
             ))}
           </motion.div>
@@ -339,10 +367,10 @@ export default function LandingPage() {
       </section>
 
       {/* 3.12 B2B ELITE & CATÁLOGO COMERCIAL (Titanium Noir) */}
-      <section className="py-24 md:py-48 bg-slate-950 relative z-30 text-white overflow-hidden">
+      <section className="py-24 md:py-48 bg-background relative z-30 text-foreground overflow-hidden transition-colors duration-500">
         {/* Abstract Background Elements */}
-        <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-zinc-800/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
-        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-white/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+        <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-accent/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-foreground/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <motion.div 
@@ -352,15 +380,15 @@ export default function LandingPage() {
             className="text-center md:text-left max-w-5xl mb-20 md:mb-32 flex flex-col md:flex-row md:items-end justify-between gap-12"
           >
             <div className="max-w-2xl">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em] mb-8">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/10 bg-accent/5 text-accent text-[10px] font-black uppercase tracking-[0.3em] mb-8">
                 <Hexagon className="w-4 h-4" /> B2B Commercial Division
               </span>
-              <h2 className="font-michroma text-4xl md:text-7xl lg:text-8xl text-white tracking-tighter leading-[1] uppercase">
+              <h2 className="font-michroma text-4xl md:text-7xl lg:text-8xl text-foreground tracking-tighter leading-[1] uppercase">
                 Catálogo <br className="hidden md:block" /> <span className="silver-text">Corporativo.</span>
               </h2>
             </div>
-            <p className="text-zinc-400 text-lg md:text-xl font-medium max-w-md leading-relaxed border-l-2 border-white/10 pl-8">
-              Brazo táctico de limpieza para las infraestructuras de más alto tránsito y riesgo en el <span className="text-white font-bold">Sur de la Florida.</span>
+            <p className="text-accent text-lg md:text-xl font-medium max-w-md leading-relaxed border-l-2 border-accent/10 pl-8">
+              Brazo táctico de limpieza para las infraestructuras de más alto tránsito y riesgo en el <span className="text-foreground font-bold">Sur de la Florida.</span>
             </p>
           </motion.div>
 
@@ -371,28 +399,28 @@ export default function LandingPage() {
                 title: "Retail & Luxury",
                 tag: "Showrooms",
                 desc: "Maximice la psicología de compra. Cristales y probadores impecables, operando fuera del horario comercial.",
-                iconColor: "text-zinc-100"
+                iconColor: "text-foreground"
               },
               {
                 icon: Hexagon,
                 title: "Casinos & Resorts",
                 tag: "High Traffic",
                 desc: "Tratamiento de superficies 24/7 y mantenimiento de bronces en entornos de operación continua.",
-                iconColor: "text-zinc-100"
+                iconColor: "text-foreground"
               },
               {
                 icon: ShoppingCart,
                 title: "Logistics Hubs",
                 tag: "Big Box",
                 desc: "Saneamiento de grandes superficies (20k+ m²). Pasillos y andenes bajo estrictas normas de seguridad.",
-                iconColor: "text-zinc-100"
+                iconColor: "text-foreground"
               },
               {
                 icon: Building2,
                 title: "Oficinas & HQ",
                 tag: "Executive",
                 desc: "Lobbies de clase mundial y salas de directorio desinfectadas. El estándar de limpieza que su marca merece.",
-                iconColor: "text-zinc-100"
+                iconColor: "text-foreground"
               }
             ].map((node, idx) => (
               <motion.div 
@@ -401,16 +429,16 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.8, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                className="bg-zinc-900/30 backdrop-blur-none p-10 rounded-2xl border border-white/5 hover:border-white/20 transition-all cursor-hover-target group flex flex-col h-full relative overflow-hidden"
+                className="bg-background/40 backdrop-blur-sm p-10 rounded-2xl border border-accent/10 hover:border-foreground/20 transition-all cursor-hover-target group flex flex-col h-full relative overflow-hidden shadow-xl"
               >
-                <div className="w-16 h-16 rounded-xl bg-zinc-800 border border-white/10 flex items-center justify-center mb-16 relative z-10 group-hover:scale-110 group-hover:bg-zinc-700 transition-all">
+                <div className="w-16 h-16 rounded-xl bg-accent/5 border border-accent/10 flex items-center justify-center mb-16 relative z-10 group-hover:scale-110 group-hover:bg-accent/10 transition-all">
                   <node.icon className={`w-7 h-7 ${node.iconColor}`} />
                 </div>
                 <div className="relative z-10 mt-auto">
-                  <span className="text-[9px] uppercase font-black tracking-[0.3em] text-zinc-500 mb-4 block">{node.tag}</span>
-                  <h3 className="text-2xl font-black text-white uppercase tracking-tighter mb-4 font-michroma">{node.title}</h3>
-                  <p className="text-zinc-500 font-medium leading-relaxed mb-10 text-sm">{node.desc}</p>
-                  <MagneticButton className="text-[10px] font-black text-zinc-100 hover:text-white uppercase tracking-[0.2em] flex items-center gap-3">
+                  <span className="text-[9px] uppercase font-black tracking-[0.3em] text-accent mb-4 block">{node.tag}</span>
+                  <h3 className="text-2xl font-black text-foreground uppercase tracking-tighter mb-4 font-michroma">{node.title}</h3>
+                  <p className="text-accent font-medium leading-relaxed mb-10 text-sm">{node.desc}</p>
+                  <MagneticButton className="text-[10px] font-black text-accent hover:text-foreground uppercase tracking-[0.2em] flex items-center gap-3">
                     Solicitar Hub <ArrowRight className="w-4 h-4" />
                   </MagneticButton>
                 </div>
@@ -422,8 +450,8 @@ export default function LandingPage() {
 
 
       {/* 3.15 STORYTELLING PORTFOLIO (Noir Edition) */}
-      <section className="py-24 md:py-48 bg-black relative z-20 text-white overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-zinc-800/20 via-black/0 to-black/0 opacity-60 pointer-events-none"></div>
+      <section className="py-24 md:py-48 bg-background relative z-20 text-foreground overflow-hidden transition-colors duration-500">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent/20 via-transparent to-transparent opacity-60 pointer-events-none"></div>
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
@@ -431,9 +459,9 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="text-center max-w-4xl mx-auto mb-20"
           >
-            <span className="text-zinc-500 font-black uppercase tracking-[0.3em] text-[10px] bg-white/5 px-4 py-2 rounded-full border border-white/5">La Diferencia DOGE</span>
-            <h2 className="font-michroma text-4xl md:text-6xl lg:text-7xl text-white mt-10 mb-8 tracking-tighter uppercase leading-[1.1]">Estándar <br/> <span className="silver-text">Forense.</span></h2>
-            <p className="text-zinc-400 text-lg md:text-xl font-medium max-w-2xl mx-auto">Rechazamos las limpiezas básicas. Recuperamos materiales, pulimos detalles y preservamos el valor real de su inmueble con rigor técnico.</p>
+            <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] bg-accent/5 px-4 py-2 rounded-full border border-accent/10">La Diferencia DOGE</span>
+            <h2 className="font-michroma text-4xl md:text-6xl lg:text-7xl text-foreground mt-10 mb-8 tracking-tighter uppercase leading-[1.1]">Estándar <br/> <span className="silver-text">Forense.</span></h2>
+            <p className="text-accent text-lg md:text-xl font-medium max-w-2xl mx-auto">Rechazamos las limpiezas básicas. Recuperamos materiales, pulimos detalles y preservamos el valor real de su inmueble con rigor técnico.</p>
           </motion.div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -473,9 +501,9 @@ export default function LandingPage() {
       </section>
 
       {/* 3.2 SUSCRIPCIONES (Noir Memberships) */}
-      <section id="suscripciones" className="py-24 md:py-48 bg-slate-950 relative z-20 overflow-hidden">
+      <section id="suscripciones" className="py-24 md:py-48 bg-background relative z-20 overflow-hidden transition-colors duration-500">
         {/* Animated Orbs */}
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-zinc-800/10 rounded-full blur-[80px] -z-10 opacity-50"></div>
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-accent/10 rounded-full blur-[80px] -z-10 opacity-50"></div>
 
         <div className="max-w-7xl mx-auto px-6">
           <motion.div 
@@ -484,9 +512,9 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="text-center max-w-4xl mx-auto mb-20 md:mb-32"
           >
-            <span className="text-zinc-500 font-black uppercase tracking-[0.3em] text-[10px] bg-white/5 px-4 py-2 rounded-full border border-white/5">Membresías Exclusivas</span>
-            <h2 className="font-michroma text-4xl md:text-7xl font-black text-white mt-10 mb-8 tracking-tighter uppercase leading-[1.1]">Estabilidad <br/> <span className="silver-text">Premium.</span></h2>
-            <p className="text-zinc-400 text-lg md:text-xl font-medium max-w-2xl mx-auto">Asegure su cupo en la agenda más solicitada de Miami. Miembros oro cuentan con prioridad absoluta y beneficios tácticos mensuales.</p>
+            <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] bg-accent/5 px-4 py-2 rounded-full border border-accent/10">Membresías Exclusivas</span>
+            <h2 className="font-michroma text-4xl md:text-7xl font-black text-foreground mt-10 mb-8 tracking-tighter uppercase leading-[1.1]">Estabilidad <br/> <span className="silver-text">Premium.</span></h2>
+            <p className="text-accent text-lg md:text-xl font-medium max-w-2xl mx-auto">Asegure su cupo en la agenda más solicitada de Miami. Miembros oro cuentan con prioridad absoluta y beneficios tácticos mensuales.</p>
           </motion.div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
@@ -546,8 +574,8 @@ export default function LandingPage() {
       </section>
 
       {/* 3.3 CONFIANZA (Noir Testimonials) */}
-      <section id="confianza" className="py-24 md:py-48 bg-black text-white relative z-20 overflow-hidden">
-        <div className="absolute top-0 right-0 w-full md:w-1/2 h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-zinc-800/10 via-transparent to-transparent opacity-50 pointer-events-none"></div>
+      <section id="confianza" className="py-24 md:py-48 bg-background transition-colors duration-500 text-foreground relative z-20 overflow-hidden">
+        <div className="absolute top-0 right-0 w-full md:w-1/2 h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent/10 via-transparent to-transparent opacity-50 pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 md:gap-32 items-center">
@@ -557,13 +585,13 @@ export default function LandingPage() {
               viewport={{ once: true }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             >
-              <span className="inline-block border border-white/10 text-zinc-500 font-black uppercase tracking-[0.3em] text-[10px] bg-white/5 px-4 py-2 rounded-full mb-10">
+              <span className="inline-block border border-accent/10 text-accent font-black uppercase tracking-[0.3em] text-[10px] bg-accent/5 px-4 py-2 rounded-full mb-10">
                 Compliance Protocol
               </span>
-              <h2 className="text-4xl md:text-7xl font-black mb-10 tracking-tighter leading-[1] uppercase font-michroma">
+              <h2 className="text-4xl md:text-7xl font-black mb-10 tracking-tighter leading-[1] uppercase font-michroma text-foreground">
                 Cero Riesgos. <br/> <span className="silver-text">Total Garantía.</span>
               </h2>
-              <p className="text-zinc-400 text-lg md:text-xl font-medium mb-12 leading-relaxed max-w-lg">
+              <p className="text-accent text-lg md:text-xl font-medium mb-12 leading-relaxed max-w-lg">
                 Cumplimos 100% con las regulaciones de Florida. Personal asegurado (General Liability) y altamente capacitado para proteger su activo.
               </p>
               <div className="space-y-6">
@@ -607,20 +635,20 @@ export default function LandingPage() {
       </section>
 
       {/* 4. CALL TO ACTION FINAL (Noir Elegance) */}
-      <section className="py-24 md:py-48 px-6 bg-slate-950 relative z-20">
+      <section className="py-24 md:py-48 px-6 bg-background relative z-20 transition-colors duration-500">
         <motion.div 
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-7xl mx-auto relative rounded-3xl bg-zinc-900/50 p-16 md:p-24 lg:p-32 overflow-hidden border border-white/5 shadow-titanium text-center"
+          className="max-w-7xl mx-auto relative rounded-3xl glass-panel p-16 md:p-24 lg:p-32 overflow-hidden shadow-titanium text-center"
         >
-          <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent opacity-50 blur-[80px] pointer-events-none"></div>
+          <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-accent/5 via-transparent to-transparent opacity-50 blur-[80px] pointer-events-none"></div>
           
           <div className="relative z-10 max-w-4xl mx-auto">
-            <h2 className="font-michroma text-4xl md:text-7xl font-black text-white mb-10 tracking-tighter leading-[1] uppercase">
+            <h2 className="font-michroma text-4xl md:text-7xl font-black text-foreground mb-10 tracking-tighter leading-[1] uppercase">
               El <span className="silver-text">Estándar</span> <br/> Superior.
             </h2>
-            <p className="text-zinc-400 text-lg md:text-2xl font-medium mb-16 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-accent text-lg md:text-2xl font-medium mb-16 leading-relaxed max-w-2xl mx-auto">
               Disfrute de lo mejor de Miami. Nosotros nos encargamos de que su inversión mantenga su valor impecable.
             </p>
             <MagneticButton href="/booking" className="cursor-hover-target w-full sm:w-auto">
@@ -633,14 +661,14 @@ export default function LandingPage() {
       </section>
 
       {/* 4.5 MAPA DE COBERTURA */}
-      <section id="cobertura" className="relative z-20 bg-black py-24 md:py-40">
+      <section id="cobertura" className="relative z-20 bg-background py-24 md:py-40 transition-colors duration-500">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20 md:mb-32">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em] mb-6">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/10 bg-accent/5 text-accent text-[10px] font-black uppercase tracking-[0.3em] mb-6">
               <MapPin className="w-3 h-3" /> Area of Operations
             </span>
-            <h2 className="font-michroma text-4xl md:text-6xl font-black text-white tracking-tighter uppercase leading-tight">Despliegue <br/> <span className="silver-text">Logístico.</span></h2>
-            <p className="text-zinc-500 font-bold mt-6 text-sm uppercase tracking-[0.2em]">Miami & South Florida, USA</p>
+            <h2 className="font-michroma text-4xl md:text-6xl font-black text-foreground tracking-tighter uppercase leading-tight">Despliegue <br/> <span className="silver-text">Logístico.</span></h2>
+            <p className="text-accent font-bold mt-6 text-sm uppercase tracking-[0.2em]">Miami & South Florida, USA</p>
           </div>
           
           <div className="w-full h-[500px] md:h-[650px] rounded-2xl overflow-hidden shadow-titanium border border-white/5 bg-zinc-900 group">
@@ -658,49 +686,49 @@ export default function LandingPage() {
       </section>
       
       {/* 5. FOOTER (Noir Minimalist) */}
-      <footer className="bg-slate-950 py-24 md:py-32 relative z-20 border-t border-white/5">
+      <footer className="py-24 md:py-32 relative z-20 border-t border-white/5 bg-[var(--footer-bg)] transition-colors duration-500">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-20">
           
           <div className="flex flex-col gap-8 max-w-sm">
             <div className="flex items-center gap-4">
-              <div className="relative w-12 h-12 flex items-center justify-center invert opacity-80">
+              <div className={`relative w-12 h-12 flex items-center justify-center invert opacity-80 ${theme === 'light' ? 'invert-0' : 'invert'}`}>
                 <Image src="/doge_logo_premium.png" alt="DOGE Premium Logo" fill className="object-contain" />
               </div>
               <div className="flex flex-col">
-                <span className="font-michroma text-2xl font-black tracking-tighter text-white uppercase leading-[0.9]">DOGE.S.M LLC</span>
-                <span className="font-michroma text-[10px] font-bold tracking-[0.4em] text-zinc-500 uppercase mt-1">Cleaning Tactics</span>
+                <span className="font-michroma text-2xl font-black tracking-tighter text-foreground uppercase leading-[0.9]">DOGE.S.M LLC</span>
+                <span className="font-michroma text-[10px] font-bold tracking-[0.4em] text-accent uppercase mt-1">Cleaning Tactics</span>
               </div>
             </div>
-            <p className="text-zinc-500 font-medium text-sm leading-relaxed">
+            <p className="text-accent font-medium text-sm leading-relaxed">
               Servicios de limpieza técnica y preservación de activos de alto nivel. Operando bajo estándares de seguridad de clase mundial en Florida central y sur.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-16 md:gap-32">
             <div className="flex flex-col gap-6">
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Contact & Dispatch</span>
-              <div className="flex flex-col gap-3 font-bold text-zinc-400 text-sm tracking-tight">
-                <a href="mailto:doge.clean.miami@gmail.com" className="hover:text-white transition-colors duration-300">doge.clean.miami@gmail.com</a>
-                <a href="tel:7869283948" className="hover:text-white transition-colors duration-300 tracking-widest text-lg text-white mt-2 font-michroma">786-928-3948</a>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground">Contact & Dispatch</span>
+              <div className="flex flex-col gap-3 font-bold text-accent text-sm tracking-tight">
+                <a href="mailto:doge.clean.miami@gmail.com" className="hover:text-foreground transition-colors duration-300">doge.clean.miami@gmail.com</a>
+                <a href="tel:7869283948" className="hover:text-foreground transition-colors duration-300 tracking-widest text-lg text-foreground mt-2 font-michroma">786-928-3948</a>
               </div>
             </div>
             <div className="flex flex-col gap-6">
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Operations</span>
-              <div className="flex flex-col gap-3 font-bold text-zinc-400 text-sm">
-                <span className="text-white">DAVID SOTOLONGO MARTINEZ</span>
-                <span className="text-zinc-600">Miami, Florida, United States</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground">Operations</span>
+              <div className="flex flex-col gap-3 font-bold text-accent text-sm">
+                <span className="text-foreground">DAVID SOTOLONGO MARTINEZ</span>
+                <span className="text-accent">Miami, Florida, United States</span>
               </div>
             </div>
           </div>
         </div>
         
         <div className="max-w-7xl mx-auto px-6 mt-32 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex flex-wrap items-center gap-8 text-[9px] font-black text-zinc-600 uppercase tracking-[0.3em]">
-            <a href="#" className="hover:text-white transition-colors">Licencias</a>
-            <a href="#" className="hover:text-white transition-colors">Florida Registry</a>
-            <a href="#" className="hover:text-white transition-colors">Privacidad</a>
+          <div className="flex flex-wrap items-center gap-8 text-[9px] font-black text-accent uppercase tracking-[0.3em]">
+            <a href="#" className="hover:text-foreground transition-colors">Licencias</a>
+            <a href="#" className="hover:text-foreground transition-colors">Florida Registry</a>
+            <a href="#" className="hover:text-foreground transition-colors">Privacidad</a>
           </div>
-          <p className="text-zinc-600 font-bold text-[9px] uppercase tracking-[0.2em]">© {new Date().getFullYear()} DOGE.S.M LLC. Titanium Noir Standard.</p>
+          <p className="text-accent font-bold text-[9px] uppercase tracking-[0.2em]">© {new Date().getFullYear()} DOGE.S.M LLC. Titanium Noir Standard.</p>
         </div>
       </footer>
 

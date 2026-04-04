@@ -74,12 +74,34 @@ const PRODUCTS = [
 
 export default function StorePage() {
   const [isMobile, setIsMobile] = useState(false);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     handleResize();
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    // Initial theme check
+    const savedTheme = localStorage.getItem('doge-theme') as 'dark' | 'light';
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.dataset.theme = savedTheme;
+    }
+
+    // Watch for theme changes from other tabs/pages
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'doge-theme') {
+        const newTheme = e.newValue as 'dark' | 'light';
+        setTheme(newTheme || 'dark');
+        document.documentElement.dataset.theme = newTheme || 'dark';
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const handleBuy = (productName: string) => {
@@ -89,23 +111,29 @@ export default function StorePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans text-white selection:bg-red-900 selection:text-white relative overflow-hidden">
+    <div className="min-h-screen bg-background font-sans text-foreground selection:bg-accent/30 selection:text-foreground relative overflow-hidden transition-colors duration-500">
       {/* Fondo Industrial Premium */}
       <div className="absolute inset-0 bg-noise opacity-[0.012] pointer-events-none"></div>
-      <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-red-900/20 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
-      <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-blue-900/20 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+      <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-accent/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+      <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-foreground/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
 
       {/* 1. NAVEGACION MINIMALISTA */}
       <nav className="relative z-50 px-6 md:px-12 py-8 flex items-center justify-between">
-        <a href="/" className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors cursor-hover-target">
+        <a href="/" className="inline-flex items-center gap-2 text-accent hover:text-foreground transition-colors cursor-hover-target">
           <ArrowLeft className="w-5 h-5" />
           <span className="font-bold text-sm uppercase tracking-widest">Volver</span>
         </a>
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded bg-red-800 flex items-center justify-center mix-blend-screen shadow-lg shadow-red-900/50">
-            <Image src="/doge_logo_premium.png" alt="Doge Logo" width={32} height={32} className="object-contain" />
+          <div className="w-8 h-8 rounded bg-accent/20 flex items-center justify-center mix-blend-normal shadow-lg transition-all">
+            <Image 
+              src="/doge_logo_premium.png" 
+              alt="Doge Logo" 
+              width={32} 
+              height={32} 
+              className={`object-contain transition-all ${theme === 'dark' ? 'invert' : ''}`} 
+            />
           </div>
-          <span className="font-black text-xl tracking-tighter uppercase text-white">DOGE<span className="text-red-600">Store</span></span>
+          <span className="font-black text-xl tracking-tighter uppercase text-foreground">DOGE<span className="text-accent">Store</span></span>
         </div>
       </nav>
 
@@ -116,24 +144,24 @@ export default function StorePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-900/50 bg-red-900/10 text-red-400 text-xs font-bold uppercase tracking-widest mb-6">
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/20 bg-accent/5 text-accent text-xs font-bold uppercase tracking-widest mb-6 transition-all">
             <ShieldCheck className="w-4 h-4" /> Equipamiento Táctico
           </span>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 tracking-tighter uppercase leading-[1.1]">
-            Arsenal de <br className="hidden md:block" /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-500">Mantenimiento.</span>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 tracking-tighter uppercase leading-[1.1] text-foreground">
+            Arsenal de <br className="hidden md:block" /> <span className="silver-text">Mantenimiento.</span>
           </h1>
-          <p className="text-slate-400 text-lg md:text-xl font-medium max-w-2xl leading-relaxed mx-auto md:mx-0">
+          <p className="text-accent text-lg md:text-xl font-medium max-w-2xl leading-relaxed mx-auto md:mx-0">
             Los mismos insumos químicos y electrónicos de despliegue que utilizan nuestras cuadrillas corporativas, ahora homologados para su hogar.
           </p>
         </motion.div>
       </header>
 
       {/* 2.5 BRANDS MARQUEE (TRUST BADGES) */}
-      <section className="relative z-10 w-full bg-slate-900 border-y border-slate-800/50 py-10 overflow-hidden mb-24 flex items-center">
-        <div className="absolute left-0 w-32 h-full bg-gradient-to-r from-slate-950 to-transparent z-20 pointer-events-none"></div>
-        <div className="absolute right-0 w-32 h-full bg-gradient-to-l from-slate-950 to-transparent z-20 pointer-events-none"></div>
+      <section className="relative z-10 w-full bg-foreground/5 border-y border-foreground/5 py-10 overflow-hidden mb-24 flex items-center transition-colors">
+        <div className="absolute left-0 w-32 h-full bg-gradient-to-r from-background to-transparent z-20 pointer-events-none"></div>
+        <div className="absolute right-0 w-32 h-full bg-gradient-to-l from-background to-transparent z-20 pointer-events-none"></div>
         
-        <div className="absolute top-4 left-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 z-30">
+        <div className="absolute top-4 left-6 text-[10px] font-black uppercase tracking-[0.2em] text-accent z-30">
           Operadores Homologados
         </div>
 
@@ -145,12 +173,12 @@ export default function StorePage() {
           {/* Duplicated for seamless loop */}
           {[1, 2].map((set) => (
             <React.Fragment key={set}>
-              <span className="text-3xl font-black text-slate-700 uppercase tracking-tighter mix-blend-screen opacity-50">3M</span>
-              <span className="text-2xl font-black text-slate-700 uppercase tracking-widest mix-blend-screen opacity-50">Kärcher</span>
-              <span className="text-3xl font-bold text-slate-700 uppercase tracking-tight mix-blend-screen opacity-50">Ecolab</span>
-              <span className="text-2xl font-black text-slate-700 uppercase tracking-tighter italic mix-blend-screen opacity-50">Unger</span>
-              <span className="text-3xl font-black text-slate-700 tracking-[-0.05em] mix-blend-screen opacity-50">TENNANT</span>
-              <span className="text-2xl font-bold text-slate-700 uppercase tracking-widest border-2 border-slate-700 px-3 py-1 mix-blend-screen opacity-50">Spartan</span>
+              <span className="text-3xl font-black text-accent uppercase tracking-tighter opacity-30">3M</span>
+              <span className="text-2xl font-black text-accent uppercase tracking-widest opacity-30">Kärcher</span>
+              <span className="text-3xl font-bold text-accent uppercase tracking-tight opacity-30">Ecolab</span>
+              <span className="text-2xl font-black text-accent uppercase tracking-tighter italic opacity-30">Unger</span>
+              <span className="text-3xl font-black text-accent tracking-[-0.05em] opacity-30">TENNANT</span>
+              <span className="text-2xl font-bold text-accent uppercase tracking-widest border-2 border-accent/20 px-3 py-1 opacity-30">Spartan</span>
             </React.Fragment>
           ))}
         </motion.div>
@@ -165,11 +193,11 @@ export default function StorePage() {
               initial={{ opacity: 0, y: isMobile ? 30 : 60 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: isMobile ? 0 : idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-[32px] overflow-hidden group hover:border-slate-600 transition-colors cursor-hover-target flex flex-col"
+              className="bg-foreground/5 backdrop-blur-xl border border-accent/10 rounded-[32px] overflow-hidden group hover:border-accent/40 transition-all cursor-hover-target flex flex-col shadow-xl"
             >
               {/* Image Container with Glow */}
-              <div className="relative h-64 md:h-80 bg-slate-900 p-8 flex items-center justify-center overflow-hidden">
-                <div className={`absolute inset-0 bg-gradient-to-b ${prod.accent} opacity-20 md:group-hover:opacity-40 transition-opacity duration-700`}></div>
+              <div className="relative h-64 md:h-80 bg-foreground/5 p-8 flex items-center justify-center overflow-hidden">
+                <div className={`absolute inset-0 bg-gradient-to-b ${prod.accent} opacity-10 md:group-hover:opacity-30 transition-opacity duration-700`}></div>
                 <motion.div 
                   whileHover={{ scale: 1.05, rotate: 2 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -178,24 +206,24 @@ export default function StorePage() {
                   <Image src={prod.img} alt={prod.name} fill className="object-contain" />
                 </motion.div>
                 {/* Background Text watermark */}
-                <div className="absolute top-4 right-4 text-6xl font-black text-white/5 uppercase select-none pointer-events-none">
+                <div className="absolute top-4 right-4 text-6xl font-black text-foreground/5 uppercase select-none pointer-events-none">
                   0{idx + 1}
                 </div>
               </div>
               
               {/* Product Info */}
               <div className="p-8 md:p-10 flex flex-col flex-grow">
-                <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-red-500 mb-2">{prod.tagline}</span>
-                <h2 className="text-2xl font-black text-white mb-4 uppercase tracking-tighter">{prod.name}</h2>
-                <p className="text-sm font-medium text-slate-400 mb-8 leading-relaxed flex-grow">
+                <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-accent mb-2">{prod.tagline}</span>
+                <h2 className="text-2xl font-black text-foreground mb-4 uppercase tracking-tighter font-michroma">{prod.name}</h2>
+                <p className="text-sm font-medium text-accent mb-8 leading-relaxed flex-grow">
                   {prod.desc}
                 </p>
                 <div className="flex items-end justify-between mt-auto">
                   <div>
-                    <span className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Precio Unitario</span>
-                    <span className="text-3xl font-black text-white">${prod.price} <span className="text-sm text-slate-500">USD</span></span>
+                    <span className="block text-xs font-bold text-accent/50 uppercase tracking-widest mb-1">Precio Unitario</span>
+                    <span className="text-3xl font-black text-foreground">${prod.price} <span className="text-sm text-accent/50">USD</span></span>
                   </div>
-                  <MagneticButton onClick={() => handleBuy(prod.name)} className="bg-white hover:bg-slate-200 text-slate-900 px-6 py-3 rounded-xl font-black uppercase text-sm tracking-widest transition-colors shadow-lg">
+                  <MagneticButton onClick={() => handleBuy(prod.name)} className="bg-foreground text-background hover:opacity-90 px-6 py-3 rounded-xl font-black uppercase text-sm tracking-widest transition-colors shadow-lg">
                     Adquirir
                   </MagneticButton>
                 </div>
@@ -214,8 +242,8 @@ export default function StorePage() {
           className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6"
         >
           <div>
-            <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter">Sistemas Integrados.</h2>
-            <p className="text-slate-400 mt-2 font-medium">Soluciones empaquetadas para despliegue industrial masivo.</p>
+            <h2 className="text-3xl md:text-5xl font-black text-foreground uppercase tracking-tighter font-michroma">Sistemas Integrados.</h2>
+            <p className="text-accent mt-2 font-medium">Soluciones empaquetadas para despliegue industrial masivo.</p>
           </div>
         </motion.div>
 
@@ -224,41 +252,41 @@ export default function StorePage() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="bg-slate-900 border border-red-900/30 rounded-[32px] overflow-hidden group flex flex-col md:flex-row relative cursor-hover-target shadow-2xl shadow-red-900/10 hover:border-red-500/50 transition-colors"
+            className="bg-foreground/5 border border-accent/10 rounded-[32px] overflow-hidden group flex flex-col md:flex-row relative cursor-hover-target shadow-2xl hover:border-accent/30 transition-all transition-colors"
           >
             {/* Visual Side */}
-            <div className="w-full md:w-2/5 md:min-h-[400px] bg-slate-950 relative flex items-center justify-center p-12 overflow-hidden border-b md:border-b-0 md:border-r border-slate-800">
-              <div className="absolute inset-0 bg-gradient-to-tr from-red-600/10 to-transparent"></div>
+            <div className="w-full md:w-2/5 md:min-h-[400px] bg-background relative flex items-center justify-center p-12 overflow-hidden border-b md:border-b-0 md:border-r border-accent/10">
+              <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 to-transparent"></div>
               {/* Fake multiple products composition */}
               <div className="relative w-48 h-48 -mr-16 drop-shadow-2xl z-20">
                 <Image src="/products/dehumidifier.png" alt="Dehumidifier" fill className="object-contain" />
               </div>
-              <div className="relative w-40 h-40 drop-shadow-2xl z-10 opacity-80 mix-blend-screen scale-x-[-1]">
+              <div className="relative w-40 h-40 drop-shadow-2xl z-10 opacity-80 mix-blend-normal scale-x-[-1]">
                 <Image src="/products/mold_control.png" alt="Mold Control" fill className="object-contain" />
               </div>
             </div>
 
             {/* Info Side */}
-            <div className="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-between relative bg-gradient-to-br from-slate-900 to-black">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-red-900/10 rounded-full blur-[100px] pointer-events-none"></div>
+            <div className="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-between relative bg-gradient-to-br from-foreground/5 to-transparent">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full blur-[100px] pointer-events-none"></div>
               
               <div>
-                <span className="inline-block bg-red-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full mb-6">Paquete Élite Florida</span>
-                <h3 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter mb-4">Kit Humedad Cero</h3>
-                <p className="text-slate-400 font-medium leading-relaxed max-w-lg mb-8">
+                <span className="inline-block bg-accent text-background text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full mb-6">Paquete Élite Florida</span>
+                <h3 className="text-3xl md:text-4xl font-black text-foreground uppercase tracking-tighter mb-4 font-michroma">Kit Humedad Cero</h3>
+                <p className="text-accent font-medium leading-relaxed max-w-lg mb-8">
                   El sistema definitivo para la alta corrosión costera en Miami. Incluye el *Evaporador de Turbina Táctica* combinado con 3 dotaciones del *Nano-Sellador de Hongos* para resguardar la propiedad por 24 meses sin supervisión.
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-t border-slate-800/80 pt-8 mt-auto relative z-10">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-t border-accent/10 pt-8 mt-auto relative z-10">
                 <div>
-                  <span className="block text-slate-500 text-xs font-bold uppercase tracking-widest line-through mb-1">Costo Fraccionado: $605 USD</span>
+                  <span className="block text-accent/50 text-xs font-bold uppercase tracking-widest line-through mb-1">Costo Fraccionado: $605 USD</span>
                   <div className="flex items-center gap-4">
-                    <span className="text-4xl font-black text-white tracking-tighter">$480 <span className="text-sm font-bold text-slate-500 tracking-widest">USD</span></span>
-                    <span className="bg-red-500/20 text-red-400 border border-red-500/30 font-bold text-xs px-2 py-1 rounded">Ahorro $125</span>
+                    <span className="text-4xl font-black text-foreground tracking-tighter font-michroma">$480 <span className="text-sm font-bold text-accent/50 tracking-widest">USD</span></span>
+                    <span className="bg-accent/20 text-accent border border-accent/2 transition-all font-bold text-xs px-2 py-1 rounded">Ahorro $125</span>
                   </div>
                 </div>
-                <MagneticButton onClick={() => handleBuy("Kit Humedad Cero")} className="bg-white hover:bg-slate-200 text-slate-900 px-8 py-4 rounded-xl font-black uppercase text-sm tracking-widest transition-colors shadow-lg shadow-white/10 w-full sm:w-auto text-center border-2 border-white">
+                <MagneticButton onClick={() => handleBuy("Kit Humedad Cero")} className="bg-foreground text-background hover:opacity-90 px-8 py-4 rounded-xl font-black uppercase text-sm tracking-widest transition-colors shadow-lg w-full sm:w-auto text-center border-2 border-transparent">
                   Contratar Sistema
                 </MagneticButton>
               </div>
@@ -267,10 +295,10 @@ export default function StorePage() {
         </div>
       </section>
 
-      <footer className="border-t border-slate-800 py-10 px-6 text-center text-slate-500 text-xs font-bold uppercase tracking-widest">
+      <footer className="border-t border-accent/10 py-10 px-6 text-center text-accent/50 text-xs font-bold uppercase tracking-widest bg-background">
         <div className="flex justify-center items-center gap-2 mb-4">
-          <Sparkles className="w-4 h-4 text-red-800" />
-          <span className="text-white">Estándar Forense Autorizado</span>
+          <Sparkles className="w-4 h-4 text-accent" />
+          <span className="text-foreground">Estándar Forense Autorizado</span>
         </div>
         <p>© {new Date().getFullYear()} DOGE.S.M LLC. Despliegue logístico exclusivo en Florida, Miami.</p>
       </footer>
