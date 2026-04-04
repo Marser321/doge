@@ -4,6 +4,7 @@ import { Michroma } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import AuraCursor from "@/components/AuraCursor";
+import BottomNav from "@/components/BottomNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,7 @@ export default function RootLayout({
           <AuraCursor />
           {children}
         </SmoothScroll>
+        <BottomNav />
       </body>
     </html>
   );
