@@ -128,6 +128,34 @@ export default function StorePage() {
         </motion.div>
       </header>
 
+      {/* 2.5 BRANDS MARQUEE (TRUST BADGES) */}
+      <section className="relative z-10 w-full bg-slate-900 border-y border-slate-800/50 py-10 overflow-hidden mb-24 flex items-center">
+        <div className="absolute left-0 w-32 h-full bg-gradient-to-r from-slate-950 to-transparent z-20 pointer-events-none"></div>
+        <div className="absolute right-0 w-32 h-full bg-gradient-to-l from-slate-950 to-transparent z-20 pointer-events-none"></div>
+        
+        <div className="absolute top-4 left-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 z-30">
+          Operadores Homologados
+        </div>
+
+        <motion.div 
+          className="flex whitespace-nowrap gap-24 items-center px-12"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ ease: "linear", duration: 30, repeat: Infinity }}
+        >
+          {/* Duplicated for seamless loop */}
+          {[1, 2].map((set) => (
+            <React.Fragment key={set}>
+              <span className="text-3xl font-black text-slate-700 uppercase tracking-tighter mix-blend-screen opacity-50">3M</span>
+              <span className="text-2xl font-black text-slate-700 uppercase tracking-widest mix-blend-screen opacity-50">Kärcher</span>
+              <span className="text-3xl font-bold text-slate-700 uppercase tracking-tight mix-blend-screen opacity-50">Ecolab</span>
+              <span className="text-2xl font-black text-slate-700 uppercase tracking-tighter italic mix-blend-screen opacity-50">Unger</span>
+              <span className="text-3xl font-black text-slate-700 tracking-[-0.05em] mix-blend-screen opacity-50">TENNANT</span>
+              <span className="text-2xl font-bold text-slate-700 uppercase tracking-widest border-2 border-slate-700 px-3 py-1 mix-blend-screen opacity-50">Spartan</span>
+            </React.Fragment>
+          ))}
+        </motion.div>
+      </section>
+
       {/* 3. GRID DE PRODUCTOS */}
       <section className="px-6 md:px-12 pb-32 max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
@@ -174,6 +202,68 @@ export default function StorePage() {
               </div>
             </motion.div>
           ))}
+        </div>
+      </section>
+
+      {/* 4. KITS ESTRATÉGICOS (UP-SELLING B2B) */}
+      <section className="px-6 md:px-12 pb-32 max-w-7xl mx-auto relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6"
+        >
+          <div>
+            <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter">Sistemas Integrados.</h2>
+            <p className="text-slate-400 mt-2 font-medium">Soluciones empaquetadas para despliegue industrial masivo.</p>
+          </div>
+        </motion.div>
+
+        <div className="space-y-8">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="bg-slate-900 border border-red-900/30 rounded-[32px] overflow-hidden group flex flex-col md:flex-row relative cursor-hover-target shadow-2xl shadow-red-900/10 hover:border-red-500/50 transition-colors"
+          >
+            {/* Visual Side */}
+            <div className="w-full md:w-2/5 md:min-h-[400px] bg-slate-950 relative flex items-center justify-center p-12 overflow-hidden border-b md:border-b-0 md:border-r border-slate-800">
+              <div className="absolute inset-0 bg-gradient-to-tr from-red-600/10 to-transparent"></div>
+              {/* Fake multiple products composition */}
+              <div className="relative w-48 h-48 -mr-16 drop-shadow-2xl z-20">
+                <Image src="/products/dehumidifier.png" alt="Dehumidifier" fill className="object-contain" />
+              </div>
+              <div className="relative w-40 h-40 drop-shadow-2xl z-10 opacity-80 mix-blend-screen scale-x-[-1]">
+                <Image src="/products/mold_control.png" alt="Mold Control" fill className="object-contain" />
+              </div>
+            </div>
+
+            {/* Info Side */}
+            <div className="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-between relative bg-gradient-to-br from-slate-900 to-black">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-red-900/10 rounded-full blur-[100px] pointer-events-none"></div>
+              
+              <div>
+                <span className="inline-block bg-red-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full mb-6">Paquete Élite Florida</span>
+                <h3 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter mb-4">Kit Humedad Cero</h3>
+                <p className="text-slate-400 font-medium leading-relaxed max-w-lg mb-8">
+                  El sistema definitivo para la alta corrosión costera en Miami. Incluye el *Evaporador de Turbina Táctica* combinado con 3 dotaciones del *Nano-Sellador de Hongos* para resguardar la propiedad por 24 meses sin supervisión.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-t border-slate-800/80 pt-8 mt-auto relative z-10">
+                <div>
+                  <span className="block text-slate-500 text-xs font-bold uppercase tracking-widest line-through mb-1">Costo Fraccionado: $605 USD</span>
+                  <div className="flex items-center gap-4">
+                    <span className="text-4xl font-black text-white tracking-tighter">$480 <span className="text-sm font-bold text-slate-500 tracking-widest">USD</span></span>
+                    <span className="bg-red-500/20 text-red-400 border border-red-500/30 font-bold text-xs px-2 py-1 rounded">Ahorro $125</span>
+                  </div>
+                </div>
+                <MagneticButton onClick={() => handleBuy("Kit Humedad Cero")} className="bg-white hover:bg-slate-200 text-slate-900 px-8 py-4 rounded-xl font-black uppercase text-sm tracking-widest transition-colors shadow-lg shadow-white/10 w-full sm:w-auto text-center border-2 border-white">
+                  Contratar Sistema
+                </MagneticButton>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
