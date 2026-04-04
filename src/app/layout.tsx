@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Orbitron } from "next/font/google";
+import { Michroma } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import AuraCursor from "@/components/AuraCursor";
 
-const orbitron = Orbitron({
+const michroma = Michroma({
   subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
-  variable: "--font-orbitron",
+  weight: "400",
+  variable: "--font-orbitron", // Keeping the variable name same to not break globals.css
 });
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${orbitron.variable} h-full antialiased`}
+      className={`${michroma.variable} h-full antialiased`}
     >
       <body className={`min-h-full flex flex-col bg-white font-orbitron lg:tracking-wide`}>
         <SmoothScroll>
