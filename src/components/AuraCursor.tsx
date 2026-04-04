@@ -2,15 +2,12 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
-export default function AuraCursor() {
+export default function SqueegeeCursor() {
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Solo mostramos el cursor custom si el dispositivo permite hover real (no touch)
-    if (window.matchMedia('(hover: none)').matches) return;
-
     setIsVisible(true);
     // Add custom cursor class to the body
     document.body.classList.add('custom-cursor');
@@ -48,38 +45,48 @@ export default function AuraCursor() {
   if (!isVisible) return null;
 
   return (
-    <>
-      <motion.div
-        className="fixed top-0 left-0 w-4 h-4 bg-blue-600 rounded-full pointer-events-none z-[100] mix-blend-difference"
-        animate={{
-          x: mousePosition.x - 8,
-          y: mousePosition.y - 8,
-          scale: isHovering ? 0 : 1,
-          opacity: isHovering ? 0 : 1
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 1000,
-          damping: 40,
-          mass: 0.1
-        }}
-      />
-      <motion.div
-        className="fixed top-0 left-0 w-12 h-12 border border-slate-400 rounded-full pointer-events-none z-[99] flex items-center justify-center mix-blend-difference"
-        animate={{
-          x: mousePosition.x - 24,
-          y: mousePosition.y - 24,
-          scale: isHovering ? 1.5 : 1,
-          backgroundColor: isHovering ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0)",
-          borderColor: isHovering ? "rgba(255,255,255,0.5)" : "rgba(148,163,184,0.4)"
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 150,
-          damping: 15,
-          mass: 0.3
-        }}
-      />
-    </>
+    <motion.div
+      className="fixed top-0 left-0 w-16 h-16 pointer-events-none z-[9999] flex items-center justify-center drop-shadow-2xl"
+      animate={{
+        // Anclar el centro de la hoja de goma al mouse (asumo centro visual)
+        x: mousePosition.x - 32,
+        y: mousePosition.y - 12,
+        rotate: isHovering ? -15 : 0,
+        scale: isHovering ? 1.2 : 1,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 400,
+        damping: 25,
+        mass: 0.1
+      }}
+    >
+      <svg width="64" height="64" viewBox="0 0 100 100" className="drop-shadow-lg">
+        {/* Rubber Blade (Black) */}
+        <rect x="5" y="25" width="90" height="8" fill="#111" rx="2" />
+        
+        {/* Brass Channel (Gold) */}
+        <rect x="0" y="16" width="100" height="9" fill="#D4AF37" rx="1" />
+        <line x1="0" y1="18" x2="100" y2="18" stroke="#FFEAA7" strokeWidth="1" opacity="0.7"/> {/* Highlight */}
+        <line x1="0" y1="24" x2="100" y2="24" stroke="#8A6C1C" strokeWidth="1" opacity="0.6"/> {/* Shadow */}
+
+        {/* Center Clip (Gold) */}
+        <path d="M 35 25 L 65 25 L 58 45 L 42 45 Z" fill="#B8962E" />
+        <path d="M 37 25 L 63 25 L 57 43 L 43 43 Z" fill="#D4AF37" />
+        
+        {/* Screws */}
+        <circle cx="43" cy="30" r="2" fill="#5A4611" />
+        <circle cx="57" cy="30" r="2" fill="#5A4611" />
+
+        {/* Handle Body (Gold) */}
+        <rect x="40" y="44" width="20" height="50" fill="#D4AF37" rx="4" />
+        <rect x="42" y="46" width="6" height="46" fill="#FFEAA7" opacity="0.6" rx="2" /> {/* Cylindrical shine */}
+        
+        {/* Handle Grip Ribs */}
+        <line x1="40" y1="65" x2="60" y2="65" stroke="#8A6C1C" strokeWidth="2" opacity="0.6"/>
+        <line x1="40" y1="75" x2="60" y2="75" stroke="#8A6C1C" strokeWidth="2" opacity="0.6"/>
+        <line x1="40" y1="85" x2="60" y2="85" stroke="#8A6C1C" strokeWidth="2" opacity="0.6"/>
+      </svg>
+    </motion.div>
   );
 }

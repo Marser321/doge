@@ -1,18 +1,29 @@
 import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import { Michroma } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import AuraCursor from "@/components/AuraCursor";
 
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
 const michroma = Michroma({
   subsets: ["latin"],
   weight: "400",
-  variable: "--font-orbitron", // Keeping the variable name same to not break globals.css
+  variable: "--font-michroma",
 });
 
 export const metadata: Metadata = {
-  title: "DOGE Facility | Limpieza de Lujo en Punta del Este",
-  description: "Servicios de limpieza y mantenimiento de alto nivel para propiedades exclusivas en Maldonado y Punta del Este. Automatización y confianza.",
+  title: "DOGE Facility | Limpieza de Lujo en Miami, Florida",
+  description: "Servicios de limpieza y mantenimiento corporativo de alto nivel para propiedades exclusivas en Miami y South Florida. Automatización y confianza.",
 };
 
 export default function RootLayout({
@@ -23,9 +34,9 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${michroma.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${michroma.variable} h-full antialiased`}
     >
-      <body className={`min-h-full flex flex-col bg-white font-orbitron lg:tracking-wide`}>
+      <body className={`min-h-full flex flex-col bg-slate-50 font-sans tracking-tight text-slate-900`}>
         <SmoothScroll>
           <AuraCursor />
           {children}

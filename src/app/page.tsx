@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Image from 'next/image'
-import { Sparkles, ShieldCheck, Leaf, ArrowRight, Star, Clock, CheckCircle, Home, Award } from 'lucide-react'
+import { Sparkles, ShieldCheck, Leaf, ArrowRight, Star, Clock, CheckCircle, Home, Award, Building2, ShoppingCart, Store, Hexagon } from 'lucide-react'
 
 // SplitText Component for staggered "Apple-like" text reveals
 const SplitTextReveal = ({ text, delay = 0, className = "" }: { text: string, delay?: number, className?: string }) => {
@@ -117,13 +117,17 @@ export default function LandingPage() {
             </motion.div>
             <span className="text-3xl font-black tracking-tighter text-slate-900 transition-colors uppercase">DOGE</span>
           </div>
-          <div className="hidden md:flex gap-10 text-sm font-bold text-slate-700 tracking-wide">
+          <div className="hidden md:flex gap-10 text-sm font-bold text-slate-700 tracking-wide z-50">
             <a href="#servicios" className="hover:text-red-800 transition-colors relative group cursor-hover-target">
               Estándar
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-800 transition-all group-hover:w-full"></span>
             </a>
             <a href="#suscripciones" className="hover:text-red-800 transition-colors relative group cursor-hover-target">
               Planes
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-800 transition-all group-hover:w-full"></span>
+            </a>
+            <a href="/store" className="hover:text-red-800 transition-colors relative group cursor-hover-target">
+              Tienda
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-800 transition-all group-hover:w-full"></span>
             </a>
             <a href="#confianza" className="hover:text-red-800 transition-colors relative group cursor-hover-target">
@@ -162,10 +166,10 @@ export default function LandingPage() {
           >
             <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50/80 backdrop-blur-sm border border-blue-200 mb-6 md:mb-8 cursor-hover-target shadow-sm">
               <span className="w-2 h-2 rounded-full bg-red-800 animate-pulse"></span>
-              <span className="text-xs font-black uppercase tracking-widest text-blue-700">Punta del Este & Maldonado</span>
+              <span className="text-xs font-black uppercase tracking-widest text-blue-700">Miami & South Florida</span>
             </motion.div>
             
-            <h1 className="text-5xl md:text-7xl lg:text-7xl font-black text-slate-900 tracking-tighter leading-[1.05] mb-6 md:mb-8">
+            <h1 className="font-michroma text-5xl md:text-7xl lg:text-7xl text-slate-900 tracking-tighter leading-[1.05] mb-6 md:mb-8">
               <SplitTextReveal text="Confianza" delay={0.1} /> <br className="hidden md:block"/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-800 via-red-700 to-zinc-500 inline-block md:mt-2">
                 <SplitTextReveal text="Inquebrantable" delay={0.3} />
@@ -300,41 +304,125 @@ export default function LandingPage() {
         {/* Background Decorative */}
         <div className="absolute top-0 right-0 w-full md:w-1/2 h-[400px] md:h-full bg-slate-100/50 -skew-x-12 -z-10 origin-top-right mix-blend-multiply"></div>
         
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-4xl mx-auto px-6">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center max-w-3xl mx-auto mb-16 md:mb-20"
+            className="mb-8"
           >
-            <span className="text-blue-700 font-black uppercase tracking-widest text-xs bg-red-100/80 px-4 py-1.5 rounded-full border border-blue-200">Menú de Especialidades</span>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mt-6 mb-6 tracking-tight">Obras de arte limpias.</h2>
-            <p className="text-slate-600 text-lg md:text-xl font-medium">No somos una agencia genérica. Empleamos cuadrillas entrenadas específicamente para lidiar con el óxido costero y el polvo obra fina.</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-black tracking-tight">Menú de Especialidades</h2>
           </motion.div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-white rounded-[24px] md:rounded-[32px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+          >
             {[
-              { title: "Limpieza Residencial VIP", desc: "Desinfección de mobiliario, retiro minucioso de polvo profundo y pulido de cocinas.", price: "Desde $150 USD", icon: Home },
-              { title: "Limpieza Post-Construcción", desc: "Retiro intensivo de polvo obra, enduido y pintura en cristales para llave en mano.", price: "Cotización m²", icon: ShieldCheck },
-              { title: "Acondicionamiento WFP", desc: "Limpiamos sus ventanales exteriores con pértigas de agua desionizada sin marcas.", price: "Desde $80 USD", icon: Sparkles },
-              { title: "Control Preventivo Costa", desc: "Purificamos humedades invernales y resguardamos su propiedad meses enteros.", price: "Desde $250 USD", icon: CheckCircle }
+              { title: "Limpieza Residencial VIP", desc: "Desinfección de mobiliario y polvo profundo.", icon: Home },
+              { title: "Limpieza Post-Construcción", desc: "Retiro intensivo de polvo obra y enduido.", icon: ShieldCheck },
+              { title: "Acondicionamiento WFP", desc: "Limpiamos ventanales exteriores sin marcas.", icon: Sparkles },
+              { title: "Control Preventivo Costa", desc: "Purificamos humedades invernales.", icon: CheckCircle }
             ].map((service, idx) => (
-              <motion.div 
+              <div 
                 key={idx} 
-                initial={{ opacity: 0, filter: "blur(10px)", y: 40 }}
-                whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-                viewport={{ once: true, margin: isMobile ? "-20px" : "-50px" }}
-                transition={{ delay: isMobile ? 0 : idx * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ scale: 1.02 }}
-                className="bg-white/90 backdrop-blur-lg p-8 md:p-10 rounded-[28px] md:rounded-[32px] border border-white shadow-[0_20px_40px_-20px_rgba(0,0,0,0.05)] hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] transition-all group flex flex-col sm:flex-row gap-6 md:gap-8 cursor-hover-target"
+                className="flex items-center gap-5 py-5 px-6 border-b border-zinc-200 last:border-0 hover:bg-zinc-50 transition-colors cursor-pointer group"
               >
-                <div className="w-16 md:w-20 h-16 md:h-20 bg-slate-100 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-red-800 transition-colors duration-500 shadow-inner">
-                  <service.icon className="w-8 md:w-10 h-8 md:h-10 text-slate-400 group-hover:text-white transition-colors duration-500" />
+                <service.icon className="w-6 h-6 text-zinc-400 shrink-0 group-hover:text-black transition-colors" strokeWidth={1.5} />
+                <div className="flex flex-col">
+                  <span className="text-xl md:text-2xl text-black tracking-tight">{service.title}</span>
+                  <span className="text-sm text-zinc-500 font-medium">{service.desc}</span>
                 </div>
-                <div>
-                  <h3 className="text-xl md:text-2xl font-black text-slate-900 mb-2 md:mb-3 tracking-tight">{service.title}</h3>
-                  <p className="text-slate-600 mb-6 leading-relaxed font-medium">{service.desc}</p>
-                  <span className="font-black text-blue-700 bg-red-100 border border-blue-200 px-4 py-2 rounded-xl text-xs md:text-sm uppercase tracking-widest">{service.price}</span>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 3.12 B2B ELITE & CATÁLOGO COMERCIAL */}
+      <section className="py-24 md:py-32 bg-slate-950 relative z-30 text-white overflow-hidden">
+        {/* Abstract Background Elements */}
+        <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-red-900/10 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-slate-800/20 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center md:text-left max-w-4xl mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8"
+          >
+            <div>
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-900/50 bg-red-900/10 text-red-500 text-xs font-black uppercase tracking-widest mb-6">
+                <Hexagon className="w-4 h-4" /> B2B Commercial Division
+              </span>
+              <h2 className="font-michroma text-4xl md:text-6xl lg:text-7xl text-white tracking-tighter leading-[1.05]">
+                Catálogo <br className="hidden md:block" /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-slate-400">Corporativo Élite.</span>
+              </h2>
+            </div>
+            <p className="text-slate-400 text-lg md:text-xl font-medium max-w-lg leading-relaxed">
+              Dejamos atrás los estándares domésticos. Somos el brazo táctico de limpieza de las infraestructuras de más alto tránsito y riesgo en la costa del Sur de la Florida.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            {[
+              {
+                icon: Store,
+                title: "Retail & Tiendas",
+                tag: "Showrooms",
+                desc: "Maximice la psicología de compra. Cristales y probadores impecables, operando fuera del horario comercial para no frenar sus ventas.",
+                color: "from-blue-900/40 to-slate-900",
+                iconColor: "text-blue-500"
+              },
+              {
+                icon: Hexagon,
+                title: "Casinos & Resorts",
+                tag: "Alto Tránsito",
+                desc: "Tratamiento de alfombras 24/7 y mantenimiento de bronces/tragamonedas en entornos de operación continua sin interrumpir el juego.",
+                color: "from-red-900/40 to-slate-900",
+                iconColor: "text-red-500"
+              },
+              {
+                icon: ShoppingCart,
+                title: "Supermercados",
+                tag: "Bromatología",
+                desc: "Saneamiento de grandes superficies (20k+ m²). Limpieza de pasillos, góndolas refrigeradas y andenes logísticos bajo estrictas normas.",
+                color: "from-zinc-800/40 to-slate-900",
+                iconColor: "text-zinc-400"
+              },
+              {
+                icon: Building2,
+                title: "Oficinas & HQ",
+                tag: "Corporaciones",
+                desc: "Lobbies de clase mundial y salas de directorio desinfectadas. Su equipo de operaciones merece el Estándar DOGE.",
+                color: "from-emerald-900/20 to-slate-900",
+                iconColor: "text-slate-300"
+              }
+            ].map((node, idx) => (
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.8, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
+                className={`bg-gradient-to-b ${node.color} p-8 md:p-10 rounded-[32px] border border-slate-800/50 hover:border-slate-600 transition-colors cursor-hover-target group flex flex-col h-full relative overflow-hidden`}
+              >
+                <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <node.icon className="w-32 h-32" />
+                </div>
+                <div className="w-14 h-14 rounded-2xl bg-slate-900/80 border border-slate-700/50 flex items-center justify-center mb-16 relative z-10 group-hover:scale-110 transition-transform">
+                  <node.icon className={`w-6 h-6 ${node.iconColor}`} />
+                </div>
+                <div className="relative z-10 mt-auto">
+                  <span className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2 block">{node.tag}</span>
+                  <h3 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">{node.title}</h3>
+                  <p className="text-slate-400 font-medium leading-relaxed mb-6">{node.desc}</p>
+                  <MagneticButton className="text-xs font-black text-white hover:text-red-500 uppercase tracking-widest flex items-center gap-2">
+                    Cotizar Hub <ArrowRight className="w-4 h-4" />
+                  </MagneticButton>
                 </div>
               </motion.div>
             ))}
@@ -353,7 +441,7 @@ export default function LandingPage() {
             className="text-center max-w-3xl mx-auto mb-16"
           >
             <span className="text-zinc-400 font-black uppercase tracking-widest text-xs bg-zinc-400/10 px-4 py-1.5 rounded-full border border-zinc-400/20">La Diferencia DOGE</span>
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-white mt-6 mb-6 tracking-tight">Estándar Forense.</h2>
+            <h2 className="font-michroma text-3xl md:text-5xl lg:text-6xl text-white mt-6 mb-6 tracking-tight">Estándar Forense.</h2>
             <p className="text-slate-400 text-lg md:text-xl font-medium">Rechazamos las limpiezas oculares básicas. Recuperamos materiales, pulimos detalles que otros ignoran y preservamos el valor real de su inmueble.</p>
           </motion.div>
           
@@ -499,7 +587,7 @@ export default function LandingPage() {
                   <div className="w-12 md:w-14 h-12 md:h-14 bg-gradient-to-br from-zinc-500 to-zinc-600 rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg shadow-zinc-500/20 shrink-0">
                     <ShieldCheck className="w-6 h-6 md:w-7 md:h-7 text-white" />
                   </div>
-                  <span className="font-bold md:font-black text-base md:text-lg text-white">Cobertura Total (BSE Uruguay)</span>
+                  <span className="font-bold md:font-black text-base md:text-lg text-white">Cobertura Total (USA General Liability)</span>
                 </motion.div>
                 <motion.div whileHover={{ scale: isMobile ? 1 : 1.02 }} className="flex items-center gap-4 md:gap-6 p-4 md:p-6 rounded-[24px] md:rounded-3xl border border-white/5 bg-white/5 backdrop-blur-md cursor-hover-target transition-colors hover:bg-white/10">
                   <div className="w-12 md:w-14 h-12 md:h-14 bg-gradient-to-br from-red-700 to-red-800 rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg shadow-red-700/20 shrink-0">
@@ -555,7 +643,7 @@ export default function LandingPage() {
               Su propiedad exige <br/> el <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-zinc-400">Estándar DOGE.</span>
             </h2>
             <p className="text-slate-300 text-lg md:text-xl lg:text-2xl font-medium mb-10 md:mb-16 leading-relaxed px-4">
-              Disfrute de Uruguay, nosotros mantenemos su valor de reventa intacto. <br className="hidden md:block" /> 
+              Disfrute de Miami, nosotros mantenemos su valor de reventa intacto. <br className="hidden md:block" /> 
               El cupo de membresías para la temporada es limitado.
             </p>
             <MagneticButton href="/booking" className="cursor-hover-target w-full sm:w-auto">
@@ -580,7 +668,7 @@ export default function LandingPage() {
             <a href="#" className="hover:text-red-800 cursor-hover-target transition-colors">Términos</a>
             <a href="#" className="hover:text-red-800 cursor-hover-target transition-colors">Privacidad</a>
             <a href="#" className="hover:text-red-800 cursor-hover-target transition-colors">CrewPulse</a>
-            <a href="#" className="hover:text-red-800 cursor-hover-target transition-colors">Uruguay</a>
+            <a href="#" className="hover:text-red-800 cursor-hover-target transition-colors">Florida</a>
           </div>
           <p className="text-slate-400 font-bold text-xs md:text-sm tracking-wide">© 2026 DOGE MANAGEMENT</p>
         </div>
