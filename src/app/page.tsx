@@ -144,7 +144,7 @@ export default function LandingPage() {
         <motion.div 
           animate={{ x: [0, 40, 0], y: [0, 20, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          className="absolute top-0 left-1/4 w-[600px] md:w-[900px] h-[600px] bg-zinc-800/10 rounded-full blur-[160px] -z-10"
+          className="absolute top-0 left-1/4 w-[600px] md:w-[900px] h-[600px] bg-zinc-800/10 rounded-full blur-[80px] -z-10"
         ></motion.div>
         
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center w-full">
@@ -311,7 +311,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-zinc-900/50 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/5 shadow-titanium"
+            className="bg-zinc-900/50 backdrop-blur-md rounded-2xl overflow-hidden border border-white/5 shadow-titanium"
           >
             {[
               { title: "Limpieza Residencial VIP", desc: "Desinfección de mobiliario y polvo profundo.", icon: Home },
@@ -338,8 +338,8 @@ export default function LandingPage() {
       {/* 3.12 B2B ELITE & CATÁLOGO COMERCIAL (Titanium Noir) */}
       <section className="py-24 md:py-48 bg-slate-950 relative z-30 text-white overflow-hidden">
         {/* Abstract Background Elements */}
-        <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-zinc-800/10 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
-        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-white/5 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
+        <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-zinc-800/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-white/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <motion.div 
@@ -398,7 +398,7 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.8, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                className="bg-zinc-900/30 backdrop-blur-sm p-10 rounded-2xl border border-white/5 hover:border-white/20 transition-all cursor-hover-target group flex flex-col h-full relative overflow-hidden"
+                className="bg-zinc-900/30 backdrop-blur-none p-10 rounded-2xl border border-white/5 hover:border-white/20 transition-all cursor-hover-target group flex flex-col h-full relative overflow-hidden"
               >
                 <div className="w-16 h-16 rounded-xl bg-zinc-800 border border-white/10 flex items-center justify-center mb-16 relative z-10 group-hover:scale-110 group-hover:bg-zinc-700 transition-all">
                   <node.icon className={`w-7 h-7 ${node.iconColor}`} />
@@ -472,7 +472,7 @@ export default function LandingPage() {
       {/* 3.2 SUSCRIPCIONES (Noir Memberships) */}
       <section id="suscripciones" className="py-24 md:py-48 bg-slate-950 relative z-20 overflow-hidden">
         {/* Animated Orbs */}
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-zinc-800/10 rounded-full blur-[120px] -z-10 opacity-50"></div>
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-zinc-800/10 rounded-full blur-[80px] -z-10 opacity-50"></div>
 
         <div className="max-w-7xl mx-auto px-6">
           <motion.div 
@@ -611,7 +611,7 @@ export default function LandingPage() {
           viewport={{ once: true }}
           className="max-w-7xl mx-auto relative rounded-3xl bg-zinc-900/50 p-16 md:p-24 lg:p-32 overflow-hidden border border-white/5 shadow-titanium text-center"
         >
-          <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent opacity-50 blur-3xl pointer-events-none"></div>
+          <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent opacity-50 blur-[80px] pointer-events-none"></div>
           
           <div className="relative z-10 max-w-4xl mx-auto">
             <h2 className="font-michroma text-4xl md:text-7xl font-black text-white mb-10 tracking-tighter leading-[1] uppercase">

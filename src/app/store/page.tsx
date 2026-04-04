@@ -91,9 +91,9 @@ export default function StorePage() {
   return (
     <div className="min-h-screen bg-slate-950 font-sans text-white selection:bg-red-900 selection:text-white relative overflow-hidden">
       {/* Fondo Industrial Premium */}
-      <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none"></div>
-      <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-red-900/20 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
-      <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-blue-900/20 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-noise opacity-[0.012] pointer-events-none"></div>
+      <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-red-900/20 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+      <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-blue-900/20 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
 
       {/* 1. NAVEGACION MINIMALISTA */}
       <nav className="relative z-50 px-6 md:px-12 py-8 flex items-center justify-between">
