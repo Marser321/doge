@@ -1,71 +1,106 @@
 @import "tailwindcss";
 
+/* ══════════════════════════════════════════════════════════════════════
+   DOGE.S.M LLC — Global Design System (Tailwind CSS v4)
+   ══════════════════════════════════════════════════════════════════════
+   Architecture: CSS Custom Properties → @theme inline → @utility
+   Themes: Titanium Noir (Dark) / Quiet Luxury Ice (Light)
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ─── DESIGN TOKENS ─────────────────────────────────────────────────── */
+
 :root {
-  /* DARK THEME (Titanium Noir - Default) */
-  --background: #030712; /* Slate 950 */
-  --foreground: #f4f4f5; /* Zinc 100 */
-  --accent: #71717a; /* Zinc 500 */
-  --glass-bg: rgba(15, 15, 20, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  /* DARK THEME — Titanium Noir (2026 Refined) */
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  --accent: #52525b;
+  --taupe: #a1a1aa;
+  --glass-bg: rgba(9, 9, 11, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.07);
   --card-bg: rgba(24, 24, 27, 0.4);
-  --silver-gradient: linear-gradient(to bottom, #ffffff 0%, #a1a1aa 100%);
-  --footer-bg: #030712;
+  --silver-gradient: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+  --footer-bg: #09090b;
   --noise-opacity: 0.015;
+
+  /* Haptic Motion Tokens */
+  --ease-haptic: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-in-out-haptic: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 [data-theme='light'] {
-  /* LIGHT THEME (White Mode) */
-  --background: #ffffff;
-  --foreground: #09090b; /* Zinc 950 */
-  --accent: #52525b; /* Zinc 600 */
-  --glass-bg: rgba(255, 255, 255, 0.7);
+  /* LIGHT THEME — Quiet Luxury Ice (Glass & Crystal) */
+  --background: #fafafa;
+  --foreground: #09090b;
+  --accent: #a1a1aa;
+  --taupe: #71717a;
+  --glass-bg: rgba(250, 250, 250, 0.75);
   --glass-border: rgba(0, 0, 0, 0.08);
-  --card-bg: #f8fafc; /* Slate 50 */
-  --silver-gradient: linear-gradient(to bottom, #09090b 0%, #52525b 100%);
-  --footer-bg: #f8fafc;
-  --noise-opacity: 0.008;
+  --card-bg: #f4f4f5;
+  --silver-gradient: linear-gradient(180deg, #18181b 0%, #52525b 100%);
+  --footer-bg: #fafafa;
+  --noise-opacity: 0.01;
 }
+
+/* ─── THEME BRIDGE (var → Tailwind v4) ──────────────────────────────── */
+/* `inline` ensures we pass through existing CSS vars without creating
+   duplicate global variables in the compiled output. */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
+  --color-taupe: var(--taupe);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-michroma: var(--font-michroma);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  transition: background-color 0.5s ease, color 0.5s ease;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ─── BASE LAYER ────────────────────────────────────────────────────── */
+
+@layer base {
+  html {
+    overflow-x: hidden;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    transition: background-color 0.6s var(--ease-haptic),
+                color 0.6s var(--ease-haptic);
+    overflow-x: hidden;
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Michroma branding for all headings */
+  h1, h2, h3, h4, h5, h6, .font-michroma {
+    font-family: var(--font-michroma), var(--font-geist-sans), sans-serif;
+  }
+
+  /* Hide native cursor when custom squeegee cursor is active */
+  body.custom-cursor,
+  body.custom-cursor * {
+    cursor: none !important;
+  }
+
+  /* Scrollbar: hidden everywhere (luxury UX — Lenis handles scroll) */
+  ::-webkit-scrollbar { display: none; }
+  * {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
-/* Hide Native cursor when custom is active */
-body.custom-cursor {
-  cursor: none !important;
-}
+/* ══════════════════════════════════════════════════════════════════════
+   TAILWIND v4 NATIVE UTILITIES (@utility)
+   ──────────────────────────────────────────────────────────────────────
+   These are first-class Tailwind utilities that support all variant
+   pseudo-classes (hover:, md:, dark:, group-hover:, etc.).
+   ══════════════════════════════════════════════════════════════════════ */
 
-body.custom-cursor * {
-  cursor: none !important;
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-* {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-/* Noise Overlay for Luxury Texture */
-.bg-noise {
+/* Luxury Noise Overlay — fixed grain texture across the viewport */
+@utility bg-noise {
   position: fixed;
   inset: 0;
   width: 100%;
@@ -77,31 +112,186 @@ body.custom-cursor * {
   transition: opacity 0.5s ease;
 }
 
-/* Glassmorphism helpers - Theme Aware */
-.glass-panel {
+/* Glassmorphism — Standard panel (16px blur, themed) */
+@utility glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
-  transition: background 0.5s ease, border 0.5s ease;
+  transition: background 0.5s ease, border-color 0.5s ease;
 }
 
-.titanium-gradient {
+/* Glassmorphism — Heavy panel (24px blur, deeper opacity) */
+@utility glass-panel-heavy {
+  background: color-mix(in srgb, var(--glass-bg) 88%, black 12%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid color-mix(in srgb, var(--glass-border) 90%, white 10%);
+}
+
+/* Titanium Gradient — directional metallic sweep */
+@utility titanium-gradient {
   background: linear-gradient(135deg, #18181b 0%, #3f3f46 50%, #18181b 100%);
 }
 
-.silver-text {
+/* Silver Text — gradient text clip for luxury headings */
+@utility silver-text {
   background: var(--silver-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.matte-border {
+/* Matte Border — subtle themed border */
+@utility matte-border {
   border: 1px solid var(--glass-border);
 }
 
-.shadow-titanium {
+/* Titanium Shadow — deep, expensive-looking box shadow */
+@utility shadow-titanium {
   box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
 }
 
+/* Edge Fade Mask — horizontal fade for marquees / carousels */
+@utility mask-fade-edges {
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+}
+
+/* Safe Area Padding — iOS home indicator spacing */
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Cursor Hover Target — haptic transition for interactive elements */
+@utility cursor-hover-target {
+  transition: transform 0.3s var(--ease-haptic), filter 0.3s var(--ease-haptic);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   PREMIUM LUXURY UTILITIES (Agency Agents Injected)
+   ──────────────────────────────────────────────────────────────────────
+   Source: engineering-senior-developer.md + design-whimsy-injector.md
+   Patterns: luxury-glass, magnetic, btn-whimsy, celebrations
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* Luxury Glass — Top-tier glassmorphism (blur 30px + saturate 200%)
+   Use for hero nav, feature sections, premium CTAs only.
+   Heavier than glass-panel — reserve for high-impact areas. */
+@utility luxury-glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.5s ease, border-color 0.5s ease,
+              box-shadow 0.5s ease;
+}
+
+/* Magnetic Element — Premium hover with cubic-bezier(0.16, 1, 0.3, 1)
+   Scale 1.05× + lift 2px — the "expensive feel" */
+@utility magnetic {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Button Whimsy — Container for shimmer sweep effect
+   Requires a ::before pseudo-element for the actual light sweep.
+   Apply this class + add shimmer-sweep-pseudo in component styles. */
+@utility btn-whimsy {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Ring Pulse — Selection confirmation animation for plan cards */
+@utility ring-pulse {
+  animation: ring-pulse-kf 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── WHIMSY KEYFRAMES ──────────────────────────────────────────────── */
+
+/* Sparkle — micro-celebration on form validation / success states */
+@keyframes sparkle {
+  0%, 100% { transform: scale(1); opacity: 0; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
+
+/* Celebrate — emoji pop for booking confirmation */
+@keyframes celebrate {
+  0% { transform: translateY(0) scale(0); opacity: 0; }
+  40% { transform: translateY(-30px) scale(1.4); opacity: 1; }
+  100% { transform: translateY(-50px) scale(1); opacity: 0; }
+}
+
+/* Shimmer Sweep — diagonal light pass for premium buttons */
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+/* Float Up — confetti particle rise for celebrations */
+@keyframes float-up {
+  0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+  100% { transform: translateY(-100vh) rotate(720deg) scale(0); opacity: 0; }
+}
+
+/* Ring Pulse — expanding ring on plan selection */
+@keyframes ring-pulse-kf {
+  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+  100% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   CINEMATIC LUXURY EFFECTS (Master Prompts Injected)
+   ──────────────────────────────────────────────────────────────────────
+   Source: Apple Refinement + Tactical Execution Prompts
+   Patterns: CTA Glow, Tilt Cards, Section Blur Dividers
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* CTA Glow — Gradient shift + shadow bloom on hover
+   Creates the "premium button" effect with animated gradient
+   and expanding soft glow on interaction. */
+@utility cta-glow {
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Tilt Card Container — 3D perspective for kinetic tilt effect
+   Used by the TiltCard React component. Sets up the 3D space. */
+@utility tilt-card {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* Section Blur Divider — Cinematic blur fade between sections
+   Apply to sections to create a smooth depth-of-field transition. */
+@utility section-blur-divider {
+  position: relative;
+}
+
+/* ─── CINEMATIC KEYFRAMES ───────────────────────────────────────────── */
+
+/* Glow Pulse — Subtle shadow bloom pulsation for CTAs */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px 0 rgba(255, 255, 255, 0.05); }
+  50% { box-shadow: 0 0 40px 8px rgba(255, 255, 255, 0.12); }
+}
+
+/* Gradient Shift — Animated gradient movement for premium buttons */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ─── REDUCED MOTION SAFETY ─────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -148,14 +148,9 @@ export default function BookingSuccessPage() {
                 Mantén el aire salino a raya. Monitorea los niveles de humedad exacta desde tu teléfono y activa el drenaje continuo protegiendo tus espacios cerrados.
               </p>
               {/* Amazon Affiliate Link */}
-              <a 
-                href="https://www.amazon.com/dp/EXAMPLE?tag=tulinkdeafiliado-20" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-full bg-slate-900 text-white font-medium py-3 px-6 rounded-xl hover:bg-slate-800 transition-colors gap-2"
-              >
-                Comprar en Amazon <ArrowRight className="w-4 h-4" />
-              </a>
+              <span className="inline-flex items-center justify-center w-full bg-slate-300 text-slate-600 font-medium py-3 px-6 rounded-xl cursor-not-allowed gap-2">
+                Próximamente <ArrowRight className="w-4 h-4" />
+              </span>
             </div>
           </div>
 
@@ -179,14 +174,9 @@ export default function BookingSuccessPage() {
                 Ideal para grandes mamparas y cristales de balcón con vista al mar. Tecnología de succión inteligente para resultados sin marcas entre visitas profesionales.
               </p>
               {/* Amazon Affiliate Link */}
-              <a 
-                href="https://www.amazon.com/dp/EXAMPLE2?tag=tulinkdeafiliado-20" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-full bg-slate-900 text-white font-medium py-3 px-6 rounded-xl hover:bg-slate-800 transition-colors gap-2"
-              >
-                Comprar en Amazon <ArrowRight className="w-4 h-4" />
-              </a>
+              <span className="inline-flex items-center justify-center w-full bg-slate-300 text-slate-600 font-medium py-3 px-6 rounded-xl cursor-not-allowed gap-2">
+                Próximamente <ArrowRight className="w-4 h-4" />
+              </span>
             </div>
           </div>
 

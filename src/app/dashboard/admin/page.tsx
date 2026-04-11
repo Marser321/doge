@@ -12,18 +12,18 @@ export default function AdminDashboard() {
         <h1 className="text-2xl font-bold text-white mb-10 tracking-tight">Cima<span className="text-blue-500">Facility</span></h1>
         
         <nav className="flex-1 space-y-2">
-          <a href="#" className="flex items-center gap-3 bg-blue-600 text-white px-4 py-3 rounded-xl font-medium shadow-lg shadow-blue-500/20">
+          <button type="button" className="flex w-full items-center gap-3 bg-blue-600 text-white px-4 py-3 rounded-xl font-medium shadow-lg shadow-blue-500/20 text-left">
             <Activity className="w-5 h-5"/> Panel de Control
-          </a>
-          <a href="#" className="flex items-center gap-3 px-4 py-3 hover:bg-slate-800 rounded-xl transition-colors">
+          </button>
+          <button type="button" className="flex w-full items-center gap-3 px-4 py-3 hover:bg-slate-800 rounded-xl transition-colors text-left">
             <Map className="w-5 h-5"/> Despacho / Mapa
-          </a>
-          <a href="#" className="flex items-center gap-3 px-4 py-3 hover:bg-slate-800 rounded-xl transition-colors">
+          </button>
+          <button type="button" className="flex w-full items-center gap-3 px-4 py-3 hover:bg-slate-800 rounded-xl transition-colors text-left">
             <Users className="w-5 h-5"/> RRSS (CrewPulse)
-          </a>
-          <a href="#" className="flex items-center gap-3 px-4 py-3 hover:bg-slate-800 rounded-xl transition-colors">
+          </button>
+          <button type="button" className="flex w-full items-center gap-3 px-4 py-3 hover:bg-slate-800 rounded-xl transition-colors text-left">
             <ShoppingCart className="w-5 h-5"/> Amazon Afiliados
-          </a>
+          </button>
         </nav>
       </aside>
 
@@ -160,7 +160,7 @@ export default function AdminDashboard() {
 
             <div className="mt-8 bg-indigo-50 p-4 rounded-xl border border-indigo-100">
               <p className="text-sm text-indigo-800 font-medium italic">
-                "Notamos un incremento del 12% en CTR al posicionar el Robot Limpiacristales en limpiezas de categoría 'Departamento alto'."
+                &quot;Notamos un incremento del 12% en CTR al posicionar el Robot Limpiacristales en limpiezas de categoría &#39;Departamento alto&#39;.&quot;
               </p>
             </div>
           </div>

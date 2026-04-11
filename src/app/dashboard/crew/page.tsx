@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { MapPin, Navigation, Camera, CheckSquare, Clock, AlertTriangle } from 'lucide-react'
+import { Navigation, Camera, CheckSquare, Clock, AlertTriangle } from 'lucide-react'
 
 // Mock Data
 const todayShift = {
@@ -92,7 +92,7 @@ export default function CrewPulseDashboard() {
           <h3 className="font-bold text-slate-800 flex items-center gap-2 mb-4">
             <Camera className="w-5 h-5 text-blue-500" /> Proof of Service (Fotos)
           </h3>
-          <p className="text-sm text-slate-500 mb-4">Tomar fotografía de "Antes y Después" obligatoria para clientes extranjeros.</p>
+          <p className="text-sm text-slate-500 mb-4">Tomar fotografía de &quot;Antes y Después&quot; obligatoria para clientes extranjeros.</p>
           <div className="grid grid-cols-2 gap-4">
             <button className="border-2 border-dashed border-slate-300 bg-slate-50 text-slate-500 rounded-xl p-6 flex flex-col items-center justify-center hover:bg-slate-100 transition-colors">
               <Camera className="w-8 h-8 mb-2 opacity-50" />

@@ -5,6 +5,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import AuraCursor from "@/components/AuraCursor";
 import BottomNav from "@/components/BottomNav";
+import { LanguageProvider } from "@/components/LanguageProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,14 +36,16 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} ${michroma.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${michroma.variable} h-full antialiased transition-colors duration-500 overflow-x-hidden`}
     >
-      <body className={`min-h-full flex flex-col bg-slate-50 font-sans tracking-tight text-slate-900`}>
-        <SmoothScroll>
-          <AuraCursor />
-          {children}
-        </SmoothScroll>
-        <BottomNav />
+      <body className="min-h-full flex flex-col bg-background font-sans tracking-tight text-foreground transition-colors duration-500">
+        <LanguageProvider>
+          <SmoothScroll>
+            <AuraCursor />
+            {children}
+          </SmoothScroll>
+          <BottomNav />
+        </LanguageProvider>
       </body>
     </html>
   );

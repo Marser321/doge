@@ -1,138 +1,286 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY || ''
+type DispatchMode = "mock" | "live";
+type WindshieldStatus = "first_job" | "availability_checked";
 
-const supabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseKey || 'placeholder')
+type AvailabilityPayload = {
+  property_id: string;
+  team_size_required: number;
+  date_start: string;
+  date_end: string;
+  service_duration_minutes?: number;
+};
+
+type CrewCandidate = {
+  employee_id: string;
+  employee_name: string;
+  travel_time_minutes: number;
+  windshield_status: WindshieldStatus;
+};
+
+type PropertyCoordinates = {
+  lat: number | null;
+  lng: number | null;
+};
+
+type Employee = {
+  id: string;
+  full_name: string;
+  capacity_size: number | null;
+};
+
+type Shift = {
+  id: string;
+  shift_start: string;
+  shift_end: string;
+};
+
+const dispatchMode: DispatchMode =
+  process.env.DISPATCH_MODE === "live" ? "live" : "mock";
+
+function json(data: unknown, status = 200): Response {
+  return Response.json(data, { status });
+}
+
+function parsePayload(input: unknown): { data?: AvailabilityPayload; errors: string[] } {
+  if (!input || typeof input !== "object") {
+    return { errors: ["Request body must be a JSON object"] };
+  }
+
+  const raw = input as Record<string, unknown>;
+  const propertyId = raw.property_id;
+  const teamSize = raw.team_size_required;
+  const dateStart = raw.date_start;
+  const dateEnd = raw.date_end;
+  const serviceDuration = raw.service_duration_minutes;
+
+  const errors: string[] = [];
+
+  if (typeof propertyId !== "string" || propertyId.trim().length === 0) {
+    errors.push("property_id is required and must be a non-empty string");
+  }
+
+  if (typeof teamSize !== "number" || !Number.isInteger(teamSize) || teamSize <= 0) {
+    errors.push("team_size_required must be a positive integer");
+  }
+
+  if (typeof dateStart !== "string" || Number.isNaN(Date.parse(dateStart))) {
+    errors.push("date_start must be a valid ISO date string");
+  }
+
+  if (typeof dateEnd !== "string" || Number.isNaN(Date.parse(dateEnd))) {
+    errors.push("date_end must be a valid ISO date string");
+  }
+
+  if (
+    typeof serviceDuration !== "undefined" &&
+    (typeof serviceDuration !== "number" ||
+      !Number.isInteger(serviceDuration) ||
+      serviceDuration <= 0)
+  ) {
+    errors.push("service_duration_minutes must be a positive integer when provided");
+  }
+
+  if (
+    typeof dateStart === "string" &&
+    typeof dateEnd === "string" &&
+    !Number.isNaN(Date.parse(dateStart)) &&
+    !Number.isNaN(Date.parse(dateEnd))
+  ) {
+    const start = new Date(dateStart).getTime();
+    const end = new Date(dateEnd).getTime();
+    if (end <= start) {
+      errors.push("date_end must be greater than date_start");
+    }
+  }
+
+  if (errors.length > 0) {
+    return { errors };
+  }
+
+  const propertyIdSafe = propertyId as string;
+  const teamSizeSafe = teamSize as number;
+  const dateStartSafe = dateStart as string;
+  const dateEndSafe = dateEnd as string;
+
+  return {
+    errors: [],
+    data: {
+      property_id: propertyIdSafe.trim(),
+      team_size_required: teamSizeSafe,
+      date_start: dateStartSafe,
+      date_end: dateEndSafe,
+      service_duration_minutes:
+        typeof serviceDuration === "number" ? serviceDuration : undefined,
+    },
+  };
+}
+
+function buildMockAvailability(payload: AvailabilityPayload): CrewCandidate[] {
+  const hourSeed = new Date(payload.date_start).getUTCHours();
+  const capacitySeed = payload.team_size_required;
+
+  const crews: CrewCandidate[] = [
+    {
+      employee_id: "mock-alpha",
+      employee_name: "Equipo Alpha",
+      travel_time_minutes: Math.max(8, 12 + capacitySeed - (hourSeed % 3)),
+      windshield_status: "availability_checked",
+    },
+    {
+      employee_id: "mock-bravo",
+      employee_name: "Equipo Bravo",
+      travel_time_minutes: Math.max(10, 16 + (hourSeed % 5)),
+      windshield_status: "availability_checked",
+    },
+    {
+      employee_id: "mock-charlie",
+      employee_name: "Equipo Charlie",
+      travel_time_minutes: 0,
+      windshield_status: "first_job",
+    },
+  ];
+
+  return crews.sort((a, b) => a.travel_time_minutes - b.travel_time_minutes);
+}
+
+function getSupabaseClient(): SupabaseClient {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error("Dispatch live mode is missing Supabase environment variables");
+  }
+
+  return createClient(supabaseUrl, supabaseKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
+}
+
+async function fetchLiveAvailability(payload: AvailabilityPayload): Promise<CrewCandidate[]> {
+  const supabase = getSupabaseClient();
+
+  const { data: property, error: propertyError } = await supabase
+    .from("properties")
+    .select("lat, lng")
+    .eq("id", payload.property_id)
+    .single<PropertyCoordinates>();
+
+  if (propertyError || !property) {
+    throw new Error("Property not found");
+  }
+
+  const { data: employees, error: employeeError } = await supabase
+    .from("employees")
+    .select("id, full_name, capacity_size")
+    .eq("status", "activo")
+    .gte("capacity_size", payload.team_size_required)
+    .returns<Employee[]>();
+
+  if (employeeError) {
+    throw new Error("Failed to fetch employees");
+  }
+
+  if (!employees || employees.length === 0) {
+    return [];
+  }
+
+  const day = payload.date_start.split("T")[0];
+  const dayStart = `${day}T00:00:00Z`;
+  const dayEnd = `${day}T23:59:59Z`;
+  const requestedStart = new Date(payload.date_start).getTime();
+  const requestedEnd = new Date(payload.date_end).getTime();
+
+  const available: CrewCandidate[] = [];
+
+  for (const employee of employees) {
+    const { data: shifts, error: shiftError } = await supabase
+      .from("shifts")
+      .select("id, shift_start, shift_end")
+      .eq("employee_id", employee.id)
+      .gte("shift_start", dayStart)
+      .lte("shift_end", dayEnd)
+      .returns<Shift[]>();
+
+    if (shiftError) {
+      continue;
+    }
+
+    const hasOverlap =
+      shifts?.some((shift) => {
+        const shiftStart = new Date(shift.shift_start).getTime();
+        const shiftEnd = new Date(shift.shift_end).getTime();
+        return requestedStart < shiftEnd && requestedEnd > shiftStart;
+      }) ?? false;
+
+    if (hasOverlap) {
+      continue;
+    }
+
+    available.push({
+      employee_id: employee.id,
+      employee_name: employee.full_name,
+      travel_time_minutes: 0,
+      windshield_status:
+        property.lat !== null && property.lng !== null
+          ? "availability_checked"
+          : "first_job",
+    });
+  }
+
+  return available.sort((a, b) => a.travel_time_minutes - b.travel_time_minutes);
+}
 
 export async function POST(request: Request) {
   try {
-    const { property_id, service_duration_minutes, team_size_required, date_start, date_end } = await request.json()
+    const body = (await request.json()) as unknown;
+    const parsed = parsePayload(body);
 
-    // 1. Fetch details of the property we need to clean (to get its location)
-    const { data: targetProperty, error: propErr } = await supabase
-      .from('properties')
-      .select('lat, lng')
-      .eq('id', property_id)
-      .single()
-
-    if (propErr || !targetProperty) {
-      return new Response(JSON.stringify({ error: 'Property not found' }), { status: 404 })
+    if (!parsed.data) {
+      return json({ error: "Invalid request payload", details: parsed.errors }, 400);
     }
 
-    // 2. Fetch all employees who have capacity >= team_size_required
-    const { data: employees } = await supabase
-      .from('employees')
-      .select('id, full_name, capacity_size')
-      .gte('capacity_size', team_size_required)
-      .eq('status', 'activo')
-
-    if (!employees || employees.length === 0) {
-      return new Response(JSON.stringify({ error: 'No crew with sufficient capacity available' }), { status: 400 })
+    if (dispatchMode === "mock") {
+      return json({
+        mode: "mock",
+        availableCrews: buildMockAvailability(parsed.data),
+      });
     }
 
-    // 3. For each suitable crew, check their shifts on that day
-    const availableCrews = []
+    const availableCrews = await fetchLiveAvailability(parsed.data);
 
-    for (const employee of employees) {
-      // Get all shifts for this employee that overlap or are on the same day
-      const { data: shifts } = await supabase
-        .from('shifts')
-        .select(`
-          id, shift_start, shift_end,
-          jobs (
-            properties (
-              lat, 
-              lng
-            )
-          )
-        `)
-        .eq('employee_id', employee.id)
-        .gte('shift_start', date_start.split('T')[0] + 'T00:00:00Z') // Same day
-        .lte('shift_end', date_start.split('T')[0] + 'T23:59:59Z')
-
-      
-      // If the crew has no shifts, they are available (and windshield time is from HQ or 0)
-      if (!shifts || shifts.length === 0) {
-        availableCrews.push({
-          employee_id: employee.id,
-          employee_name: employee.full_name,
-          travel_time_minutes: 0, 
-          windshield_status: 'first_job'
-        })
-        continue
-      }
-
-      // Check double booking for the requested time window
-      const requestedStart = new Date(date_start).getTime()
-      const requestedEnd = new Date(date_end).getTime()
-      let hasOverlap = false
-
-      for (const shift of shifts) {
-        const sStart = new Date(shift.shift_start).getTime()
-        const sEnd = new Date(shift.shift_end).getTime()
-        if (requestedStart < sEnd && requestedEnd > sStart) {
-          hasOverlap = true
-          break
-        }
-      }
-
-      if (hasOverlap) continue // Prevents double booking
-
-      // 4. Calculate Distance Matrix if there's a preceding or succeeding shift
-      // Find the shift immediately before the requested slot to calculate travel time
-      const precedingShift: any = shifts
-        .filter(s => new Date(s.shift_end).getTime() <= requestedStart)
-        .sort((a, b) => new Date(b.shift_end).getTime() - new Date(a.shift_end).getTime())[0]
-
-      if (precedingShift && precedingShift.jobs && precedingShift.jobs.properties) {
-        const prevLat = precedingShift.jobs.properties.lat
-        const prevLng = precedingShift.jobs.properties.lng
-
-        // Call Google Maps Distance Matrix API
-        const origin = `${prevLat},${prevLng}`
-        const destination = `${targetProperty.lat},${targetProperty.lng}`
-        const mapsReq = await fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destination}&key=${googleMapsApiKey}`)
-        const mapsData = await mapsReq.json()
-
-        let travelDurationMinutes = 30 // Fallback assuming 30 min max in Punta del Este
-        if (mapsData.rows?.[0]?.elements?.[0]?.status === 'OK') {
-          const durationSeconds = mapsData.rows[0].elements[0].duration.value
-          travelDurationMinutes = Math.ceil(durationSeconds / 60)
-        }
-
-        // Validate windshield time constraint:
-        // Turno A (fin) + windshield_time <= Turno B (inicio)
-        const gapMinutes = (requestedStart - new Date(precedingShift.shift_end).getTime()) / 60000
-
-        if (gapMinutes >= travelDurationMinutes) {
-          // It's a valid geographical grouping!
-          availableCrews.push({
-            employee_id: employee.id,
-            employee_name: employee.full_name,
-            travel_time_minutes: travelDurationMinutes,
-            windshield_status: 'optimal_routing' // Helps us sort the best crew
-          })
-        }
-      } else {
-        // Gap is valid but no directly preceding shift with location
-        availableCrews.push({
-          employee_id: employee.id,
-          employee_name: employee.full_name,
-          travel_time_minutes: 0,
-          windshield_status: 'isolated_job'
-        })
-      }
+    if (availableCrews.length === 0) {
+      return json(
+        { error: "No crew with sufficient capacity available" },
+        404,
+      );
     }
 
-    // Sort by optimal routing (least travel time first, grouping them together)
-    availableCrews.sort((a, b) => a.travel_time_minutes - b.travel_time_minutes)
-
-    return new Response(JSON.stringify({ availableCrews }), { status: 200 })
-
+    return json({ mode: "live", availableCrews });
   } catch (error) {
-    console.error(error)
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 })
+    const message =
+      error instanceof Error ? error.message : "Unexpected dispatch error";
+
+    if (
+      message === "Property not found" ||
+      message.includes("Invalid request payload")
+    ) {
+      return json({ error: message }, 400);
+    }
+
+    if (message.includes("missing Supabase")) {
+      return json(
+        {
+          error:
+            "Dispatch service is unavailable. Configure DISPATCH_MODE=mock or provide live credentials.",
+        },
+        503,
+      );
+    }
+
+    return json({ error: "Internal dispatch service error" }, 500);
   }
 }
