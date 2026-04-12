@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { motion, useTransform, useSpring, useMotionValue, type MotionValue } from 'framer-motion'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Store, Hexagon, Building2, ArrowRight, Sparkles, ShieldCheck, Home, Zap } from 'lucide-react'
+import { Store, Hexagon, Building2, ArrowRight, Sparkles, ShieldCheck, Home, Anchor } from 'lucide-react'
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
@@ -55,11 +55,11 @@ const B2B_PRECISION_STEPS = [
     phase: 'Crystal Level 05',
   },
   {
-    title: 'Hubs Tecnológicos',
-    tag: 'Precision Areas',
-    desc: 'Limpieza de cristales técnicos y salas blancas. Precisión clínica donde la visibilidad es crítica para la operación.',
-    img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2670&auto=format&fit=crop',
-    icon: Zap,
+    title: 'Yates & Marinas',
+    tag: 'Miami Marine',
+    desc: 'Protocolos de limpieza ultra-precisos para cristales de puente de mando, ventanales panorámicos y barandas de vidrio en embarcaciones de lujo.',
+    img: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?q=80&w=2670&auto=format&fit=crop',
+    icon: Anchor,
     phase: 'Crystal Level 06',
   },
 ] as const
@@ -325,8 +325,8 @@ export const PrecisionProtocolScroll = () => {
 
       <SqueegeeBlade xProgress={bladeX} />
 
-      <div className="relative z-50 h-full w-full flex flex-col justify-center pt-20 pb-16 pointer-events-none overflow-hidden">
-        <div className="px-4 sm:px-6 md:px-32 mb-4 sm:mb-8 md:mb-12 h-fit shrink-0">
+      <div className="relative z-50 h-full w-full flex flex-col justify-center pt-24 sm:pt-28 md:pt-32 pb-16 pointer-events-none overflow-visible">
+        <div className="px-4 sm:px-6 md:px-32 mb-6 sm:mb-10 md:mb-14 h-fit shrink-0">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} className="flex flex-col gap-4 sm:gap-6 md:gap-8">
             <div className="flex items-center gap-4 sm:gap-6">
               <span className="hidden sm:inline-block w-16 h-px bg-accent/40"></span>
@@ -334,9 +334,9 @@ export const PrecisionProtocolScroll = () => {
                 Precision Glass Specialty Narrative
               </span>
             </div>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white uppercase tracking-tighter font-michroma leading-tight md:leading-none drop-shadow-[0_0_30px_rgba(0,0,0,0.8)] pb-2">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white uppercase tracking-tighter font-michroma leading-[1.15] md:leading-[1.1] drop-shadow-[0_0_30px_rgba(0,0,0,0.8)] pb-3 pt-1">
               {activeIdx === 0 ? 'Cristal.' : activeIdx === 1 ? 'Vision.' : activeIdx <= 3 ? 'Pureza.' : 'Espejo.'} <br />
-              <span className="silver-text text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl pt-2 block">Precision.</span>
+              <span className="silver-text text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl pt-3 block">Precision.</span>
             </h2>
           </motion.div>
         </div>
@@ -352,12 +352,12 @@ export const PrecisionProtocolScroll = () => {
                 y: activeIdx === idx ? 0 : 36,
               }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              <div className="w-[85vw] sm:w-[70vw] md:min-w-[850px] md:w-[850px] h-[450px] sm:h-[500px] md:h-[55vh] lg:h-[65vh] max-h-[700px] min-h-[450px] glass-panel-heavy rounded-[32px] md:rounded-[48px] p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-between border border-white/5 group transition-all shadow-titanium relative overflow-hidden pointer-events-auto"
+              className="w-[85vw] sm:w-[70vw] md:min-w-[850px] md:w-[850px] h-[450px] sm:h-[500px] md:h-[55vh] lg:h-[65vh] max-h-[700px] min-h-[450px] glass-panel-heavy rounded-[32px] md:rounded-[48px] p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-between border border-white/5 group transition-all shadow-titanium relative overflow-hidden pointer-events-auto will-change-transform"
             >
               <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 blur-[180px] -z-10 group-hover:bg-accent/20 transition-colors"></div>
 
-              <div className="relative z-10 flex flex-col h-full justify-between overflow-hidden">
-                <div className="flex flex-col flex-1 min-h-0">
+              <div className="relative z-10 flex flex-col h-full justify-between overflow-visible">
+                <div className="flex flex-col flex-1 min-h-0 overflow-visible">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-[20px] md:rounded-[32px] bg-white/5 border border-white/10 flex items-center justify-center mb-4 sm:mb-6 md:mb-8 group-hover:scale-110 group-hover:border-accent/50 group-hover:shadow-[0_0_60px_rgba(255,255,255,0.1)] transition-all shadow-2xl relative shrink-0">
                     <step.icon className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-white" />
                     <div className="absolute inset-0 bg-accent/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -367,8 +367,8 @@ export const PrecisionProtocolScroll = () => {
                     <div className="hidden sm:block h-px w-6 sm:w-12 bg-white/10 text-accent">•</div>
                     <span className="text-[10px] sm:text-[11px] md:text-[13px] font-black text-accent uppercase tracking-[0.3em] sm:tracking-[0.6em]">Batch 0{idx + 1}</span>
                   </div>
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-4 sm:mb-6 font-michroma leading-[1.1] max-w-[95%] shrink-0">{step.title}</h3>
-                  <div className="overflow-y-auto scrollbar-none min-h-0 flex-1 pb-4">
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-4 sm:mb-6 font-michroma leading-[1.15] max-w-[95%] shrink-0 py-1">{step.title}</h3>
+                  <div className="overflow-y-auto scrollbar-none min-h-0 flex-1 pb-4 overflow-x-visible">
                     <p className="text-accent text-sm sm:text-base md:text-lg font-medium leading-[1.6] md:leading-[1.5] max-w-3xl pr-4">{step.desc}</p>
                   </div>
                 </div>
