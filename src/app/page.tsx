@@ -63,8 +63,12 @@ const TextScrubber = ({ text, className = "" }: { text: string, className?: stri
 
   return (
     <h1 ref={containerRef} className={`font-michroma ${className}`}>
-      {text.split("").map((char, i) => (
-        <span key={i} className="char inline-block">{char === " " ? "\u00A0" : char}</span>
+      {text.split(" ").map((word, wIdx) => (
+        <span key={wIdx} className="inline-block whitespace-nowrap mr-[0.25em]">
+          {word.split("").map((char, cIdx) => (
+            <span key={cIdx} className="char inline-block">{char}</span>
+          ))}
+        </span>
       ))}
     </h1>
   );
@@ -310,7 +314,7 @@ export default function LandingPage() {
             
             <TextScrubber 
               text="Limpieza de Élite." 
-              className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-[10rem] font-black text-foreground leading-[0.85] tracking-[-0.05em] uppercase mb-12"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-foreground leading-[0.85] tracking-[-0.05em] uppercase mb-12"
             />
             
             <motion.p variants={fadeInUp} className="text-lg md:text-xl text-zinc-400 mb-10 md:mb-12 leading-relaxed font-medium max-w-lg">
@@ -416,7 +420,7 @@ export default function LandingPage() {
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/10 bg-accent/5 text-accent text-[10px] font-black uppercase tracking-[0.3em] mb-8">
               <Sparkles className="w-3 h-3" /> {t('how.badge')}
             </span>
-            <h2 className="font-michroma text-4xl md:text-7xl font-black text-foreground mt-6 mb-8 tracking-tighter uppercase leading-[1.1]">
+            <h2 className="font-michroma text-3xl md:text-5xl lg:text-6xl font-black text-foreground mt-6 mb-8 tracking-tighter uppercase leading-[1.1]">
               {t('how.title')} <br /> <span className="silver-text">{t('how.title2')}</span>
             </h2>
             <p className="text-accent text-lg md:text-xl font-medium max-w-2xl mx-auto">
@@ -498,7 +502,7 @@ export default function LandingPage() {
           >
             <div>
               <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">{t('eco.badge')}</span>
-              <h2 className="text-4xl md:text-7xl font-black text-foreground tracking-tighter uppercase font-michroma leading-tight">
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tighter uppercase font-michroma leading-tight">
                 {t('eco.title')} <br /> <span className="silver-text">{t('eco.title2')}</span>
               </h2>
             </div>
@@ -620,7 +624,7 @@ export default function LandingPage() {
           >
             <div>
               <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Especialidades Tácticas</span>
-              <h2 className="text-4xl md:text-7xl font-black text-foreground tracking-tighter uppercase font-michroma leading-tight">Menú de <br/> <span className="silver-text">Operaciones.</span></h2>
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tighter uppercase font-michroma leading-tight">Menú de <br/> <span className="silver-text">Operaciones.</span></h2>
             </div>
             <p className="text-accent max-w-sm font-medium border-l border-accent/10 pl-6 h-fit">
               Sistemas de limpieza de precisión diseñados para la <span className="text-foreground">preservación extrema</span> de activos inmobiliarios.
@@ -706,7 +710,7 @@ export default function LandingPage() {
               className="max-w-xl"
             >
               <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] mb-8 block">La Diferencia DOGE</span>
-              <h2 className="font-michroma text-4xl md:text-7xl text-foreground mb-8 tracking-tighter uppercase leading-[1]">Grado de <br/> <span className="silver-text">Precisión.</span></h2>
+              <h2 className="font-michroma text-3xl md:text-5xl lg:text-6xl text-foreground mb-8 tracking-tighter uppercase leading-[1]">Grado de <br/> <span className="silver-text">Precisión.</span></h2>
               <p className="text-accent text-lg md:text-xl font-medium leading-relaxed mb-12">
                 En el mercado de Miami, la limpieza no es un gasto, es una <span className="text-foreground">estrategia de preservación</span>. Aplicamos protocolos de precisión para recuperar materiales nobles y mantener sus activos en estado de revista.
               </p>
@@ -779,7 +783,7 @@ export default function LandingPage() {
             className="text-center max-w-4xl mx-auto mb-20 md:mb-32"
           >
             <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] bg-accent/5 px-4 py-2 rounded-full border border-accent/10">Membresías Exclusivas</span>
-            <h2 className="font-michroma text-4xl md:text-7xl font-black text-foreground mt-10 mb-8 tracking-tighter uppercase leading-[1.1]">Estabilidad <br/> <span className="silver-text">Premium.</span></h2>
+            <h2 className="font-michroma text-3xl md:text-5xl lg:text-6xl font-black text-foreground mt-10 mb-8 tracking-tighter uppercase leading-[1.1]">Estabilidad <br/> <span className="silver-text">Premium.</span></h2>
             <p className="text-accent text-lg md:text-xl font-medium max-w-2xl mx-auto">Asegure su cupo en la agenda más solicitada de Miami. Miembros oro cuentan con prioridad absoluta y beneficios tácticos mensuales.</p>
           </motion.div>
           
@@ -857,7 +861,7 @@ export default function LandingPage() {
               <span className="inline-block border border-accent/10 text-accent font-black uppercase tracking-[0.3em] text-[10px] bg-accent/5 px-4 py-2 rounded-full mb-10">
                 Compliance Protocol
               </span>
-              <h2 className="text-4xl md:text-7xl font-black mb-10 tracking-tighter leading-[1] uppercase font-michroma text-foreground">
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-black mb-10 tracking-tighter leading-[1] uppercase font-michroma text-foreground">
                 Cero Riesgos. <br/> <span className="silver-text">Total Garantía.</span>
               </h2>
               <p className="text-accent text-lg md:text-xl font-medium mb-12 leading-relaxed max-w-lg">
@@ -918,7 +922,7 @@ export default function LandingPage() {
           <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-accent/5 via-transparent to-transparent opacity-50 blur-[80px] pointer-events-none"></div>
           
           <div className="relative z-10 max-w-4xl mx-auto">
-            <h2 className="font-michroma text-4xl md:text-7xl font-black text-foreground mb-10 tracking-tighter leading-[1] uppercase">
+            <h2 className="font-michroma text-3xl md:text-5xl lg:text-6xl font-black text-foreground mb-10 tracking-tighter leading-[1] uppercase">
               El <span className="silver-text">Estándar</span> <br/> Superior.
             </h2>
             <p className="text-accent text-lg md:text-2xl font-medium mb-16 leading-relaxed max-w-2xl mx-auto">
@@ -941,7 +945,7 @@ export default function LandingPage() {
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/10 bg-accent/5 text-accent text-[10px] font-black uppercase tracking-[0.3em] mb-6">
               <MapPin className="w-3 h-3" /> Area of Operations
             </span>
-            <h2 className="font-michroma text-4xl md:text-6xl font-black text-foreground tracking-tighter uppercase leading-tight">Despliegue <br/> <span className="silver-text">Logístico.</span></h2>
+            <h2 className="font-michroma text-3xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tighter uppercase leading-tight">Despliegue <br/> <span className="silver-text">Logístico.</span></h2>
             <p className="text-accent font-bold mt-6 text-sm uppercase tracking-[0.2em]">Miami & South Florida, USA</p>
           </div>
           
@@ -998,9 +1002,9 @@ export default function LandingPage() {
         
         <div className="max-w-7xl mx-auto px-6 mt-32 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex flex-wrap items-center gap-8 text-[9px] font-black text-accent uppercase tracking-[0.3em]">
-            <span className="opacity-60 cursor-not-allowed">Licencias (Próximamente)</span>
-            <span className="opacity-60 cursor-not-allowed">Florida Registry (Próximamente)</span>
-            <span className="opacity-60 cursor-not-allowed">Privacidad (Próximamente)</span>
+            <Link href="/legal/licenses" className="hover:text-foreground transition-colors">Licencias</Link>
+            <Link href="/legal/registry" className="hover:text-foreground transition-colors">Florida Registry</Link>
+            <Link href="/legal/privacy" className="hover:text-foreground transition-colors">Privacidad</Link>
           </div>
           <p className="text-accent font-bold text-[9px] uppercase tracking-[0.2em]">© {new Date().getFullYear()} DOGE.S.M LLC. Titanium Noir Standard.</p>
         </div>

@@ -241,6 +241,116 @@ export const TRANSLATIONS = {
   'bnav.guarantee': { es: 'Garantía', en: 'Guarantee' },
   'bnav.search': { es: 'Búsqueda', en: 'Search' },
   'bnav.store': { es: 'Tienda', en: 'Store' },
+
+  // ── Residential VIP Form ──────────────────────
+  'rvip.title': { es: 'Residencial', en: 'VIP Elite' },
+  'rvip.title2': { es: 'VIP Elite.', en: 'Residential.' },
+  'rvip.subtitle': {
+    es: 'Sube fotos de tu propiedad o describe las áreas que necesitan atención. Te enviamos un estimado personalizado para tu hogar de lujo.',
+    en: 'Upload photos of your property or describe areas that need attention. We\'ll send you a personalized estimate for your luxury home.',
+  },
+  'rvip.uploadLabel': { es: 'Sube fotos o videos', en: 'Upload photos or videos' },
+  'rvip.uploadHint': { es: 'Arrastra archivos aquí o haz clic para seleccionar', en: 'Drag files here or click to select' },
+  'rvip.textLabel': { es: 'O describe por texto', en: 'Or describe by text' },
+  'rvip.textPlaceholder': {
+    es: 'Ej: Necesito limpieza profunda de mi penthouse de 3 habitaciones en Brickell, incluyendo mármol y mobiliario de lujo...',
+    en: 'E.g.: I need a deep cleaning for my 3-bedroom penthouse in Brickell, including marble and luxury furniture...',
+  },
+  'rvip.submit': { es: 'Solicitar Estimado', en: 'Request Estimate' },
+  'rvip.methodPhotos': { es: 'Fotos / Videos', en: 'Photos / Videos' },
+  'rvip.methodText': { es: 'Describir por Texto', en: 'Describe by Text' },
+
+  // ── Post-Construction Form ────────────────────
+  'pc.title': { es: 'Post-', en: 'Post-' },
+  'pc.title2': { es: 'Construcción.', en: 'Construction.' },
+  'pc.subtitle': {
+    es: 'Sube fotos del área post-obra o describe el proyecto. Te enviamos un estimado para el retiro intensivo de polvo y materiales.',
+    en: 'Upload photos of the post-construction area or describe the project. We\'ll send you an estimate for intensive dust and material removal.',
+  },
+  'pc.uploadLabel': { es: 'Sube fotos o videos', en: 'Upload photos or videos' },
+  'pc.uploadHint': { es: 'Arrastra archivos aquí o haz clic para seleccionar', en: 'Drag files here or click to select' },
+  'pc.textLabel': { es: 'O describe por texto', en: 'Or describe by text' },
+  'pc.textPlaceholder': {
+    es: 'Ej: Acabo de terminar una remodelación de cocina y baño, quedan residuos de cemento y polvo fino en todas las superficies...',
+    en: 'E.g.: I just finished a kitchen and bathroom renovation, there are cement residues and fine dust on all surfaces...',
+  },
+  'pc.submit': { es: 'Solicitar Estimado', en: 'Request Estimate' },
+  'pc.methodPhotos': { es: 'Fotos / Videos', en: 'Photos / Videos' },
+  'pc.methodText': { es: 'Describir por Texto', en: 'Describe by Text' },
+
+  // ── Florida Control Form ──────────────────────
+  'fc.title': { es: 'Control', en: 'Florida' },
+  'fc.title2': { es: 'Florida.', en: 'Control.' },
+  'fc.subtitle': {
+    es: 'Sube fotos de las áreas afectadas por humedad o describe el problema. Te enviamos un plan de acción y estimado personalizado.',
+    en: 'Upload photos of moisture-affected areas or describe the issue. We\'ll send you an action plan and personalized estimate.',
+  },
+  'fc.uploadLabel': { es: 'Sube fotos o videos', en: 'Upload photos or videos' },
+  'fc.uploadHint': { es: 'Arrastra archivos aquí o haz clic para seleccionar', en: 'Drag files here or click to select' },
+  'fc.textLabel': { es: 'O describe por texto', en: 'Or describe by text' },
+  'fc.textPlaceholder': {
+    es: 'Ej: Tengo problemas de humedad en el clóset principal y en las paredes del baño, veo manchas de moho...',
+    en: 'E.g.: I have moisture issues in the master closet and bathroom walls, I can see mold spots...',
+  },
+  'fc.submit': { es: 'Solicitar Estimado', en: 'Request Estimate' },
+  'fc.methodPhotos': { es: 'Fotos / Videos', en: 'Photos / Videos' },
+  'fc.methodText': { es: 'Describir por Texto', en: 'Describe by Text' },
+
+  // ── Account Page ──────────────────────────────
+  'account.title': { es: 'Mi', en: 'My' },
+  'account.title2': { es: 'Cuenta.', en: 'Account.' },
+  'account.subtitle': {
+    es: 'Gestiona tu perfil, pagos e historial de servicios desde un solo lugar.',
+    en: 'Manage your profile, payments and service history from one place.',
+  },
+  'account.profile': { es: 'Perfil', en: 'Profile' },
+  'account.guestName': { es: 'Invitado', en: 'Guest' },
+  'account.guestSub': { es: 'Sin membresía activa', en: 'No active membership' },
+  'account.editProfile': { es: 'Editar Perfil', en: 'Edit Profile' },
+  'account.name': { es: 'Nombre completo', en: 'Full name' },
+  'account.email': { es: 'Correo electrónico', en: 'Email' },
+  'account.phone': { es: 'Teléfono', en: 'Phone' },
+  'account.address': { es: 'Dirección', en: 'Address' },
+  'account.payment': { es: 'Métodos de Pago', en: 'Payment Methods' },
+  'account.paymentDesc': {
+    es: 'Configura tus métodos de pago para una experiencia más rápida.',
+    en: 'Set up your payment methods for a faster experience.',
+  },
+  'account.addPayment': { es: 'Agregar Método', en: 'Add Method' },
+  'account.history': { es: 'Historial de Servicios', en: 'Service History' },
+  'account.historyDesc': {
+    es: 'Tu historial de servicios aparecerá aquí una vez que completes tu primera operación.',
+    en: 'Your service history will appear here once you complete your first operation.',
+  },
+  'account.firstService': { es: 'Solicitar Primer Servicio', en: 'Request First Service' },
+  'account.settings': { es: 'Configuración', en: 'Settings' },
+  'account.language': { es: 'Idioma', en: 'Language' },
+  'account.theme': { es: 'Tema', en: 'Theme' },
+  'account.themeDark': { es: 'Oscuro', en: 'Dark' },
+  'account.themeLight': { es: 'Claro', en: 'Light' },
+  'account.notifications': { es: 'Notificaciones', en: 'Notifications' },
+  'account.notifDesc': {
+    es: 'Recibe alertas sobre tus servicios y ofertas exclusivas.',
+    en: 'Receive alerts about your services and exclusive offers.',
+  },
+  'account.contactTeam': { es: 'Contactar Equipo', en: 'Contact Team' },
+  'account.logout': { es: 'Cerrar Sesión', en: 'Log Out' },
+  'account.saveCta': { es: 'Guardar Cambios', en: 'Save Changes' },
+
+  // ── Search Modal ──────────────────────────────
+  'search.title': { es: 'Buscar', en: 'Search' },
+  'search.placeholder': { es: 'Buscar servicios, productos, páginas...', en: 'Search services, products, pages...' },
+  'search.noResults': { es: 'Sin resultados', en: 'No results' },
+  'search.services': { es: 'Servicios', en: 'Services' },
+  'search.products': { es: 'Productos', en: 'Products' },
+  'search.pages': { es: 'Páginas', en: 'Pages' },
+
+  // ── Legal Pages ───────────────────────────────
+  'legal.licenses.title': { es: 'Licencias.', en: 'Licenses.' },
+  'legal.registry.title': { es: 'Registro Florida.', en: 'Florida Registry.' },
+  'legal.privacy.title': { es: 'Privacidad.', en: 'Privacy.' },
+  'legal.back': { es: 'Volver', en: 'Back' },
+  'legal.lastUpdated': { es: 'Última actualización', en: 'Last updated' },
 } as const
 
 export type TranslationKey = keyof typeof TRANSLATIONS

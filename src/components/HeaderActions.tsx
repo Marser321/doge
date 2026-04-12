@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Moon, Globe, ShoppingCart, MoreVertical, User, CreditCard, History, Settings, LogOut, X } from 'lucide-react'
+import { Sun, Moon, Globe, ShoppingCart, MoreVertical, User, CreditCard, History, Settings, LogOut, X, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { useLanguage } from './LanguageProvider'
 
@@ -39,10 +39,10 @@ export default function HeaderActions({ theme, onToggleTheme }: HeaderActionsPro
   }, [])
 
   const MENU_ITEMS = [
-    { icon: User, label: t('nav.myAccount'), href: '#', disabled: true },
-    { icon: CreditCard, label: t('nav.paymentMethods'), href: '#', disabled: true },
-    { icon: History, label: t('nav.serviceHistory'), href: '#', disabled: true },
-    { icon: Settings, label: t('nav.settings'), href: '#', disabled: true },
+    { icon: User, label: t('nav.myAccount'), href: '/account', disabled: false },
+    { icon: CreditCard, label: t('nav.paymentMethods'), href: '/account', disabled: false },
+    { icon: History, label: t('nav.serviceHistory'), href: '/account', disabled: false },
+    { icon: Settings, label: t('nav.settings'), href: '/account', disabled: false },
   ]
 
   return (
@@ -129,18 +129,18 @@ export default function HeaderActions({ theme, onToggleTheme }: HeaderActionsPro
               {/* Menu Items */}
               <div className="p-2">
                 {MENU_ITEMS.map((item, idx) => (
-                  <button
+                  <Link
                     key={idx}
-                    disabled={item.disabled}
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:bg-white/5 hover:text-white transition-all cursor-not-allowed opacity-60"
-                    aria-label={`${item.label} próximamente`}
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:bg-white/5 hover:text-white transition-all"
                   >
                     <item.icon className="w-4 h-4" />
                     <span className="text-xs font-bold uppercase tracking-wider">{item.label}</span>
-                    <span className="ml-auto text-[8px] font-black tracking-widest text-zinc-600 uppercase">
-                      {lang === 'es' ? 'Pronto' : 'Soon'}
+                    <span className="ml-auto">
+                      <ArrowRight className="w-3.5 h-3.5 text-zinc-600" />
                     </span>
-                  </button>
+                  </Link>
                 ))}
               </div>
 

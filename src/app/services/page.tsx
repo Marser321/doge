@@ -24,7 +24,7 @@ const SERVICES = [
     nameEn: 'VIP Elite Residential',
     descEs: 'Desinfección HEPA de grado médico. Tratamiento profundo para mobiliario de lujo, mármol y roble.',
     descEn: 'Medical-grade HEPA disinfection. Deep treatment for luxury furniture, marble and oak.',
-    active: false,
+    active: true,
     accent: 'from-amber-500/20 to-orange-500/20',
   },
   {
@@ -34,7 +34,7 @@ const SERVICES = [
     nameEn: 'Post-Construction',
     descEs: 'Retiro intensivo de polvo de obra, materiales pesados y residuos de construcción.',
     descEn: 'Intensive removal of construction dust, heavy materials and building debris.',
-    active: false,
+    active: true,
     accent: 'from-zinc-500/20 to-slate-500/20',
   },
   {
@@ -44,7 +44,7 @@ const SERVICES = [
     nameEn: 'Florida Anti-Moisture Control',
     descEs: 'Control de humedad 24/7 para propiedades costeras. Prevención de moho y corrosión.',
     descEn: '24/7 moisture control for coastal properties. Mold and corrosion prevention.',
-    active: false,
+    active: true,
     accent: 'from-emerald-500/20 to-teal-500/20',
   },
 ]

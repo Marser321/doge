@@ -326,7 +326,7 @@ export const PrecisionProtocolScroll = () => {
       <SqueegeeBlade xProgress={bladeX} />
 
       <div className="relative z-50 h-full w-full flex flex-col justify-center pointer-events-none overflow-hidden">
-        <div className="px-4 sm:px-6 md:px-32 mb-6 sm:mb-12 md:mb-16 h-fit overflow-hidden">
+        <div className="px-4 sm:px-6 md:px-32 mb-6 sm:mb-12 md:mb-16 h-fit">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} className="flex flex-col gap-4 sm:gap-6 md:gap-8">
             <div className="flex items-center gap-4 sm:gap-6">
               <span className="hidden sm:inline-block w-16 h-px bg-accent/40"></span>
@@ -334,9 +334,9 @@ export const PrecisionProtocolScroll = () => {
                 Precision Glass Specialty Narrative
               </span>
             </div>
-            <h2 className="text-5xl sm:text-7xl md:text-[8rem] xl:text-[10rem] font-black text-white uppercase tracking-tighter font-michroma leading-[0.8] drop-shadow-[0_0_30px_rgba(0,0,0,0.8)]">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white uppercase tracking-tighter font-michroma leading-[0.85] drop-shadow-[0_0_30px_rgba(0,0,0,0.8)]">
               {activeIdx === 0 ? 'Cristal.' : activeIdx === 1 ? 'Vision.' : activeIdx <= 3 ? 'Pureza.' : 'Espejo.'} <br />
-              <span className="silver-text text-4xl sm:text-6xl md:text-[7rem] xl:text-[9rem]">Precision.</span>
+              <span className="silver-text text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">Precision.</span>
             </h2>
           </motion.div>
         </div>
