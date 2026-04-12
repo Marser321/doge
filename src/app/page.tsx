@@ -234,7 +234,7 @@ export default function LandingPage() {
   const opacityHero = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans text-zinc-100 selection:bg-zinc-800 selection:text-white relative transition-opacity duration-1000 overflow-x-hidden">
+    <div className="min-h-screen bg-background font-sans text-foreground selection:bg-accent selection:text-white relative transition-opacity duration-1000 overflow-x-hidden">
       <div className="bg-noise"></div> {/* Luxury Noise Overlay */}
 
       {/* 1. NAVIGATION (Noir Glassmorphism) */}
@@ -317,8 +317,8 @@ export default function LandingPage() {
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-foreground leading-[0.85] tracking-[-0.05em] uppercase mb-12"
             />
             
-            <motion.p variants={fadeInUp} className="text-lg md:text-xl text-zinc-400 mb-10 md:mb-12 leading-relaxed font-medium max-w-lg">
-              Limpieza de precisión y conservación de activos inmobiliarios en Miami. <span className="text-zinc-100 font-bold">Un estándar superior para quienes no aceptan menos que la perfección.</span>
+            <motion.p variants={fadeInUp} className="text-lg md:text-xl text-accent mb-10 md:mb-12 leading-relaxed font-medium max-w-lg">
+              Limpieza de precisión y conservación de activos inmobiliarios en Miami. <span className="text-foreground font-bold">Un estándar superior para quienes no aceptan menos que la perfección.</span>
             </motion.p>
             
             <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-8 items-center">
@@ -335,10 +335,10 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <div className="border-l border-white/10 pl-4">
-                  <div className="flex text-zinc-500 mb-0.5 scale-75 origin-left">
+                  <div className="flex text-taupe mb-0.5 scale-75 origin-left">
                     {[1, 2, 3, 4, 5].map((i) => <Star key={i} className="w-4 h-4 fill-current"/>)}
                   </div>
-                  <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Inversores VIP Miami</span>
+                  <span className="text-[10px] font-black text-taupe uppercase tracking-widest">Inversores VIP Miami</span>
                 </div>
               </div>
             </motion.div>
@@ -368,12 +368,12 @@ export default function LandingPage() {
                 className="absolute top-8 right-8 glass-panel p-5 rounded-2xl shadow-titanium"
               >
                 <div className="flex gap-4 items-center">
-                  <div className="w-12 h-12 bg-white/5 rounded-xl flex justify-center items-center text-zinc-100 backdrop-blur-md border border-white/10">
+                  <div className="w-12 h-12 bg-white/5 rounded-xl flex justify-center items-center text-foreground backdrop-blur-md border border-white/10">
                     <CheckCircle className="w-6 h-6"/>
                   </div>
                   <div>
                     <p className="text-xs font-black text-white uppercase tracking-wider">Audit Complete</p>
-                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-tighter">Status: Protected</p>
+                    <p className="text-[10px] font-bold text-taupe uppercase tracking-tighter">Status: Protected</p>
                   </div>
                 </div>
               </motion.div>
@@ -390,7 +390,7 @@ export default function LandingPage() {
                   </div>
                   <div>
                     <span className="block font-bold text-sm tracking-tight uppercase">Garantía VIP</span>
-                    <span className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em] leading-none">Security Active</span>
+                    <span className="text-[9px] font-black text-taupe uppercase tracking-[0.2em] leading-none">Security Active</span>
                   </div>
                 </div>
                 <div className="w-32 bg-white/5 h-1 rounded-full overflow-hidden">
@@ -789,9 +789,9 @@ export default function LandingPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
             {[
-              { id: 'bronce', name: 'Bronce', price: 150, freq: 'Mensual', popular: false },
-              { id: 'plata', name: 'Plata', price: 250, freq: 'Quincenal', popular: true },
-              { id: 'oro', name: 'Oro VIP', price: 450, freq: 'Semanal', popular: false },
+              { id: 'bronce', name: 'Bronce', price: 150, freq: 'Mensual', popular: false, features: ['1 Sanitación Mensual', 'Acceso a Agenda', 'Soporte Estándar'] },
+              { id: 'plata', name: 'Plata', price: 250, freq: 'Quincenal', popular: true, features: ['2 Sanitaciones/Mes', 'Prioridad de Agenda', 'Insumos Premium'] },
+              { id: 'oro', name: 'Oro VIP', price: 450, freq: 'Semanal', popular: false, features: ['4 Sanitaciones/Mes', 'Turnos VIP Fijos', 'Auditoría Fotográfica Garantizada'] },
             ].map((plan, idx) => (
               <motion.div 
                 key={plan.id}
@@ -808,32 +808,27 @@ export default function LandingPage() {
                     : 'bg-zinc-900/30 border-white/5 text-white hover:border-white/10'
                   }`}>
                     {plan.popular && (
-                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] font-black px-6 py-2 rounded-full tracking-[0.2em] uppercase shadow-xl whitespace-nowrap">
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-accent text-background text-[9px] font-black px-6 py-2 rounded-full tracking-[0.2em] uppercase shadow-xl whitespace-nowrap">
                         Most Requested
                       </div>
                     )}
-                    <h3 className={`text-2xl md:text-3xl font-black mb-2 uppercase font-michroma ${plan.popular ? 'text-black' : 'text-white'}`}>{plan.name}</h3>
-                    <p className={`text-[9px] font-black uppercase tracking-[0.3em] mb-10 ${plan.popular ? 'text-zinc-500' : 'text-zinc-500'}`}>{plan.freq}</p>
-                    <div className="mb-12">
-                      <span className="text-5xl font-black tracking-tighter">${plan.price}</span>
-                      <span className={`text-[10px] font-bold ml-2 uppercase tracking-widest ${plan.popular ? 'text-zinc-400' : 'text-zinc-500'}`}>/visita</span>
+                    <h3 className={`text-2xl md:text-3xl font-black mb-2 uppercase font-michroma ${plan.popular ? 'text-background' : 'text-foreground'}`}>{plan.name}</h3>
+                    <p className={`text-[9px] font-black uppercase tracking-[0.3em] mb-10 ${plan.popular ? 'text-background/70' : 'text-taupe'}`}>{plan.freq}</p>
+                    <div className="mb-8 border-b border-accent/10 pb-8">
+                      <span className="text-4xl font-black text-foreground font-michroma">${plan.price}</span>
+                      <span className={`text-[10px] font-bold ml-2 uppercase tracking-widest ${plan.popular ? 'text-background/70' : 'text-taupe'}`}>/visita</span>
                     </div>
-                    <ul className="space-y-6 mb-12 flex-grow">
-                      {[
-                        "Garantía de Tarifa Congelada",
-                        "Reporte Preventivo Táctico",
-                        plan.id !== 'bronce' ? "Lavado de Vidrios WFP" : "Atención Personalizada",
-                        plan.id === 'oro' ? "Prioridad Absoluta (A1)" : "Despacho Optimizado"
-                      ].map((item, i) => (
-                        <li key={i} className={`flex items-center text-xs font-bold uppercase tracking-tight ${plan.popular ? 'text-zinc-700' : 'text-zinc-400'}`}>
-                          <CheckCircle className={`w-4 h-4 mr-3 shrink-0 ${plan.popular ? 'text-black' : 'text-zinc-600'}`} /> {item}
+                    <ul className="space-y-4 mb-10 flex-grow">
+                      {plan.features.map((item, i) => (
+                        <li key={i} className={`flex items-center text-xs font-bold uppercase tracking-tight ${plan.popular ? 'text-background/80' : 'text-accent'}`}>
+                          <CheckCircle className={`w-4 h-4 mr-3 shrink-0 ${plan.popular ? 'text-background' : 'text-accent/60'}`} /> {item}
                         </li>
                       ))}
                     </ul>
                     <MagneticButton 
                       href="/membership" 
                       className={`w-full text-center py-5 px-8 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] transition-all cta-glow ${
-                        plan.popular ? 'bg-black text-white hover:bg-zinc-800 hover:shadow-[0_0_30px_6px_rgba(0,0,0,0.3)]' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:shadow-[0_0_30px_6px_rgba(255,255,255,0.08)]'
+                        plan.popular ? 'bg-background text-foreground hover:bg-background/90' : 'bg-accent/5 hover:bg-accent/10 text-foreground border border-accent/10'
                       }`}
                     >
                       {t('mem.cta')}
@@ -868,17 +863,17 @@ export default function LandingPage() {
                 Cumplimos 100% con las regulaciones de Florida. Personal asegurado (General Liability) y altamente capacitado para proteger su activo.
               </p>
               <div className="space-y-6">
-                <div className="flex items-center gap-6 p-6 rounded-2xl border border-white/5 bg-zinc-900/40 backdrop-blur-md">
-                  <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/10 shadow-titanium shrink-0">
-                    <ShieldCheck className="w-6 h-6 text-white" />
+                <div className="flex items-center gap-6 p-6 rounded-2xl border border-accent/10 bg-accent/5 backdrop-blur-md">
+                  <div className="w-12 h-12 bg-background rounded-xl flex items-center justify-center border border-accent/10 shadow-titanium shrink-0">
+                    <ShieldCheck className="w-6 h-6 text-accent" />
                   </div>
-                  <span className="font-bold text-sm text-white uppercase tracking-widest leading-tight">USA General Liability <br/> <span className="text-[10px] text-zinc-500">Full Coverage</span></span>
+                  <span className="font-bold text-sm text-foreground uppercase tracking-widest leading-tight">USA General Liability <br/> <span className="text-[10px] text-accent">Full Coverage</span></span>
                 </div>
-                <div className="flex items-center gap-6 p-6 rounded-2xl border border-white/5 bg-zinc-900/40 backdrop-blur-md">
-                  <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/10 shadow-titanium shrink-0">
-                    <MapPin className="w-6 h-6 text-white" />
+                <div className="flex items-center gap-6 p-6 rounded-2xl border border-accent/10 bg-accent/5 backdrop-blur-md">
+                  <div className="w-12 h-12 bg-background rounded-xl flex items-center justify-center border border-accent/10 shadow-titanium shrink-0">
+                    <MapPin className="w-6 h-6 text-accent" />
                   </div>
-                  <span className="font-bold text-sm text-white uppercase tracking-widest leading-tight">Geofencing Protocol <br/> <span className="text-[10px] text-zinc-500">Live Team Tracking</span></span>
+                  <span className="font-bold text-sm text-foreground uppercase tracking-widest leading-tight">Geofencing Protocol <br/> <span className="text-[10px] text-accent">Live Team Tracking</span></span>
                 </div>
               </div>
             </motion.div>
@@ -890,18 +885,18 @@ export default function LandingPage() {
               className="w-full"
             >
               <TiltCard maxTilt={3} scale={1.01} className="w-full">
-                <div className="luxury-glass p-10 md:p-16 rounded-2xl relative shadow-titanium border border-white/5">
-                  <div className="absolute -top-12 -right-6 text-9xl text-white/5 font-serif leading-none italic pointer-events-none disabled">&quot;</div>
-                  <p className="text-xl md:text-3xl text-zinc-100 mb-12 italic font-medium leading-[1.4] tracking-tight">
+                <div className="luxury-glass p-10 md:p-16 rounded-2xl relative shadow-titanium border border-accent/10">
+                  <div className="absolute -top-12 -right-6 text-9xl text-accent/10 font-serif leading-none italic pointer-events-none disabled">&quot;</div>
+                  <p className="text-xl md:text-3xl text-foreground mb-12 italic font-medium leading-[1.4] tracking-tight">
                     &quot;Delegar mi propiedad desde el exterior era un riesgo constante. Con DOGE veo el estado de mis activos en tiempo real con reportes tácticos de alta resolución.&quot;
                   </p>
-                  <div className="flex items-center gap-6 border-t border-white/5 pt-10">
-                    <div className="w-16 h-16 rounded-full bg-zinc-800 p-1 overflow-hidden shadow-2xl border border-white/10 shrink-0">
+                  <div className="flex items-center gap-6 border-t border-accent/10 pt-10">
+                    <div className="w-16 h-16 rounded-full bg-accent/10 p-1 overflow-hidden shadow-2xl border border-accent/20 shrink-0">
                       <Image src="https://ui-avatars.com/api/?name=J+Silva&background=27272a&color=fff" alt="Review" width={64} height={64} className="rounded-full object-cover" />
                     </div>
                     <div>
-                      <p className="font-black text-white text-lg uppercase tracking-tight font-michroma">J. Silva</p>
-                      <p className="text-zinc-500 font-black text-[10px] uppercase tracking-[0.2em] mt-1">Founder @ Luxury Real Estate</p>
+                      <span className="text-sm font-bold text-foreground">Alejandro V.</span>
+                      <p className="text-taupe font-black text-[10px] uppercase tracking-[0.2em] mt-1">Founder @ Luxury Real Estate</p>
                     </div>
                   </div>
                 </div>

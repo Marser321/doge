@@ -330,7 +330,7 @@ export const PrecisionProtocolScroll = () => {
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} className="flex flex-col gap-4 sm:gap-6 md:gap-8">
             <div className="flex items-center gap-4 sm:gap-6">
               <span className="hidden sm:inline-block w-16 h-px bg-accent/40"></span>
-              <span className="text-zinc-500 text-[10px] sm:text-[11px] font-black uppercase tracking-[0.4em] sm:tracking-[0.7em] font-michroma">
+              <span className="text-taupe text-[10px] sm:text-[11px] font-black uppercase tracking-[0.4em] sm:tracking-[0.7em] font-michroma">
                 Precision Glass Specialty Narrative
               </span>
             </div>
@@ -363,17 +363,17 @@ export const PrecisionProtocolScroll = () => {
                     <div className="absolute inset-0 bg-accent/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </div>
                   <div className="flex flex-wrap items-center gap-3 sm:gap-6 mb-4 sm:mb-8">
-                    <span className="text-[10px] sm:text-[12px] md:text-[14px] font-black text-zinc-500 uppercase tracking-[0.3em] sm:tracking-[0.5em] leading-none">{step.tag}</span>
+                    <span className="text-[10px] sm:text-[12px] md:text-[14px] font-black text-taupe uppercase tracking-[0.3em] sm:tracking-[0.5em] leading-none">{step.tag}</span>
                     <div className="hidden sm:block h-px w-8 sm:w-16 bg-white/10 text-accent">•</div>
                     <span className="text-[10px] sm:text-[12px] md:text-[14px] font-black text-accent uppercase tracking-[0.3em] sm:tracking-[0.6em]">Batch 0{idx + 1}</span>
                   </div>
                   <h3 className="text-2xl sm:text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4 sm:mb-6 md:mb-8 font-michroma leading-[1.1] max-w-[90%]">{step.title}</h3>
-                  <p className="text-zinc-400 text-sm sm:text-base md:text-xl font-medium leading-[1.6] md:leading-[1.4] max-w-3xl pr-4">{step.desc}</p>
+                  <p className="text-accent text-sm sm:text-base md:text-xl font-medium leading-[1.6] md:leading-[1.4] max-w-3xl pr-4">{step.desc}</p>
                 </div>
 
                 <div className="flex items-center justify-between pt-6 sm:pt-8 md:pt-12 border-t border-white/5 mt-auto">
                   <div className="flex flex-col gap-2 sm:gap-3">
-                    <span className="text-[9px] sm:text-[11px] md:text-[14px] font-black text-zinc-600 uppercase tracking-widest leading-none">Glass Precision Level</span>
+                    <span className="text-[9px] sm:text-[11px] md:text-[14px] font-black text-accent uppercase tracking-widest leading-none">Glass Precision Level</span>
                     <span className="text-[12px] sm:text-sm md:text-lg font-bold text-white uppercase tracking-widest flex items-center gap-2 sm:gap-4 md:gap-6">
                       <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 text-accent" /> {step.phase}
                     </span>
