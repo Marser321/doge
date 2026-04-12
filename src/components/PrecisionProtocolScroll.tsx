@@ -325,8 +325,8 @@ export const PrecisionProtocolScroll = () => {
 
       <SqueegeeBlade xProgress={bladeX} />
 
-      <div className="relative z-50 h-full w-full flex flex-col justify-center pointer-events-none overflow-hidden">
-        <div className="px-4 sm:px-6 md:px-32 mb-6 sm:mb-12 md:mb-16 h-fit">
+      <div className="relative z-50 h-full w-full flex flex-col justify-center pt-20 pb-16 pointer-events-none overflow-hidden">
+        <div className="px-4 sm:px-6 md:px-32 mb-4 sm:mb-8 md:mb-12 h-fit shrink-0">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} className="flex flex-col gap-4 sm:gap-6 md:gap-8">
             <div className="flex items-center gap-4 sm:gap-6">
               <span className="hidden sm:inline-block w-16 h-px bg-accent/40"></span>
@@ -334,9 +334,9 @@ export const PrecisionProtocolScroll = () => {
                 Precision Glass Specialty Narrative
               </span>
             </div>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white uppercase tracking-tighter font-michroma leading-[0.85] drop-shadow-[0_0_30px_rgba(0,0,0,0.8)]">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white uppercase tracking-tighter font-michroma leading-tight md:leading-none drop-shadow-[0_0_30px_rgba(0,0,0,0.8)] pb-2">
               {activeIdx === 0 ? 'Cristal.' : activeIdx === 1 ? 'Vision.' : activeIdx <= 3 ? 'Pureza.' : 'Espejo.'} <br />
-              <span className="silver-text text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">Precision.</span>
+              <span className="silver-text text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl pt-2 block">Precision.</span>
             </h2>
           </motion.div>
         </div>
@@ -352,26 +352,28 @@ export const PrecisionProtocolScroll = () => {
                 y: activeIdx === idx ? 0 : 36,
               }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="w-[85vw] sm:w-[70vw] md:min-w-[850px] md:w-[850px] h-[520px] sm:h-[600px] md:h-[680px] glass-panel-heavy rounded-[32px] md:rounded-[60px] p-6 sm:p-10 md:p-16 flex flex-col justify-between border border-white/5 group transition-all shadow-titanium relative overflow-hidden pointer-events-auto"
+              <div className="w-[85vw] sm:w-[70vw] md:min-w-[850px] md:w-[850px] h-[450px] sm:h-[500px] md:h-[55vh] lg:h-[65vh] max-h-[700px] min-h-[450px] glass-panel-heavy rounded-[32px] md:rounded-[48px] p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-between border border-white/5 group transition-all shadow-titanium relative overflow-hidden pointer-events-auto"
             >
               <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 blur-[180px] -z-10 group-hover:bg-accent/20 transition-colors"></div>
 
-              <div className="relative z-10 flex flex-col h-full justify-between">
-                <div>
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 rounded-[24px] md:rounded-[40px] bg-white/5 border border-white/10 flex items-center justify-center mb-6 sm:mb-10 md:mb-16 group-hover:scale-110 group-hover:border-accent/50 group-hover:shadow-[0_0_60px_rgba(255,255,255,0.1)] transition-all shadow-2xl relative">
-                    <step.icon className="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 text-white" />
+              <div className="relative z-10 flex flex-col h-full justify-between overflow-hidden">
+                <div className="flex flex-col flex-1 min-h-0">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-[20px] md:rounded-[32px] bg-white/5 border border-white/10 flex items-center justify-center mb-4 sm:mb-6 md:mb-8 group-hover:scale-110 group-hover:border-accent/50 group-hover:shadow-[0_0_60px_rgba(255,255,255,0.1)] transition-all shadow-2xl relative shrink-0">
+                    <step.icon className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-white" />
                     <div className="absolute inset-0 bg-accent/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </div>
-                  <div className="flex flex-wrap items-center gap-3 sm:gap-6 mb-4 sm:mb-8">
-                    <span className="text-[10px] sm:text-[12px] md:text-[14px] font-black text-taupe uppercase tracking-[0.3em] sm:tracking-[0.5em] leading-none">{step.tag}</span>
-                    <div className="hidden sm:block h-px w-8 sm:w-16 bg-white/10 text-accent">•</div>
-                    <span className="text-[10px] sm:text-[12px] md:text-[14px] font-black text-accent uppercase tracking-[0.3em] sm:tracking-[0.6em]">Batch 0{idx + 1}</span>
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 sm:mb-6 shrink-0">
+                    <span className="text-[10px] sm:text-[11px] md:text-[13px] font-black text-taupe uppercase tracking-[0.3em] sm:tracking-[0.5em] leading-none">{step.tag}</span>
+                    <div className="hidden sm:block h-px w-6 sm:w-12 bg-white/10 text-accent">•</div>
+                    <span className="text-[10px] sm:text-[11px] md:text-[13px] font-black text-accent uppercase tracking-[0.3em] sm:tracking-[0.6em]">Batch 0{idx + 1}</span>
                   </div>
-                  <h3 className="text-2xl sm:text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4 sm:mb-6 md:mb-8 font-michroma leading-[1.1] max-w-[90%]">{step.title}</h3>
-                  <p className="text-accent text-sm sm:text-base md:text-xl font-medium leading-[1.6] md:leading-[1.4] max-w-3xl pr-4">{step.desc}</p>
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-4 sm:mb-6 font-michroma leading-[1.1] max-w-[95%] shrink-0">{step.title}</h3>
+                  <div className="overflow-y-auto scrollbar-none min-h-0 flex-1 pb-4">
+                    <p className="text-accent text-sm sm:text-base md:text-lg font-medium leading-[1.6] md:leading-[1.5] max-w-3xl pr-4">{step.desc}</p>
+                  </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-6 sm:pt-8 md:pt-12 border-t border-white/5 mt-auto">
+                <div className="flex items-center justify-between pt-5 sm:pt-6 md:pt-8 border-t border-white/5 mt-2 shrink-0">
                   <div className="flex flex-col gap-2 sm:gap-3">
                     <span className="text-[9px] sm:text-[11px] md:text-[14px] font-black text-accent uppercase tracking-widest leading-none">Glass Precision Level</span>
                     <span className="text-[12px] sm:text-sm md:text-lg font-bold text-white uppercase tracking-widest flex items-center gap-2 sm:gap-4 md:gap-6">
@@ -391,7 +393,7 @@ export const PrecisionProtocolScroll = () => {
         </div>
       </div>
 
-      <div className="absolute bottom-4 sm:bottom-8 md:bottom-12 left-6 right-6 sm:left-16 sm:right-16 md:left-32 md:right-32 h-[3px] sm:h-[4px] md:h-[6px] bg-white/5 rounded-full overflow-hidden z-[70]">
+      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-6 right-6 sm:left-16 sm:right-16 md:left-32 md:right-32 h-[3px] sm:h-[4px] md:h-[6px] bg-white/5 rounded-full overflow-hidden z-[70]">
         <motion.div
           className="h-full bg-accent shadow-[0_0_50px_rgba(255,255,255,0.6)]"
           animate={{ width: `${((activeIdx + 1) / B2B_PRECISION_STEPS.length) * 100}%` }}
