@@ -410,7 +410,7 @@ export default function LandingPage() {
 
 
       {/* 2.5 HOW IT WORKS (4-Step Visual Flow) */}
-      <section className="py-24 md:py-48 bg-background relative z-20 overflow-hidden transition-colors duration-500">
+      <section className="py-16 md:py-24 bg-background relative z-20 overflow-hidden transition-colors duration-500">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -492,7 +492,7 @@ export default function LandingPage() {
       </section>
 
       {/* 2.6 ECOSYSTEM CONNECTED (Services ↔ Map ↔ Store) */}
-      <section className="py-24 md:py-48 bg-background relative z-20 overflow-hidden transition-colors duration-500 section-blur-divider">
+      <section className="py-16 md:py-24 bg-background relative z-20 overflow-hidden transition-colors duration-500 section-blur-divider">
         <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
@@ -579,7 +579,7 @@ export default function LandingPage() {
       <FeaturedProducts />
 
       {/* 3. VALUE PROPOSITION (Titanium Cards + TiltCard 3D) */}
-      <section className="py-24 md:py-32 bg-background relative z-20 transition-colors duration-500 section-blur-divider">
+      <section className="py-16 md:py-24 bg-background relative z-20 transition-colors duration-500 section-blur-divider">
         {/* Section blur divider — top fade */}
         <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6">
@@ -618,7 +618,7 @@ export default function LandingPage() {
       </section>
 
       {/* 3.1 SERVICIOS (Bento Grid Architecture - 2026 Luxury) */}
-      <section id="servicios" className="py-24 md:py-48 bg-background relative z-20 overflow-hidden transition-colors duration-500">
+      <section id="servicios" className="py-16 md:py-24 bg-background relative z-20 overflow-hidden transition-colors duration-500">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
@@ -704,7 +704,7 @@ export default function LandingPage() {
 
 
       {/* 3.15 STORYTELLING PORTFOLIO (Cinematic Immersive - 2026) */}
-      <section className="py-24 md:py-48 bg-background relative z-20 text-foreground overflow-hidden transition-colors duration-500">
+      <section className="py-16 md:py-24 bg-background relative z-20 text-foreground overflow-hidden transition-colors duration-500">
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center mb-32">
             <motion.div 
@@ -773,7 +773,7 @@ export default function LandingPage() {
       </section>
 
       {/* 3.2 SUSCRIPCIONES (Noir Memberships) */}
-      <section id="suscripciones" className="py-24 md:py-48 bg-background relative z-20 overflow-hidden transition-colors duration-500 section-blur-divider">
+      <section id="suscripciones" className="py-16 md:py-24 bg-background relative z-20 overflow-hidden transition-colors duration-500 section-blur-divider">
         {/* Section blur divider — top fade */}
         <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background to-transparent z-30 pointer-events-none" />
         {/* Animated Orbs */}
@@ -846,7 +846,7 @@ export default function LandingPage() {
       </section>
 
       {/* 3.3 CONFIANZA (Noir Testimonials) */}
-      <section id="confianza" className="py-24 md:py-48 bg-background transition-colors duration-500 text-foreground relative z-20 overflow-hidden">
+      <section id="confianza" className="py-16 md:py-24 bg-background transition-colors duration-500 text-foreground relative z-20 overflow-hidden">
         <div className="absolute top-0 right-0 w-full md:w-1/2 h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent/10 via-transparent to-transparent opacity-50 pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -911,7 +911,7 @@ export default function LandingPage() {
       </section>
 
       {/* 4. CALL TO ACTION FINAL (Noir Elegance) */}
-      <section className="py-24 md:py-48 px-6 bg-background relative z-20 transition-colors duration-500">
+      <section className="py-16 md:py-24 px-6 bg-background relative z-20 transition-colors duration-500">
         <motion.div 
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -963,7 +963,7 @@ export default function LandingPage() {
       </section>
       
       {/* 5. FOOTER (Noir Minimalist) */}
-      <footer className="py-24 md:py-32 relative z-20 border-t border-white/5 bg-[var(--footer-bg)] transition-colors duration-500">
+      <footer className="py-16 md:py-24 relative z-20 border-t border-white/5 bg-[var(--footer-bg)] transition-colors duration-500">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-20">
           
           <div className="flex flex-col gap-8 max-w-sm">

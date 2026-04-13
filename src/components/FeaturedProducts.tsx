@@ -39,10 +39,10 @@ export function FeaturedProducts() {
     loadFeatured()
   }, [])
 
-  if (loading || products.length === 0) return null
+  if (loading) return null;
 
   return (
-    <section className="py-24 bg-background relative z-20 overflow-hidden transition-colors duration-500 section-blur-divider">
+    <section className="py-16 md:py-24 bg-background relative z-20 overflow-hidden transition-colors duration-500 section-blur-divider">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
            initial={{ opacity: 0, y: 30 }}
@@ -63,8 +63,15 @@ export function FeaturedProducts() {
           </Link>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product, idx) => (
+        {products.length === 0 ? (
+          <div className="text-center py-12 border border-dashed border-white/10 rounded-3xl bg-white/[0.02]">
+            <p className="text-zinc-500 font-bold uppercase tracking-wider text-sm mb-2">No hay productos destacados</p>
+            <p className="text-zinc-600 text-xs max-w-md mx-auto">Selecciona los productos desde el panel administrativo marcando la estrella para que aparezcan en esta sección.</p>
+            <Link href="/admin/products" className="mt-4 inline-block px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-accent text-xs font-bold transition-colors">Ir al Admin</Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {products.map((product, idx) => (
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 40 }}
@@ -109,7 +116,8 @@ export function FeaturedProducts() {
               </TiltCard>
             </motion.div>
           ))}
-        </div>
+          </div>
+        )}
       </div>
     </section>
   )
