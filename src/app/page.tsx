@@ -14,6 +14,7 @@ if (typeof window !== 'undefined') {
 
 import { Sparkles, ShieldCheck, Leaf, ArrowRight, Star, Clock, CheckCircle, Home, MapPin, Sun, Moon, Zap, Droplets, Camera, DollarSign, CalendarCheck, Store, Map } from 'lucide-react'
 import { PrecisionProtocolScroll } from '../components/PrecisionProtocolScroll'
+import { FeaturedProducts } from '../components/FeaturedProducts'
 import { TiltCard } from '../components/TiltCard'
 import { useMagnetic } from '@/hooks/useMagnetic'
 import HeaderActions from '@/components/HeaderActions'
@@ -573,6 +574,9 @@ export default function LandingPage() {
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
       </section>
+
+      {/* FEATURED PRODUCTS (Dynamic Store Interaction) */}
+      <FeaturedProducts />
 
       {/* 3. VALUE PROPOSITION (Titanium Cards + TiltCard 3D) */}
       <section className="py-24 md:py-32 bg-background relative z-20 transition-colors duration-500 section-blur-divider">

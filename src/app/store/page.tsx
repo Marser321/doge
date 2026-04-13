@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { Sparkles, ArrowLeft, ShieldCheck, ShoppingCart } from 'lucide-react'
 
 import { BrandMarquee } from '@/components/BrandMarquee'
-import { PRODUCTS, type Product } from '@/data/products'
+import { db, Product } from '@/lib/db'
 
 function getInitialIsMobile() {
   if (typeof window === 'undefined') return false
@@ -16,6 +16,8 @@ function getInitialIsMobile() {
 
 export default function StorePage() {
   const [isMobile, setIsMobile] = useState(getInitialIsMobile)
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768)
@@ -26,35 +28,73 @@ export default function StorePage() {
       document.documentElement.dataset.theme = savedTheme
     }
 
+    async function fetchProducts() {
+      try {
+        const { data, error } = await db.products.getAll()
+        if (data) {
+          // Filtrar solo productos activos
+          setProducts(data.filter(p => p.is_active))
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProducts()
+
     return () => {
       window.removeEventListener('resize', handleResize)
     }
   }, [])
 
-  const handleBuy = (productName: string) => {
+  const handleWhatsAppBuy = (productName: string) => {
     const message = encodeURIComponent(`Hola DOGE.S.M LLC, quisiera adquirir unidades del equipamiento: ${productName}. ¿Cuál es el proceso?`)
     window.open(`https://wa.me/17869283948?text=${message}`, '_blank', 'noopener,noreferrer')
   }
 
   const renderPurchaseCta = (product: Product) => {
-    if (product.purchaseStatus === 'coming_soon') {
+    if (product.sale_type === 'amazon_affiliate' && product.amazon_affiliate_url) {
+      return (
+        <a
+          href={product.amazon_affiliate_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-[#FF9900] text-black hover:opacity-90 px-6 py-3 rounded-xl font-black uppercase text-xs tracking-widest transition-colors shadow-lg font-michroma flex items-center justify-center gap-2 btn-whimsy magnetic cta-glow hover:scale-[1.03] hover:-translate-y-0.5 hover:shadow-[0_0_30px_6px_rgba(255,153,0,0.2)]"
+        >
+          Buy on Amazon <ShoppingCart className="w-4 h-4" />
+        </a>
+      )
+    }
+
+    if (product.sale_type === 'own_stock' && product.stock_quantity <= 0) {
       return (
         <span className="bg-zinc-300 text-zinc-600 px-6 py-3 rounded-xl font-black uppercase text-xs tracking-widest shadow-lg font-michroma flex items-center justify-center gap-2 cursor-not-allowed magnetic">
-          Próximamente <ShoppingCart className="w-4 h-4" />
+          Sold Out <ShoppingCart className="w-4 h-4" />
         </span>
       )
     }
 
     return (
-      <a
-        href={product.purchaseUrl}
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        onClick={() => handleWhatsAppBuy(product.name)}
         className="bg-foreground text-background hover:opacity-90 px-6 py-3 rounded-xl font-black uppercase text-xs tracking-widest transition-colors shadow-lg font-michroma flex items-center justify-center gap-2 btn-whimsy magnetic cta-glow hover:scale-[1.03] hover:-translate-y-0.5 hover:shadow-[0_0_30px_6px_rgba(255,255,255,0.1)]"
       >
-        {product.purchaseLabel} <ShoppingCart className="w-4 h-4" />
-      </a>
+        Contactar Concierge <ShoppingCart className="w-4 h-4" />
+      </button>
     )
+  }
+
+  // Dummy helper for images since we don't have product_images populated yet
+  const getImageUrl = (slug: string) => {
+    const urlMap: Record<string, string> = {
+      'dyson_v15': 'https://images.unsplash.com/photo-1558317374-067fb5f30001?q=80&w=2670&auto=format&fit=crop',
+      'karcher_sc3': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=2670&auto=format&fit=crop',
+      'bissell_big_green': '/products/bissell_big_green.png',
+      'mold_control': '/products/mold_control.png'
+    }
+    return urlMap[slug] || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=2670&auto=format&fit=crop'
   }
 
   return (
@@ -109,69 +149,78 @@ export default function StorePage() {
 
       {/* 3. GRID DE PRODUCTOS */}
       <section className="px-6 md:px-12 pb-32 max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-          {PRODUCTS.map((product, idx) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: isMobile ? 30 : 60 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: isMobile ? 0 : idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-foreground/5 luxury-glass rounded-[32px] overflow-hidden group hover:border-accent/40 transition-all cursor-hover-target flex flex-col shadow-xl"
-            >
-              <Link href={`/products/${product.id}`} className="block relative h-64 md:h-80 bg-foreground/5 p-8 flex items-center justify-center overflow-hidden">
-                <div className={`absolute inset-0 bg-gradient-to-b ${product.accent} opacity-10 md:group-hover:opacity-30 transition-opacity duration-700`}></div>
+        
+        {loading ? (
+          <div className="flex justify-center items-center py-32">
+             <div className="w-8 h-8 rounded-full border-4 border-foreground/20 border-t-foreground animate-spin"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            {products.map((product, idx) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: isMobile ? 30 : 60 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: isMobile ? 0 : idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
+                className="bg-foreground/5 luxury-glass rounded-[32px] overflow-hidden group hover:border-accent/40 transition-all cursor-hover-target flex flex-col shadow-xl"
+              >
+                <Link href={`/store/products/${product.slug}`} className="block relative h-64 md:h-80 bg-foreground/5 p-8 flex items-center justify-center overflow-hidden">
+                  <div className={`absolute inset-0 bg-gradient-to-b ${product.accent_gradient || 'from-zinc-500 to-zinc-800'} opacity-10 md:group-hover:opacity-30 transition-opacity duration-700`}></div>
 
-                {/* Brand Badge */}
-                <div className="absolute top-6 left-6 z-20 flex flex-col gap-1">
-                  <span className="text-[10px] font-black uppercase text-accent tracking-[0.2em]">{product.brand}</span>
-                  <div className="h-0.5 w-8 bg-accent animate-pulse"></div>
-                </div>
-
-                <motion.div
-                  whileHover={{ scale: 1.05, rotate: 2 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                  className="relative w-full h-full drop-shadow-2xl z-10"
-                >
-                  <Image src={product.img} alt={product.name} fill className="object-contain" />
-                </motion.div>
-                <div className="absolute bottom-4 right-6 text-6xl font-black text-foreground/5 uppercase select-none pointer-events-none">
-                  0{idx + 1}
-                </div>
-              </Link>
-
-              <div className="p-8 md:p-10 flex flex-col flex-grow">
-                {/* Member Benefit Pill */}
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-[9px] font-black uppercase tracking-widest text-accent">
-                    {product.benefit}
+                  {/* Brand Badge */}
+                  <div className="absolute top-6 left-6 z-20 flex flex-col gap-1">
+                    <span className="text-[10px] font-black uppercase text-accent tracking-[0.2em]">{product.brand || 'DOGE Lab'}</span>
+                    <div className="h-0.5 w-8 bg-accent animate-pulse"></div>
                   </div>
-                  <div className="h-1 w-1 bg-accent/30 rounded-full"></div>
-                  <span className="text-[9px] font-bold text-accent/50 uppercase tracking-widest">Verified</span>
-                </div>
 
-                <Link href={`/products/${product.id}`}>
-                  <h2 className="text-2xl font-black text-foreground mb-4 uppercase tracking-tighter font-michroma hover:text-accent transition-colors">{product.name}</h2>
+                  <motion.div
+                    whileHover={{ scale: 1.05, rotate: 2 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    className="relative w-full h-full drop-shadow-2xl z-10"
+                  >
+                    <Image src={getImageUrl(product.slug)} alt={product.name} fill className="object-contain" />
+                  </motion.div>
+                  <div className="absolute bottom-4 right-6 text-6xl font-black text-foreground/5 uppercase select-none pointer-events-none">
+                    0{idx + 1}
+                  </div>
                 </Link>
-                <p className="text-sm font-medium text-accent mb-8 leading-relaxed flex-grow">
-                  {product.desc}
-                </p>
 
-                <div className="flex items-end justify-between mt-auto gap-4">
-                  <div>
-                    <span className="block text-xs font-bold text-accent/50 uppercase tracking-widest mb-1">Inversión Estimada</span>
-                    <span className="text-3xl font-black text-foreground font-michroma">${product.price}</span>
+                <div className="p-8 md:p-10 flex flex-col flex-grow">
+                  {/* Member Benefit Pill */}
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-[9px] font-black uppercase tracking-widest text-accent">
+                      {product.benefit_label || 'Verified Stock'}
+                    </div>
+                    <div className="h-1 w-1 bg-accent/30 rounded-full"></div>
+                    <span className="text-[9px] font-bold text-accent/50 uppercase tracking-widest">
+                      {product.sale_type === 'amazon_affiliate' ? 'Amazon Partner' : 'Direct'}
+                    </span>
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <Link href={`/products/${product.id}`} className="text-center px-4 py-2 border border-accent/20 rounded-lg text-[9px] font-black uppercase tracking-widest hover:border-foreground/50 transition-all font-michroma magnetic hover:scale-[1.03] hover:-translate-y-0.5">
-                      Especificaciones
-                    </Link>
-                    {renderPurchaseCta(product)}
+
+                  <Link href={`/store/products/${product.slug}`}>
+                    <h2 className="text-2xl font-black text-foreground mb-4 uppercase tracking-tighter font-michroma hover:text-accent transition-colors">{product.name}</h2>
+                  </Link>
+                  <p className="text-sm font-medium text-accent mb-8 leading-relaxed flex-grow">
+                    {product.description}
+                  </p>
+
+                  <div className="flex items-end justify-between mt-auto gap-4">
+                    <div>
+                      <span className="block text-xs font-bold text-accent/50 uppercase tracking-widest mb-1">Inversión Estimada</span>
+                      <span className="text-3xl font-black text-foreground font-michroma">${product.price.toLocaleString()}</span>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Link href={`/store/products/${product.slug}`} className="text-center px-4 py-2 border border-accent/20 rounded-lg text-[9px] font-black uppercase tracking-widest hover:border-foreground/50 transition-all font-michroma magnetic hover:scale-[1.03] hover:-translate-y-0.5">
+                        Especificaciones
+                      </Link>
+                      {renderPurchaseCta(product)}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* 4. KITS ESTRATÉGICOS (UP-SELLING B2B) */}

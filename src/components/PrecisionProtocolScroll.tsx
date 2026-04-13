@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { motion, useTransform, useSpring, useMotionValue, type MotionValue } from 'framer-motion'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Store, Hexagon, Building2, ArrowRight, Sparkles, ShieldCheck, Home, Anchor } from 'lucide-react'
+import { Store, Hexagon, Building2, ArrowRight, Sparkles, ShieldCheck, Home, Anchor, Droplets, Waves } from 'lucide-react'
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
@@ -61,6 +61,22 @@ const B2B_PRECISION_STEPS = [
     img: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?q=80&w=2670&auto=format&fit=crop',
     icon: Anchor,
     phase: 'Crystal Level 06',
+  },
+  {
+    title: 'Janitorial Services',
+    tag: 'Premium Facilities',
+    desc: 'Mantenimiento integral de superficies de alto tráfico. Utilizamos tecnología de auto-fregado comercial para asegurar estándares sanitarios impecables en entornos premium como aeropuertos y lobbies de lujo.',
+    img: '/services/floor_scrubber_luxury_1776053381221.png',
+    icon: Waves,
+    phase: 'Crystal Level 07',
+  },
+  {
+    title: 'Lavado a Presión',
+    tag: 'Hardscape Restoration',
+    desc: 'Restauración profunda de superficies exteriores mediante sistemas rotativos de alta presión. Eliminación de manchas, moho y residuos en concreto, adoquines y entradas de lujo con precisión milimétrica.',
+    img: '/services/surface_cleaner_luxury_1776053413810.png',
+    icon: Droplets,
+    phase: 'Crystal Level 08',
   },
 ] as const
 

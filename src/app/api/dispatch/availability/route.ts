@@ -1,4 +1,4 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { insforge } from "@/lib/insforge";
 
 type DispatchMode = "mock" | "live";
 type WindshieldStatus = "first_job" | "availability_checked";
@@ -144,41 +144,23 @@ function buildMockAvailability(payload: AvailabilityPayload): CrewCandidate[] {
   return crews.sort((a, b) => a.travel_time_minutes - b.travel_time_minutes);
 }
 
-function getSupabaseClient(): SupabaseClient {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !supabaseKey) {
-    throw new Error("Dispatch live mode is missing Supabase environment variables");
-  }
-
-  return createClient(supabaseUrl, supabaseKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-  });
-}
-
 async function fetchLiveAvailability(payload: AvailabilityPayload): Promise<CrewCandidate[]> {
-  const supabase = getSupabaseClient();
-
-  const { data: property, error: propertyError } = await supabase
+  const { data: properties, error: propertyError } = await insforge.database
     .from("properties")
     .select("lat, lng")
-    .eq("id", payload.property_id)
-    .single<PropertyCoordinates>();
+    .eq("id", payload.property_id);
+
+  const property = properties?.[0] as PropertyCoordinates | undefined;
 
   if (propertyError || !property) {
     throw new Error("Property not found");
   }
 
-  const { data: employees, error: employeeError } = await supabase
+  const { data: employees, error: employeeError } = await insforge.database
     .from("employees")
     .select("id, full_name, capacity_size")
     .eq("status", "activo")
-    .gte("capacity_size", payload.team_size_required)
-    .returns<Employee[]>();
+    .gte("capacity_size", payload.team_size_required);
 
   if (employeeError) {
     throw new Error("Failed to fetch employees");
@@ -196,21 +178,21 @@ async function fetchLiveAvailability(payload: AvailabilityPayload): Promise<Crew
 
   const available: CrewCandidate[] = [];
 
-  for (const employee of employees) {
-    const { data: shifts, error: shiftError } = await supabase
+  for (const emp of employees) {
+    const employee = emp as Employee;
+    const { data: shifts, error: shiftError } = await insforge.database
       .from("shifts")
       .select("id, shift_start, shift_end")
       .eq("employee_id", employee.id)
       .gte("shift_start", dayStart)
-      .lte("shift_end", dayEnd)
-      .returns<Shift[]>();
+      .lte("shift_end", dayEnd);
 
     if (shiftError) {
       continue;
     }
 
     const hasOverlap =
-      shifts?.some((shift) => {
+      (shifts as Shift[])?.some((shift) => {
         const shiftStart = new Date(shift.shift_start).getTime();
         const shiftEnd = new Date(shift.shift_end).getTime();
         return requestedStart < shiftEnd && requestedEnd > shiftStart;

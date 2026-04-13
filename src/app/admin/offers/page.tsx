@@ -1,17 +1,55 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Plus, Tag, Copy, Power, Trash2 } from 'lucide-react'
-
-const MOCK_OFFERS = [
-  { id: 'OFF-Q4-ROBOT', title: 'Free Window Robot Ad-on', code: 'TITANIUM-ROBOT', target: 'Titanium Tiers', uses: 45, status: 'Active', expiry: 'Dec 31, 2026' },
-  { id: 'OFF-SUMMER-20', title: '20% Off Deep Sanitize', code: 'DEEPRELAX20', target: 'All Tiers', uses: 128, status: 'Active', expiry: 'Aug 31, 2026' },
-  { id: 'OFF-YACHT-VIP', title: 'Yacht Compounding Upgrade', code: 'YACHT-PLUS', target: 'Gold & Above', uses: 12, status: 'Active', expiry: 'No Expiry' },
-  { id: 'OFF-WELCOME', title: 'First Month -50%', code: 'NEWDOGE50', target: 'New Clients', uses: 412, status: 'Inactive', expiry: 'Jan 1, 2026' },
-]
+import { db, Offer } from '@/lib/db'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
 
 export default function OffersDashboard() {
+  const [offers, setOffers] = useState<Offer[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  const fetchOffers = async () => {
+    try {
+      const { data, error } = await db.offers.getAll()
+      if (data) setOffers(data)
+    } catch (error) {
+      console.error('Error fetching offers:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchOffers()
+  }, [])
+
+  const handleToggleStatus = async (offer: Offer) => {
+    const newStatus = offer.status === 'Active' ? 'Inactive' : 'Active'
+    const { error } = await db.offers.update(offer.id, { status: newStatus as any })
+    if (!error) {
+      setOffers(offers.map(o => o.id === offer.id ? { ...o, status: newStatus as any } : o))
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    if (confirm('Are you sure you want to delete this offer?')) {
+      const { error } = await db.offers.delete(id)
+      if (!error) {
+        setOffers(offers.filter(o => o.id !== id))
+      }
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="w-8 h-8 border-4 border-white/10 border-t-white rounded-full animate-spin"></div>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out space-y-8">
@@ -31,7 +69,7 @@ export default function OffersDashboard() {
 
        {/* Offers List */}
        <div className="space-y-4">
-          {MOCK_OFFERS.map((offer) => (
+          {offers.map((offer) => (
              <div key={offer.id} className="glass-panel p-6 rounded-2xl border border-white/10 hover:border-white/20 transition-all flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden group">
                
                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -61,22 +99,32 @@ export default function OffersDashboard() {
                <div className="flex items-center gap-8 md:gap-12 w-full md:w-auto border-t border-white/5 md:border-t-0 pt-4 md:pt-0">
                  <div>
                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Target</p>
-                   <p className="text-zinc-300 text-sm font-medium">{offer.target}</p>
+                   <p className="text-zinc-300 text-sm font-medium">{offer.target_audience}</p>
                  </div>
                  <div>
                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Uses</p>
-                   <p className="text-white text-sm font-michroma font-bold">{offer.uses}</p>
+                   <p className="text-white text-sm font-michroma font-bold">{offer.usage_count}</p>
                  </div>
                  <div>
                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Expires</p>
-                   <p className="text-zinc-400 text-sm font-medium">{offer.expiry}</p>
+                   <p className="text-zinc-400 text-sm font-medium">
+                     {offer.expires_at ? format(new Date(offer.expires_at), 'MMM d, yyyy', { locale: es }) : 'No Expiry'}
+                   </p>
                  </div>
                  
                  <div className="flex items-center gap-2 ml-auto">
-                    <button className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-zinc-400 transition-colors" title="Toggle Status">
-                      <Power className="w-4 h-4" />
+                    <button 
+                      onClick={() => handleToggleStatus(offer)}
+                      className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-zinc-400 transition-colors" 
+                      title="Toggle Status"
+                    >
+                      <Power className={`w-4 h-4 ${offer.status === 'Active' ? 'text-green-400' : ''}`} />
                     </button>
-                    <button className="p-2 bg-white/5 hover:bg-red-500/20 hover:text-red-400 rounded-lg text-zinc-500 transition-colors" title="Delete">
+                    <button 
+                      onClick={() => handleDelete(offer.id)}
+                      className="p-2 bg-white/5 hover:bg-red-500/20 hover:text-red-400 rounded-lg text-zinc-500 transition-colors" 
+                      title="Delete"
+                    >
                       <Trash2 className="w-4 h-4" />
                     </button>
                  </div>
@@ -84,6 +132,12 @@ export default function OffersDashboard() {
 
              </div>
           ))}
+          
+          {offers.length === 0 && (
+            <div className="text-center py-12 text-zinc-500">
+              No offers found. Create your first one above.
+            </div>
+          )}
        </div>
 
        {/* Creation Modal Mock */}
@@ -96,24 +150,15 @@ export default function OffersDashboard() {
                </div>
                
                <div className="space-y-4">
-                 <div>
-                   <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Offer Title</label>
-                   <input type="text" className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-white/30" placeholder="e.g. 10% Off Annual Plan" />
-                 </div>
-                 <div>
-                   <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Promo Code</label>
-                   <input type="text" className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white text-sm font-mono focus:outline-none focus:border-white/30" placeholder="e.g. ANNUAL10" />
-                 </div>
-                 <div className="flex gap-4">
-                   <div className="flex-1">
-                     <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Discount %</label>
-                     <input type="number" className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-white/30" placeholder="10" />
-                   </div>
-                   <div className="flex-1">
-                     <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Expiry Date</label>
-                     <input type="date" className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-white/30" />
-                   </div>
-                 </div>
+                  <p className="text-zinc-400 text-sm italic">Creation form coming soon (linked to DB).</p>
+                  <div>
+                    <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Offer Title</label>
+                    <input type="text" className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-white/30" placeholder="e.g. 10% Off Annual Plan" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Promo Code</label>
+                    <input type="text" className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white text-sm font-mono focus:outline-none focus:border-white/30" placeholder="e.g. ANNUAL10" />
+                  </div>
                </div>
 
                <div className="flex justify-end gap-3 pt-4 border-t border-white/5">

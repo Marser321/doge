@@ -1,19 +1,30 @@
 'use client'
 
-import React, { useState } from 'react'
-import { Search, Filter, Mail, Phone, ExternalLink, ShieldCheck } from 'lucide-react'
-
-// Mock Client Data
-const MOCK_CLIENTS = [
-  { id: 'C-1029', name: 'Alvaro Hernandez', company: 'Ocean View Condos', ltv: '$42,500', status: 'VIP', lastActive: '2 hours ago', email: 'alvaro@oceanview.com' },
-  { id: 'C-1030', name: 'Sarah Jenkins', company: 'Brickell Financial Hub', ltv: '$18,200', status: 'Corporate', lastActive: '1 day ago', email: 's.jenkins@brickellfin.com' },
-  { id: 'C-1031', name: 'Marcus Wong', company: 'Luxury Auto Dealership', ltv: '$9,800', status: 'Corporate', lastActive: '3 days ago', email: 'mwong@luxuryauto.miami' },
-  { id: 'C-1032', name: 'Elena Rostova', company: 'Private Residence', ltv: '$24,500', status: 'VIP', lastActive: '5 hours ago', email: 'elena.r@gmail.com' },
-  { id: 'C-1033', name: 'David Smith', company: 'Wynwood Tech Space', ltv: '$3,200', status: 'Standard', lastActive: '1 week ago', email: 'dsmith@wynwoodtech.io' },
-]
+import React, { useState, useEffect } from 'react'
+import { Search, Mail, Phone, ExternalLink, ShieldCheck } from 'lucide-react'
+import { db, Client } from '@/lib/db'
+import { formatDistanceToNow } from 'date-fns'
+import { es } from 'date-fns/locale'
 
 export default function ClientsDashboard() {
+  const [clients, setClients] = useState<Client[]>([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchClients() {
+      try {
+        const { data, error } = await db.clients.getAll()
+        if (data) setClients(data)
+      } catch (error) {
+        console.error('Error fetching clients:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchClients()
+  }, [])
 
   const getStatusStyles = (status: string) => {
     switch(status) {
@@ -26,10 +37,19 @@ export default function ClientsDashboard() {
     }
   }
 
-  const filteredClients = MOCK_CLIENTS.filter(client => 
+  const filteredClients = clients.filter(client => 
     client.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    client.company.toLowerCase().includes(searchTerm.toLowerCase())
+    (client.company || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (client.email || '').toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="w-8 h-8 border-4 border-white/10 border-t-white rounded-full animate-spin"></div>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out space-y-6">
@@ -80,17 +100,19 @@ export default function ClientsDashboard() {
 
               <div className="space-y-1 mb-6 relative">
                  <h3 className="font-bold text-lg text-white group-hover:silver-text transition-all">{client.name}</h3>
-                 <p className="text-zinc-400 text-sm font-medium">{client.company}</p>
+                 <p className="text-zinc-400 text-sm font-medium">{client.company || 'Private Client'}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4 mb-6">
                  <div className="bg-white/[0.03] p-3 rounded-xl border border-white/5">
                     <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Lifetime Value</p>
-                    <p className="font-michroma font-bold text-white text-sm">{client.ltv}</p>
+                    <p className="font-michroma font-bold text-white text-sm">${client.lifetime_value.toLocaleString()}</p>
                  </div>
                  <div className="bg-white/[0.03] p-3 rounded-xl border border-white/5">
-                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Last Active</p>
-                    <p className="text-white text-sm">{client.lastActive}</p>
+                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Created</p>
+                    <p className="text-white text-sm">
+                      {formatDistanceToNow(new Date(client.created_at), { addSuffix: true, locale: es })}
+                    </p>
                  </div>
               </div>
 
@@ -108,6 +130,12 @@ export default function ClientsDashboard() {
               </div>
            </div>
          ))}
+         
+         {filteredClients.length === 0 && (
+           <div className="col-span-full text-center py-12 text-zinc-500">
+             No clients found matching your search.
+           </div>
+         )}
        </div>
 
     </div>

@@ -1,20 +1,35 @@
 'use client'
 
-import React, { useState } from 'react'
-import { Search, Filter, MoreHorizontal, CheckCircle2, PauseCircle, XCircle } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { Search, Filter, MoreHorizontal, CheckCircle2, PauseCircle, XCircle, Clock } from 'lucide-material-react'
+import { db, Subscription } from '@/lib/db'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
 
-// Mock Data
-const MOCK_SUBSCRIPTIONS = [
-  { id: 'SUB-001', client: 'Ocean View Condos', tier: 'Titanium Enterprise', status: 'Active', mrr: '$8,500', nextBilling: 'Nov 1, 2026' },
-  { id: 'SUB-002', client: 'Brickell Financial Hub', tier: 'Black Corporate', status: 'Active', mrr: '$4,200', nextBilling: 'Oct 28, 2026' },
-  { id: 'SUB-003', client: 'Luxury Auto Dealership', tier: 'Titanium Premium', status: 'Pending', mrr: '$2,800', nextBilling: 'Pending Setup' },
-  { id: 'SUB-004', client: 'South Beach Residences', tier: 'Gold Standard', status: 'Active', mrr: '$1,500', nextBilling: 'Nov 5, 2026' },
-  { id: 'SUB-005', client: 'Wynwood Tech Space', tier: 'Gold Standard', status: 'Paused', mrr: '$1,500', nextBilling: '-' },
-  { id: 'SUB-006', client: 'Coral Gables Estate', tier: 'Black Residential', status: 'Cancelled', mrr: '$0', nextBilling: '-' },
-]
+// Custom Clock icon if not available in lucide
+const CustomClock = (props: any) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+)
 
 export default function SubscriptionsDashboard() {
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchSubscriptions() {
+      try {
+        const { data, error } = await db.subscriptions.getAll()
+        if (data) setSubscriptions(data)
+      } catch (error) {
+        console.error('Error fetching subscriptions:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchSubscriptions()
+  }, [])
 
   const getStatusBadge = (status: string) => {
     switch(status) {
@@ -27,7 +42,7 @@ export default function SubscriptionsDashboard() {
       case 'Pending':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
-            <Clock className="w-3.5 h-3.5" /> Pending
+            <CustomClock className="w-3.5 h-3.5" /> Pending
           </span>
         )
       case 'Paused':
@@ -47,15 +62,18 @@ export default function SubscriptionsDashboard() {
     }
   }
 
-  // Quick fix for Clock icon
-  const Clock = (props: any) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-  )
-
-  const filteredSubs = MOCK_SUBSCRIPTIONS.filter(sub => 
-    sub.client.toLowerCase().includes(searchTerm.toLowerCase()) || 
+  const filteredSubs = subscriptions.filter(sub => 
+    (sub.client?.name || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
     sub.id.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="w-8 h-8 border-4 border-white/10 border-t-white rounded-full animate-spin"></div>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out space-y-6">
@@ -103,25 +121,25 @@ export default function SubscriptionsDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {filteredSubs.map((sub, i) => (
+                {filteredSubs.map((sub) => (
                   <tr key={sub.id} className="hover:bg-white/[0.02] transition-colors group cursor-pointer">
                     <td className="p-4">
-                      <span className="font-mono text-xs text-zinc-500">{sub.id}</span>
+                      <span className="font-mono text-[10px] text-zinc-500">{sub.id.substring(0, 8)}</span>
                     </td>
                     <td className="p-4">
-                      <p className="font-bold text-white text-sm">{sub.client}</p>
+                      <p className="font-bold text-white text-sm">{sub.client?.name || 'Private'}</p>
                     </td>
                     <td className="p-4">
-                      <span className="text-zinc-300 text-sm">{sub.tier}</span>
+                      <span className="text-zinc-300 text-sm">{sub.tier?.name || 'Standard'}</span>
                     </td>
                     <td className="p-4">
-                      <span className="font-michroma font-bold text-white text-sm">{sub.mrr}</span>
+                      <span className="font-michroma font-bold text-white text-sm">${sub.mrr.toLocaleString()}</span>
                     </td>
                     <td className="p-4">
                       {getStatusBadge(sub.status)}
                     </td>
                     <td className="p-4 text-sm text-zinc-400">
-                      {sub.nextBilling}
+                      {sub.next_billing_date ? format(new Date(sub.next_billing_date), 'PPP', { locale: es }) : 'Pending Setup'}
                     </td>
                     <td className="p-4 text-right">
                       <button className="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-white transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
@@ -142,7 +160,7 @@ export default function SubscriptionsDashboard() {
           
           {/* Pagination Footer */}
           <div className="p-4 border-t border-white/5 bg-white/[0.02] flex items-center justify-between text-sm text-zinc-400">
-            <span>Showing {filteredSubs.length} of {MOCK_SUBSCRIPTIONS.length} subscriptions</span>
+            <span>Showing {filteredSubs.length} of {subscriptions.length} subscriptions</span>
             <div className="flex gap-2">
               <button className="px-3 py-1 rounded bg-black/20 hover:bg-black/40 disabled:opacity-50" disabled>Previous</button>
               <button className="px-3 py-1 rounded bg-black/20 hover:bg-black/40 disabled:opacity-50" disabled>Next</button>
