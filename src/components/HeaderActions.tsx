@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Moon, Globe, ShoppingCart, MoreVertical, User, CreditCard, History, Settings, LogOut, X, ArrowRight } from 'lucide-react'
+import { Sun, Moon, Globe, ShoppingCart, MoreVertical, User, CreditCard, History, Settings, LogOut, X, ArrowRight, Shield } from 'lucide-react'
 import Link from 'next/link'
 import { useLanguage } from './LanguageProvider'
 
@@ -42,6 +42,7 @@ export default function HeaderActions({ theme, onToggleTheme }: HeaderActionsPro
     { icon: User, label: t('nav.myAccount'), href: '/account', disabled: false },
     { icon: CreditCard, label: t('nav.paymentMethods'), href: '/account', disabled: false },
     { icon: History, label: t('nav.serviceHistory'), href: '/account', disabled: false },
+    { icon: Shield, label: 'Admin (CEO)', href: '/admin', disabled: false },
     { icon: Settings, label: t('nav.settings'), href: '/account', disabled: false },
   ]
 
