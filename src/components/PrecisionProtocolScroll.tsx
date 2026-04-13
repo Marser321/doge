@@ -150,7 +150,7 @@ const SoapyOverlay = () => {
 
   return (
     <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
-      <div className="absolute inset-0 backdrop-blur-[48px] bg-white/12 dark:bg-zinc-900/28 mix-blend-screen opacity-75"></div>
+      <div className="absolute inset-0 backdrop-blur-md bg-white/10 dark:bg-zinc-900/30 mix-blend-screen opacity-50"></div>
 
       <div className="absolute inset-0">
         {bubbleSeeds.map((seed, i) => (
@@ -219,7 +219,7 @@ const StepBackgroundLayer = ({
           priority={shouldPrioritize}
           loading={shouldPrioritize ? 'eager' : 'lazy'}
           onError={() => setBaseImageSrc((current) => (current === FALLBACK_STEP_IMAGE ? current : FALLBACK_STEP_IMAGE))}
-          className="object-cover grayscale saturate-50 blur-[24px] scale-110"
+          className="object-cover grayscale saturate-50 blur-lg scale-110"
         />
         <div className="absolute inset-0 bg-black/60 backdrop-blur-xl"></div>
         <SoapyOverlay />
@@ -268,7 +268,11 @@ export const PrecisionProtocolScroll = () => {
     const sectionElement = sectionRef.current
     const horizontalElement = horizontalRef.current
 
-    const calculateHorizontalTravel = () => Math.max(0, horizontalElement.scrollWidth - window.innerWidth + 320)
+    const calculateHorizontalTravel = () => {
+      const isMobile = window.innerWidth < 768;
+      const paddingOffset = isMobile ? (window.innerWidth * 0.1) : 320;
+      return Math.max(0, horizontalElement.scrollWidth - window.innerWidth + paddingOffset);
+    }
 
     const syncActiveIndex = (progress: number) => {
       const nextIndex = Math.min(
@@ -370,7 +374,7 @@ export const PrecisionProtocolScroll = () => {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="w-[85vw] sm:w-[70vw] md:min-w-[850px] md:w-[850px] h-[450px] sm:h-[500px] md:h-[55vh] lg:h-[65vh] max-h-[700px] min-h-[450px] glass-panel-heavy rounded-[32px] md:rounded-[48px] p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-between border border-white/5 group transition-all shadow-titanium relative overflow-hidden pointer-events-auto will-change-transform"
             >
-              <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 blur-[180px] -z-10 group-hover:bg-accent/20 transition-colors"></div>
+              <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 blur-3xl -z-10 group-hover:bg-accent/20 transition-colors"></div>
 
               <div className="relative z-10 flex flex-col h-full justify-between overflow-visible">
                 <div className="flex flex-col flex-1 min-h-0 overflow-visible">
