@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Search, Filter, MoreHorizontal, CheckCircle2, PauseCircle, XCircle, Clock } from 'lucide-material-react'
+import { Search, Filter, MoreHorizontal, CheckCircle2, PauseCircle, XCircle, Clock } from 'lucide-react'
 import { db, Subscription } from '@/lib/db'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
