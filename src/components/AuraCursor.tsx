@@ -17,6 +17,11 @@ export default function SqueegeeCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isOnGlass, setIsOnGlass] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'light'>(getInitialTheme);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    setIsTouchDevice(window.matchMedia('(pointer: coarse)').matches);
+  }, []);
 
   // Raw mouse position
   const mouseX = useMotionValue(-100);
@@ -126,6 +131,8 @@ export default function SqueegeeCursor() {
     : theme === 'dark'
       ? 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))'
       : 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))';
+
+  if (isTouchDevice) return null;
 
   return (
     <motion.div
