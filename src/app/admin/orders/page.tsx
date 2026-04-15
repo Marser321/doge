@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Search, Filter, MoreHorizontal, ShoppingCart, DollarSign, Package, Clock, ExternalLink } from 'lucide-react'
 import { db } from '@/lib/db'
 import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
+import { es } from 'date-fns/locale/es'
 
 export default function OrdersDashboard() {
   const [orders, setOrders] = useState<any[]>([])

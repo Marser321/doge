@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Search, Mail, Phone, ExternalLink, ShieldCheck } from 'lucide-react'
 import { db, Client } from '@/lib/db'
 import { formatDistanceToNow } from 'date-fns'
-import { es } from 'date-fns/locale'
+import { es } from 'date-fns/locale/es'
 
 export default function ClientsDashboard() {
   const [clients, setClients] = useState<Client[]>([])

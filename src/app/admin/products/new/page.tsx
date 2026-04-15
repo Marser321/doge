@@ -91,7 +91,7 @@ export default function NewProductForm() {
         specs: cleanSpecs
       }
 
-      const { data, error: submitError } = await db.products.create(productPayload)
+      const { data, error: submitError } = await db.products.create(productPayload as any)
       
       if (submitError) throw new Error(submitError.message || 'Error creating product')
 

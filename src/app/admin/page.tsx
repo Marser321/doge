@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { TrendingUp, Users, CreditCard, Activity, ArrowUpRight, Clock } from 'lucide-react'
 import { db, KPISnapshot, Offer, Subscription } from '@/lib/db'
 import { formatDistanceToNow } from 'date-fns'
-import { es } from 'date-fns/locale'
+import { es } from 'date-fns/locale/es'
 
 export default function AdminDashboard() {
   const [kpis, setKpis] = useState<KPISnapshot[]>([])
@@ -13,6 +13,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let isMounted = true;
     async function fetchData() {
       try {
         const [kpiRes, activityRes, offersRes] = await Promise.all([
@@ -21,17 +22,20 @@ export default function AdminDashboard() {
           db.offers.getAll()
         ])
 
-        if (kpiRes.data) setKpis(kpiRes.data)
-        setRecentActivity(activityRes)
-        if (offersRes.data) setOffers(offersRes.data)
+        if (isMounted) {
+          if (kpiRes.data) setKpis(kpiRes.data)
+          setRecentActivity(activityRes)
+          if (offersRes.data) setOffers(offersRes.data)
+        }
       } catch (error) {
         console.error('Error fetching dashboard data:', error)
       } finally {
-        setLoading(false)
+        if (isMounted) setLoading(false)
       }
     }
 
     fetchData()
+    return () => { isMounted = false }
   }, [])
 
   const getKPIValue = (name: string) => {

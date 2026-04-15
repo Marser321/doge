@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowLeft, ShieldCheck as ShieldCheckIcon, Camera, FileText, Upload, X, ImageIcon, Film, Send, CheckCircle, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, ShieldCheck, Camera, FileText, Upload, X, ImageIcon, Film, Send, CheckCircle } from 'lucide-react'
 import { useLanguage } from '@/components/LanguageProvider'
 
 type DescriptionMethod = 'photos' | 'text'
@@ -139,7 +139,7 @@ export default function PostConstructionPage() {
           <span className="font-bold text-xs uppercase tracking-[0.3em]">{lang === 'es' ? 'Servicios' : 'Services'}</span>
         </Link>
         <div className="flex items-center gap-3">
-          <ShieldCheckIcon className="w-5 h-5 text-accent" />
+          <ShieldCheck className="w-5 h-5 text-accent" />
           <span className="font-black text-xl tracking-tighter uppercase text-foreground font-michroma">
             {lang === 'es' ? 'Post-Obra' : 'Post-Build'}
           </span>

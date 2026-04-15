@@ -1,10 +1,10 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Search, Filter, MoreHorizontal, CheckCircle2, PauseCircle, XCircle, Clock } from 'lucide-react'
+import { Search, Filter, MoreHorizontal, CheckCircle, PauseCircle, XCircle, Clock } from 'lucide-react'
 import { db, Subscription } from '@/lib/db'
 import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
+import { es } from 'date-fns/locale/es'
 
 // Custom Clock icon if not available in lucide
 const CustomClock = (props: any) => (
@@ -36,7 +36,7 @@ export default function SubscriptionsDashboard() {
       case 'Active':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-green-500/10 text-green-400 border border-green-500/20">
-            <CheckCircle2 className="w-3.5 h-3.5" /> Active
+            <CheckCircle className="w-3.5 h-3.5" /> Active
           </span>
         )
       case 'Pending':

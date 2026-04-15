@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Plus, Tag, Copy, Power, Trash2 } from 'lucide-react'
 import { db, Offer } from '@/lib/db'
 import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
+import { es } from 'date-fns/locale/es'
 
 export default function OffersDashboard() {
   const [offers, setOffers] = useState<Offer[]>([])

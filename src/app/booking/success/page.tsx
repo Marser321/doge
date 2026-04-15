@@ -3,7 +3,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { CheckCircle2, Calendar, MapPin, Clock, ArrowRight, ShieldCheck, Zap, Droplets } from 'lucide-react'
+import { CheckCircle, Calendar, MapPin, Clock, ArrowRight, ShieldCheck, Zap, Droplets } from 'lucide-react'
 
 export default function BookingSuccessPage() {
   return (
@@ -28,7 +28,7 @@ export default function BookingSuccessPage() {
             transition={{ type: 'spring', damping: 12, delay: 0.2 }}
             className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-[24px] mb-6 shadow-xl shadow-green-100/50"
           >
-            <CheckCircle2 className="w-10 h-10 text-green-600" />
+            <CheckCircle className="w-10 h-10 text-green-600" />
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
