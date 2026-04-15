@@ -273,7 +273,7 @@ export default function StorePage() {
                     <span className="bg-accent/20 text-accent border border-accent/20 font-bold text-xs px-2 py-1 rounded">Ahorro $125</span>
                   </div>
                 </div>
-                <button onClick={() => handleBuy('Kit Humedad Cero')} className="bg-foreground text-background hover:opacity-90 px-8 py-4 rounded-xl font-black uppercase text-sm tracking-widest transition-colors shadow-lg w-full sm:w-auto text-center border-2 border-transparent font-michroma btn-whimsy magnetic cta-glow hover:scale-[1.03] hover:-translate-y-0.5 hover:shadow-[0_0_30px_6px_rgba(255,255,255,0.1)] group relative">
+                <button onClick={() => handleWhatsAppBuy('Kit Humedad Cero')} className="bg-foreground text-background hover:opacity-90 px-8 py-4 rounded-xl font-black uppercase text-sm tracking-widest transition-colors shadow-lg w-full sm:w-auto text-center border-2 border-transparent font-michroma btn-whimsy magnetic cta-glow hover:scale-[1.03] hover:-translate-y-0.5 hover:shadow-[0_0_30px_6px_rgba(255,255,255,0.1)] group relative">
                   Contratar Sistema
                 </button>
               </div>
