@@ -26,10 +26,11 @@ export default function OrdersDashboard() {
     fetchOrders()
   }, [])
 
+  const term = searchTerm.toLowerCase()
   const filteredOrders = orders.filter(o => 
-    o.order_number.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    o.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (o.customer_email || '').toLowerCase().includes(searchTerm.toLowerCase())
+    o.order_number.toLowerCase().includes(term) ||
+    o.customer_name.toLowerCase().includes(term) ||
+    (o.customer_email || '').toLowerCase().includes(term)
   )
 
   const getStatusBadge = (status: string) => {
