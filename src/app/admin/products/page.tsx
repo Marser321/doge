@@ -37,9 +37,10 @@ export default function ProductsDashboard() {
     }
   }
 
+  const lowerSearchTerm = searchTerm.toLowerCase()
   const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    (p.brand || '').toLowerCase().includes(searchTerm.toLowerCase())
+    p.name.toLowerCase().includes(lowerSearchTerm) ||
+    (p.brand || '').toLowerCase().includes(lowerSearchTerm)
   )
 
   const getSaleTypeStyle = (type: string) => {
