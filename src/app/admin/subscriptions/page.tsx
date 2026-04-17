@@ -63,9 +63,10 @@ export default function SubscriptionsDashboard() {
     }
   }
 
+  const searchLower = searchTerm.toLowerCase()
   const filteredSubs = subscriptions.filter(sub => 
-    (sub.client?.name || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
-    sub.id.toLowerCase().includes(searchTerm.toLowerCase())
+    (sub.client?.name || '').toLowerCase().includes(searchLower) ||
+    sub.id.toLowerCase().includes(searchLower)
   )
 
   if (loading) {
