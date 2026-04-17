@@ -1,0 +1,3 @@
+🎯 **What:** Added unit tests for the `t` translation function in `src/data/i18n.ts` to improve test coverage and reliability for localization mapping.
+📊 **Coverage:** Covered happy paths (translating known keys to expected languages 'en' and 'es'), edge cases (when a provided `TranslationKey` doesn't exist in the mapping), and fallback behaviors (when an unsupported language string is passed).
+✨ **Result:** Enhanced the reliability of the application's basic translation mechanism by verifying behavior against undefined properties and ensuring the fallback (returning the key itself) works correctly.
