@@ -111,16 +111,16 @@ export const db = {
       const { data, error } = await insforge.database
         .from('clients')
         .insert([client])
-        .select();
-      return { data: (data as unknown as Client[])?.[0] as Client, error };
+        .select().maybeSingle();
+      return { data: data as Client, error };
     },
     async update(id: string, updates: Partial<Client>) {
       const { data, error } = await insforge.database
         .from('clients')
         .update(updates)
         .eq('id', id)
-        .select();
-      return { data: (data as unknown as Client[])?.[0] as Client, error };
+        .select().maybeSingle();
+      return { data: data as Client, error };
     },
     async delete(id: string) {
       const { error } = await insforge.database
@@ -145,16 +145,16 @@ export const db = {
       const { data, error } = await insforge.database
         .from('subscriptions')
         .insert([subscription])
-        .select();
-      return { data: (data as unknown as Subscription[])?.[0] as Subscription, error };
+        .select().maybeSingle();
+      return { data: data as Subscription, error };
     },
     async update(id: string, updates: Partial<Subscription>) {
       const { data, error } = await insforge.database
         .from('subscriptions')
         .update(updates)
         .eq('id', id)
-        .select();
-      return { data: (data as unknown as Subscription[])?.[0] as Subscription, error };
+        .select().maybeSingle();
+      return { data: data as Subscription, error };
     }
   },
 
@@ -172,16 +172,16 @@ export const db = {
       const { data, error } = await insforge.database
         .from('offers')
         .insert([offer])
-        .select();
-      return { data: (data as unknown as Offer[])?.[0] as Offer, error };
+        .select().maybeSingle();
+      return { data: data as Offer, error };
     },
     async update(id: string, updates: Partial<Offer>) {
       const { data, error } = await insforge.database
         .from('offers')
         .update(updates)
         .eq('id', id)
-        .select();
-      return { data: (data as unknown as Offer[])?.[0] as Offer, error };
+        .select().maybeSingle();
+      return { data: data as Offer, error };
     },
     async delete(id: string) {
       const { error } = await insforge.database
@@ -214,16 +214,16 @@ export const db = {
       const { data, error } = await insforge.database
         .from('products')
         .insert([product])
-        .select();
-      return { data: (data as unknown as Product[])?.[0] as Product, error };
+        .select().maybeSingle();
+      return { data: data as Product, error };
     },
     async update(id: string, updates: Partial<Product>) {
       const { data, error } = await insforge.database
         .from('products')
         .update(updates)
         .eq('id', id)
-        .select();
-      return { data: (data as unknown as Product[])?.[0] as Product, error };
+        .select().maybeSingle();
+      return { data: data as Product, error };
     },
     async delete(id: string) {
       const { error } = await insforge.database
@@ -261,8 +261,8 @@ export const db = {
         .from('products')
         .update({ is_featured })
         .eq('id', id)
-        .select();
-      return { data: (data as unknown as Product[])?.[0] as Product, error };
+        .select().maybeSingle();
+      return { data: data as Product, error };
     },
     async addImage(product_id: string, image_url: string) {
       const { data, error } = await insforge.database
