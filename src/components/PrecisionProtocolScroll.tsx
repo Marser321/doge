@@ -361,7 +361,7 @@ export const PrecisionProtocolScroll = () => {
           </motion.div>
         </div>
 
-        <div ref={horizontalRef} className="flex gap-6 sm:gap-16 md:gap-32 w-max px-4 sm:px-16 md:px-32 relative z-[60] overflow-visible">
+        <div ref={horizontalRef} className="flex flex-nowrap gap-6 sm:gap-10 md:gap-16 w-max px-4 sm:px-16 md:px-32 relative z-[60] overflow-visible">
           {B2B_PRECISION_STEPS.map((step, idx) => (
             <motion.div
               key={idx}
@@ -372,7 +372,7 @@ export const PrecisionProtocolScroll = () => {
                 y: activeIdx === idx ? 0 : 36,
               }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="w-[85vw] sm:w-[70vw] md:min-w-[850px] md:w-[850px] h-[450px] sm:h-[500px] md:h-[55vh] lg:h-[65vh] max-h-[700px] min-h-[450px] shrink-0 glass-panel-heavy rounded-[32px] md:rounded-[48px] p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-between border border-white/5 group transition-all shadow-titanium relative overflow-hidden pointer-events-auto will-change-transform"
+              className="w-[85vw] sm:w-[70vw] md:min-w-[700px] md:w-[700px] h-[450px] sm:h-[500px] md:h-[55vh] lg:h-[65vh] max-h-[700px] min-h-[450px] shrink-0 glass-panel-heavy rounded-[32px] md:rounded-[48px] p-6 sm:p-8 md:p-10 flex flex-col justify-between border border-white/5 group transition-all shadow-titanium relative overflow-hidden pointer-events-auto will-change-transform"
             >
               <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 blur-3xl -z-10 group-hover:bg-accent/20 transition-colors"></div>
 
