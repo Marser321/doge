@@ -35,14 +35,17 @@ export default function NewClientForm() {
     setError(null)
 
     try {
+      const sanitizedName = formData.name.trim()
+      if (!sanitizedName) throw new Error("Full Name is required and cannot be empty.")
+
       const payload: any = {
-        name: formData.name,
-        company: formData.company || null,
-        email: formData.email || null,
-        phone: formData.phone || null,
-        address: formData.address || null,
+        name: sanitizedName,
+        company: formData.company?.trim() || null,
+        email: formData.email?.trim() || null,
+        phone: formData.phone?.trim() || null,
+        address: formData.address?.trim() || null,
         status: formData.status,
-        notes: formData.notes || null,
+        notes: formData.notes?.trim() || null,
         lifetime_value: 0
       }
 
@@ -83,6 +86,7 @@ export default function NewClientForm() {
        )}
 
        <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 space-y-6">
+         <fieldset disabled={loading} className="group/fieldset contents">
           <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-6">
             <User className="w-5 h-5 text-accent" />
             <h2 className="text-lg font-bold font-michroma text-white">Client Information</h2>
@@ -128,6 +132,7 @@ export default function NewClientForm() {
                <textarea name="notes" value={formData.notes} onChange={handleInputChange} rows={3} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 resize-none" placeholder="Preferences, access codes, etc." />
              </div>
           </div>
+         </fieldset>
        </form>
     </div>
   )

@@ -51,18 +51,22 @@ export default function NewProductForm() {
       parsedValue = (e.target as HTMLInputElement).checked
     }
 
-    setFormData(prev => ({
-      ...prev,
-      [name]: parsedValue
-    }))
+    setFormData(prev => {
+      const nextState = {
+        ...prev,
+        [name]: parsedValue
+      }
 
-    // Auto-generate slug from name if slug is empty or matches previous auto-slug
-    if (name === 'name' && (!formData.slug || formData.slug === formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''))) {
-      setFormData(prev => ({
-         ...prev,
-         slug: value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')
-      }))
-    }
+      // Auto-generate slug from name if slug is empty or matches previous auto-slug
+      if (name === 'name') {
+        const generatedPrevSlug = prev.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')
+        if (!prev.slug || prev.slug === generatedPrevSlug) {
+          nextState.slug = value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')
+        }
+      }
+
+      return nextState
+    })
   }
 
   const handleSpecChange = (index: number, field: 'label' | 'value', value: string) => {
@@ -81,29 +85,68 @@ export default function NewProductForm() {
     setError(null)
 
     try {
+      // 1. Strict Payload Validation (Uroboros Audit Hardening)
+      const sanitizedName = formData.name.trim()
+      const sanitizedSlug = formData.slug.trim() || sanitizedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')
+      
+      if (!sanitizedName) throw new Error("Nombre del producto requerido y no puede ser vacío.")
+      if (!sanitizedSlug) throw new Error("Slug inválido o vacío.")
+      
+      const priceVal = Number(formData.price)
+      if (isNaN(priceVal) || priceVal < 0) throw new Error("El precio debe ser un valor numérico positivo.")
+      
+      const stockVal = Number(formData.stock_quantity)
+      if (isNaN(stockVal) || stockVal < 0) throw new Error("El inventario debe ser un número entero válido mayor a 0.")
+
       // Clean up specs (remove empty ones)
       const cleanSpecs = specs.filter(s => s.label.trim() !== '' && s.value.trim() !== '')
 
       // Prepare final product payload
       const productPayload = {
-        ...formData,
-        compare_at_price: formData.compare_at_price > 0 ? formData.compare_at_price : null,
-        cost_price: formData.cost_price > 0 ? formData.cost_price : null,
+        name: sanitizedName,
+        slug: sanitizedSlug,
+        brand: formData.brand || null,
+        tagline: formData.tagline || null,
+        description: formData.description || null,
+        detailed_description: formData.detailed_description || null,
+        price: priceVal,
+        compare_at_price: Number(formData.compare_at_price) > 0 ? Number(formData.compare_at_price) : null,
+        cost_price: Number(formData.cost_price) > 0 ? Number(formData.cost_price) : null,
+        sale_type: formData.sale_type,
+        amazon_affiliate_url: formData.amazon_affiliate_url || null,
+        amazon_asin: formData.amazon_asin || null,
+        stock_quantity: stockVal,
+        low_stock_threshold: Number(formData.low_stock_threshold) >= 0 ? Number(formData.low_stock_threshold) : 0,
+        category: formData.category || null,
+        benefit_label: formData.benefit_label || null,
+        accent_gradient: formData.accent_gradient || null,
+        is_active: formData.is_active,
+        is_featured: formData.is_featured,
+        sort_order: formData.sort_order,
         specs: cleanSpecs
       }
 
-      const { data, error: submitError } = await db.products.create(productPayload as any)
+      // 2. Transactional Operations Structure
+      const { data: newProduct, error: submitError } = await db.products.create(productPayload as any)
       
-      if (submitError) throw new Error(submitError.message || 'Error creating product')
+      if (submitError) throw new Error(submitError.message || 'Error creating product in database.')
 
-      // If image URL is provided, we would normally save it to product_images here.
-      // Since product_images isn't fully integrated in db.ts yet, we'll skip for now
-      // but the field is ready for future integration.
+      // 3. Dependent Image linking & Rollback Mechanism
+      if (imageUrl && imageUrl.trim() !== '' && newProduct?.id) {
+         try {
+           const { error: imageError } = await db.products.addImage(newProduct.id, imageUrl)
+           if (imageError) throw new Error("Fallo forzado por base de datos de imagen: " + imageError.message)
+         } catch (imgLinkError: any) {
+           // Rollback (Destruir el producto previamente creado)
+           await db.products.delete(newProduct.id)
+           throw new Error(`Inserción de imagen rechazada. Proceso completo abortado limpiamente por Uroboros Core. Log: ${imgLinkError.message}`)
+         }
+      }
 
       router.push('/admin/products')
       router.refresh()
     } catch (err: any) {
-      setError(err.message || 'An unexpected error occurred')
+      setError(err.message || 'Error transaccional abortado de manera segura.')
       setLoading(false)
     }
   }
@@ -136,6 +179,7 @@ export default function NewProductForm() {
        )}
 
        <form onSubmit={handleSubmit} className="space-y-8">
+         <fieldset disabled={loading} className="group/fieldset contents">
           
           {/* Main Info */}
           <div className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 space-y-6">
@@ -153,6 +197,11 @@ export default function NewProductForm() {
                 <div>
                   <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Slug (URL)</label>
                   <input required name="slug" value={formData.slug} onChange={handleInputChange} type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-zinc-300 font-mono text-sm focus:outline-none focus:border-accent/50 transition-colors" placeholder="dyson-v15" />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Category</label>
+                  <input name="category" value={formData.category} onChange={handleInputChange} type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors" placeholder="e.g. cleaning" />
                 </div>
 
                 <div>
@@ -327,9 +376,9 @@ export default function NewProductForm() {
                 {specs.length === 0 && (
                   <p className="text-zinc-500 text-sm text-center py-4">No specifications added.</p>
                 )}
-             </div>
+              </div>
           </div>
-
+         </fieldset>
        </form>
     </div>
   )

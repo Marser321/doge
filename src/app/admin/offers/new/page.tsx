@@ -43,14 +43,35 @@ export default function NewOfferForm() {
     setError(null)
 
     try {
+      const sanitizedTitle = formData.title.trim()
+      if (!sanitizedTitle) throw new Error("Offer title is required.")
+
+      const sanitizedCode = formData.code.trim().toUpperCase()
+      if (!sanitizedCode || /\s/.test(sanitizedCode)) throw new Error("Promo code must not contain spaces or be empty.")
+      
+      const parsedDiscountAmount = Number(formData.discount_amount)
+      if (isNaN(parsedDiscountAmount) || parsedDiscountAmount <= 0) {
+         throw new Error("Discount amount must be a valid positive number.")
+      }
+      if (formData.discount_type === 'percent' && parsedDiscountAmount > 100) {
+         throw new Error("Percentage discount cannot exceed 100%.")
+      }
+
+      if (formData.expires_at) {
+          const selectedDate = new Date(formData.expires_at)
+          if (selectedDate.getTime() < Date.now()) {
+             throw new Error("Expiration date cannot be in the past.")
+          }
+      }
+
       const payload: any = {
-        title: formData.title,
-        code: formData.code.toUpperCase(),
+        title: sanitizedTitle,
+        code: sanitizedCode,
         discount_type: formData.discount_type,
-        discount_amount: formData.discount_amount || 0,
-        discount_percent: formData.discount_type === 'percent' ? (formData.discount_amount || 0) : null,
+        discount_amount: parsedDiscountAmount,
+        discount_percent: formData.discount_type === 'percent' ? parsedDiscountAmount : null,
         target_audience: formData.target_audience,
-        max_uses: formData.max_uses,
+        max_uses: formData.max_uses || null,
         expires_at: formData.expires_at ? new Date(formData.expires_at).toISOString() : null,
         applies_to: formData.applies_to,
         status: 'Active',
@@ -102,6 +123,7 @@ export default function NewOfferForm() {
        )}
 
        <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 space-y-6">
+         <fieldset disabled={loading} className="group/fieldset contents">
           <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-6">
             <Tag className="w-5 h-5 text-accent" />
             <h2 className="text-lg font-bold font-michroma text-white">Offer Details</h2>
@@ -166,6 +188,7 @@ export default function NewOfferForm() {
                </select>
              </div>
           </div>
+         </fieldset>
        </form>
     </div>
   )

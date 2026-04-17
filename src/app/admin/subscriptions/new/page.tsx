@@ -56,11 +56,20 @@ export default function NewSubscriptionForm() {
     setError(null)
 
     try {
+      const parsedMrr = Number(formData.mrr)
+      if (isNaN(parsedMrr) || parsedMrr < 0) {
+         throw new Error("MRR must be a valid positive number.")
+      }
+
+      if (!formData.started_at) {
+         throw new Error("Start date is required.")
+      }
+      
       const payload: any = {
         client_id: formData.client_id || null,
         tier_id: formData.tier_id || null,
         status: formData.status,
-        mrr: formData.mrr,
+        mrr: parsedMrr,
         started_at: new Date(formData.started_at).toISOString(),
         next_billing_date: formData.next_billing_date ? new Date(formData.next_billing_date).toISOString() : null,
       }
@@ -102,6 +111,7 @@ export default function NewSubscriptionForm() {
        )}
 
        <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 space-y-6">
+         <fieldset disabled={loading || fetchingClients} className="group/fieldset contents">
           <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-6">
             <Repeat className="w-5 h-5 text-accent" />
             <h2 className="text-lg font-bold font-michroma text-white">Subscription Details</h2>
@@ -143,6 +153,7 @@ export default function NewSubscriptionForm() {
                <input name="next_billing_date" value={formData.next_billing_date} onChange={handleInputChange} type="date" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 filter-[invert(1)_hue-rotate(180deg)]" />
              </div>
           </div>
+         </fieldset>
        </form>
     </div>
   )
