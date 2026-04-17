@@ -5,6 +5,7 @@ import { Search, Filter, MoreHorizontal, CheckCircle, PauseCircle, XCircle, Cloc
 import { db, Subscription } from '@/lib/db'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale/es'
+import Link from 'next/link'
 
 // Custom Clock icon if not available in lucide
 const CustomClock = (props: any) => (
@@ -83,9 +84,12 @@ export default function SubscriptionsDashboard() {
             <h1 className="text-2xl font-michroma font-bold text-white tracking-wide">Plan Subscriptions</h1>
             <p className="text-zinc-400 text-sm mt-1">Manage recurring billing and membership tiers.</p>
           </div>
-          <button className="px-5 py-2.5 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target">
+          <Link 
+            href="/admin/subscriptions/new"
+            className="px-5 py-2.5 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target"
+          >
             + Create Manual Subscription
-          </button>
+          </Link>
        </div>
 
        {/* Toolbar */}

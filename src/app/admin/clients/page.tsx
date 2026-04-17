@@ -5,6 +5,7 @@ import { Search, Mail, Phone, ExternalLink, ShieldCheck } from 'lucide-react'
 import { db, Client } from '@/lib/db'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale/es'
+import Link from 'next/link'
 
 export default function ClientsDashboard() {
   const [clients, setClients] = useState<Client[]>([])
@@ -59,9 +60,17 @@ export default function ClientsDashboard() {
             <h1 className="text-2xl font-michroma font-bold text-white tracking-wide">Client Directory</h1>
             <p className="text-zinc-400 text-sm mt-1">Manage corporate and residential accounts.</p>
           </div>
-          <button className="px-5 py-2.5 rounded-xl border border-white/20 text-white font-medium hover:bg-white/10 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.05)] cursor-hover-target">
-            Export CSV
-          </button>
+          <div className="flex gap-3">
+             <Link 
+               href="/admin/clients/new"
+               className="px-5 py-2.5 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target"
+             >
+               + New Client
+             </Link>
+             <button className="px-5 py-2.5 rounded-xl border border-white/20 text-white font-medium hover:bg-white/10 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.05)] cursor-hover-target">
+               Export CSV
+             </button>
+          </div>
        </div>
 
        {/* Toolbar */}

@@ -5,10 +5,10 @@ import { Plus, Tag, Copy, Power, Trash2 } from 'lucide-react'
 import { db, Offer } from '@/lib/db'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale/es'
+import Link from 'next/link'
 
 export default function OffersDashboard() {
   const [offers, setOffers] = useState<Offer[]>([])
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
 
   const fetchOffers = async () => {
@@ -59,12 +59,12 @@ export default function OffersDashboard() {
             <h1 className="text-2xl font-michroma font-bold text-white tracking-wide">Promotions & Offers</h1>
             <p className="text-zinc-400 text-sm mt-1">Manage cross-sells, upsells, and discount codes.</p>
           </div>
-          <button 
-            onClick={() => setIsModalOpen(true)}
+          <Link 
+            href="/admin/offers/new"
             className="px-5 py-2.5 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target"
           >
             <Plus className="w-4 h-4" /> New Offer
-          </button>
+          </Link>
        </div>
 
        {/* Offers List */}
@@ -139,35 +139,6 @@ export default function OffersDashboard() {
             </div>
           )}
        </div>
-
-       {/* Creation Modal Mock */}
-       {isModalOpen && (
-         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-            <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-6 slide-in-from-bottom-8">
-               <div className="flex justify-between items-center">
-                 <h2 className="text-xl font-bold font-michroma text-white">Create New Offer</h2>
-                 <button onClick={() => setIsModalOpen(false)} className="text-zinc-400 hover:text-white">✕</button>
-               </div>
-               
-               <div className="space-y-4">
-                  <p className="text-zinc-400 text-sm italic">Creation form coming soon (linked to DB).</p>
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Offer Title</label>
-                    <input type="text" className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-white/30" placeholder="e.g. 10% Off Annual Plan" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Promo Code</label>
-                    <input type="text" className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white text-sm font-mono focus:outline-none focus:border-white/30" placeholder="e.g. ANNUAL10" />
-                  </div>
-               </div>
-
-               <div className="flex justify-end gap-3 pt-4 border-t border-white/5">
-                 <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Cancel</button>
-                 <button onClick={() => setIsModalOpen(false)} className="px-5 py-2 rounded-xl bg-white text-zinc-900 text-sm font-bold shadow-lg">Save Offer</button>
-               </div>
-            </div>
-         </div>
-       )}
     </div>
   )
 }

@@ -165,9 +165,20 @@ export default function OrdersDashboard() {
                       <p className="font-michroma font-bold text-white text-sm">${o.total.toLocaleString()}</p>
                     </td>
                     <td className="p-4">
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getStatusBadge(o.status)}`}>
-                        {o.status}
-                      </span>
+                      <select 
+                        value={o.status}
+                        onChange={async (e) => {
+                          const newStatus = e.target.value;
+                          setOrders(orders.map(order => order.id === o.id ? { ...order, status: newStatus } : order));
+                          await db.orders.updateStatus(o.id, newStatus);
+                        }}
+                        className={`bg-black/50 border border-white/10 rounded px-2 py-1 text-[10px] font-bold uppercase tracking-wider focus:outline-none focus:border-white/30 cursor-pointer ${getStatusBadge(o.status)}`}
+                      >
+                        <option value="Pending" className="bg-zinc-900 text-white">Pending</option>
+                        <option value="Shipped" className="bg-zinc-900 text-white">Shipped</option>
+                        <option value="Delivered" className="bg-zinc-900 text-white">Delivered</option>
+                        <option value="Cancelled" className="bg-zinc-900 text-white">Cancelled</option>
+                      </select>
                     </td>
                     <td className="p-4">
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getPaymentBadge(o.payment_status)}`}>
@@ -175,7 +186,7 @@ export default function OrdersDashboard() {
                       </span>
                     </td>
                     <td className="p-4 text-right">
-                      <button className="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-white transition-colors">
+                      <button className="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-white transition-colors cursor-not-allowed opacity-50" title="Details view coming soon">
                         <MoreHorizontal className="w-5 h-5" />
                       </button>
                     </td>
