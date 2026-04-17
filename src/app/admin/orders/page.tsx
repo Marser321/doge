@@ -169,8 +169,18 @@ export default function OrdersDashboard() {
                         value={o.status}
                         onChange={async (e) => {
                           const newStatus = e.target.value;
-                          setOrders(orders.map(order => order.id === o.id ? { ...order, status: newStatus } : order));
-                          await db.orders.updateStatus(o.id, newStatus);
+                          const previousStatus = o.status;
+                          try {
+                            setOrders(orders.map(order => order.id === o.id ? { ...order, status: newStatus } : order));
+                            const { error } = await db.orders.updateStatus(o.id, newStatus);
+                            if (error) {
+                              setOrders(orders.map(order => order.id === o.id ? { ...order, status: previousStatus } : order));
+                              alert('Failed to update: ' + error.message);
+                            }
+                          } catch (err: any) {
+                            setOrders(orders.map(order => order.id === o.id ? { ...order, status: previousStatus } : order));
+                            alert('An unexpected error occurred: ' + err.message);
+                          }
                         }}
                         className={`bg-black/50 border border-white/10 rounded px-2 py-1 text-[10px] font-bold uppercase tracking-wider focus:outline-none focus:border-white/30 cursor-pointer ${getStatusBadge(o.status)}`}
                       >

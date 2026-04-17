@@ -2,11 +2,13 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { LayoutDashboard, Users, Tag, CreditCard, LogOut, Settings, Bell, ShoppingBag, Package } from 'lucide-react'
+import { insforge } from '@/lib/insforge'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const router = useRouter()
 
   const navItems = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -62,11 +64,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Footer actions */}
         <div className="p-4 border-t border-white/5 space-y-2 shrink-0">
-           <button disabled className="flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-500 cursor-not-allowed transition-all w-full text-left text-sm font-medium" title="Coming Soon">
-             <Settings className="w-5 h-5 text-zinc-600" />
-             Settings (Soon)
-           </button>
-           <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all w-full text-left text-sm font-medium group">
+           <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition-all w-full text-left text-sm font-medium group">
+             <Settings className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
+             Settings
+           </Link>
+           <button 
+             onClick={async () => {
+               await insforge.auth.signOut()
+               router.push('/login')
+             }}
+             className="flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all w-full text-left text-sm font-medium group"
+           >
              <LogOut className="w-5 h-5 text-zinc-500 group-hover:text-red-400 transition-colors" />
              Sign Out
            </button>

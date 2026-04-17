@@ -28,7 +28,9 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     if (isOpen && inputRef.current) {
       setTimeout(() => inputRef.current?.focus(), 200)
     }
-    if (!isOpen) setQuery('')
+    if (!isOpen) {
+      setTimeout(() => setQuery(''), 0);
+    }
   }, [isOpen])
 
   // Close on Escape

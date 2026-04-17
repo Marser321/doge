@@ -73,7 +73,9 @@ export default function BookingFlow() {
 
   // Trigger confetti when entering step 3
   useEffect(() => {
-    if (step === 3) triggerConfetti()
+    if (step === 3) {
+      requestAnimationFrame(() => triggerConfetti());
+    }
   }, [step, triggerConfetti])
 
   return (

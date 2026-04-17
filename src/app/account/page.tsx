@@ -17,7 +17,7 @@ export default function AccountPage() {
   useEffect(() => {
     const savedTheme = localStorage.getItem('doge-theme') as 'dark' | 'light'
     if (savedTheme) {
-      setTheme(savedTheme)
+      requestAnimationFrame(() => setTheme(savedTheme))
       document.documentElement.dataset.theme = savedTheme
     }
   }, [])

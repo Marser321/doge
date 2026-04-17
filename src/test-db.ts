@@ -11,7 +11,7 @@ async function testSchema() {
       } else {
         console.log(`Table ${table} EXISTS. rows:`, data?.length);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.log(`Table ${table} threw:`, e.message);
     }
   }

@@ -27,18 +27,30 @@ export default function OffersDashboard() {
   }, [])
 
   const handleToggleStatus = async (offer: Offer) => {
-    const newStatus = offer.status === 'Active' ? 'Inactive' : 'Active'
-    const { error } = await db.offers.update(offer.id, { status: newStatus as any })
-    if (!error) {
-      setOffers(offers.map(o => o.id === offer.id ? { ...o, status: newStatus as any } : o))
+    try {
+      const newStatus = offer.status === 'Active' ? 'Inactive' : 'Active'
+      const { error } = await db.offers.update(offer.id, { status: newStatus as any })
+      if (!error) {
+        setOffers(offers.map(o => o.id === offer.id ? { ...o, status: newStatus as any } : o))
+      } else {
+        alert('Failed to update offer status: ' + error.message)
+      }
+    } catch (err: any) {
+      alert('An unexpected error occurred: ' + err.message)
     }
   }
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this offer?')) {
-      const { error } = await db.offers.delete(id)
-      if (!error) {
-        setOffers(offers.filter(o => o.id !== id))
+      try {
+        const { error } = await db.offers.delete(id)
+        if (!error) {
+          setOffers(offers.filter(o => o.id !== id))
+        } else {
+          alert('Failed to delete offer: ' + error.message)
+        }
+      } catch (err: any) {
+        alert('An unexpected error occurred: ' + err.message)
       }
     }
   }

@@ -103,21 +103,22 @@ export const db = {
       const { data, error } = await insforge.database
         .from('clients')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(300);
       return { data: data as Client[], error };
     },
     async create(client: Partial<Client>) {
       const { data, error } = await insforge.database
         .from('clients')
         .insert([client]);
-      return { data: (data as any)?.[0] as Client, error };
+      return { data: (data as unknown as Client[])?.[0] as Client, error };
     },
     async update(id: string, updates: Partial<Client>) {
       const { data, error } = await insforge.database
         .from('clients')
         .update(updates)
         .eq('id', id);
-      return { data: (data as any)?.[0] as Client, error };
+      return { data: (data as unknown as Client[])?.[0] as Client, error };
     },
     async delete(id: string) {
       const { error } = await insforge.database
@@ -131,27 +132,25 @@ export const db = {
   // Subscriptions
   subscriptions: {
     async getAll() {
-      // Note: InsForge SDK supports basic joins if relationships are set, 
-      // but for now we'll fetch them separately or use a flat structure if needed.
-      // Based on PostgREST, we can use select('*, client:clients(*), tier:subscription_tiers(*)')
       const { data, error } = await insforge.database
         .from('subscriptions')
         .select('*, client:clients(*), tier:subscription_tiers(*)')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(300);
       return { data: data as Subscription[], error };
     },
     async create(subscription: Partial<Subscription>) {
       const { data, error } = await insforge.database
         .from('subscriptions')
         .insert([subscription]);
-      return { data: (data as any)?.[0] as Subscription, error };
+      return { data: (data as unknown as Subscription[])?.[0] as Subscription, error };
     },
     async update(id: string, updates: Partial<Subscription>) {
       const { data, error } = await insforge.database
         .from('subscriptions')
         .update(updates)
         .eq('id', id);
-      return { data: (data as any)?.[0] as Subscription, error };
+      return { data: (data as unknown as Subscription[])?.[0] as Subscription, error };
     }
   },
 
@@ -161,21 +160,22 @@ export const db = {
       const { data, error } = await insforge.database
         .from('offers')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(300);
       return { data: data as Offer[], error };
     },
     async create(offer: Partial<Offer>) {
       const { data, error } = await insforge.database
         .from('offers')
         .insert([offer]);
-      return { data: (data as any)?.[0] as Offer, error };
+      return { data: (data as unknown as Offer[])?.[0] as Offer, error };
     },
     async update(id: string, updates: Partial<Offer>) {
       const { data, error } = await insforge.database
         .from('offers')
         .update(updates)
         .eq('id', id);
-      return { data: (data as any)?.[0] as Offer, error };
+      return { data: (data as unknown as Offer[])?.[0] as Offer, error };
     },
     async delete(id: string) {
       const { error } = await insforge.database
@@ -192,7 +192,8 @@ export const db = {
       const { data, error } = await insforge.database
         .from('products')
         .select('*')
-        .order('sort_order', { ascending: true });
+        .order('sort_order', { ascending: true })
+        .limit(300);
       return { data: data as Product[], error };
     },
     async getBySlug(slug: string) {
@@ -207,14 +208,14 @@ export const db = {
       const { data, error } = await insforge.database
         .from('products')
         .insert([product]);
-      return { data: (data as any)?.[0] as Product, error };
+      return { data: (data as unknown as Product[])?.[0] as Product, error };
     },
     async update(id: string, updates: Partial<Product>) {
       const { data, error } = await insforge.database
         .from('products')
         .update(updates)
         .eq('id', id);
-      return { data: (data as any)?.[0] as Product, error };
+      return { data: (data as unknown as Product[])?.[0] as Product, error };
     },
     async delete(id: string) {
       const { error } = await insforge.database
@@ -252,7 +253,7 @@ export const db = {
         .from('products')
         .update({ is_featured })
         .eq('id', id);
-      return { data: (data as any)?.[0] as Product, error };
+      return { data: (data as unknown as Product[])?.[0] as Product, error };
     }
   },
 
@@ -262,25 +263,27 @@ export const db = {
       const { data, error } = await insforge.database
         .from('orders')
         .select('*, client:clients(*)')
-        .order('created_at', { ascending: false });
-      return { data: data as any[], error };
+        .order('created_at', { ascending: false })
+        .limit(300);
+      return { data: data as unknown[], error };
     },
-    async create(order: any, items: any[]) {
+    async create(order: Record<string, unknown>, items: Record<string, unknown>[]) {
       // Create order first
       const { data: orderData, error: orderError } = await insforge.database
         .from('orders')
         .insert([order]);
       
-      if (orderError || !(orderData as any)?.[0]?.id) return { error: orderError };
+      const typedOrderData = orderData as Array<{ id: string }> | null;
+      if (orderError || !typedOrderData?.[0]?.id) return { error: orderError };
 
       // Create items with the new order ID
-      const orderId = (orderData as any)[0].id;
+      const orderId = typedOrderData[0].id;
       const itemsWithId = items.map(item => ({ ...item, order_id: orderId }));
       const { error: itemsError } = await insforge.database
         .from('order_items')
         .insert(itemsWithId);
 
-      return { data: (orderData as any)[0], error: itemsError };
+      return { data: typedOrderData[0], error: itemsError };
     },
     async updateStatus(id: string, status: string) {
       const { data, error } = await insforge.database

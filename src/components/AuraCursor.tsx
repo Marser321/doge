@@ -20,7 +20,11 @@ export default function SqueegeeCursor() {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
-    setIsTouchDevice(window.matchMedia('(pointer: coarse)').matches);
+    let mounted = true;
+    requestAnimationFrame(() => {
+      if (mounted) setIsTouchDevice(window.matchMedia('(pointer: coarse)').matches);
+    });
+    return () => { mounted = false; };
   }, []);
 
   // Raw mouse position

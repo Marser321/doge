@@ -269,9 +269,9 @@ export const PrecisionProtocolScroll = () => {
     const horizontalElement = horizontalRef.current
 
     const calculateHorizontalTravel = () => {
-      const isMobile = window.innerWidth < 768;
-      const paddingOffset = isMobile ? (window.innerWidth * 0.1) : 320;
-      return Math.max(0, horizontalElement.scrollWidth - window.innerWidth + paddingOffset);
+      // Just subtract the viewport width from the total scrollable width.
+      // The container already has horizontal padding (px-4/px-16/px-32) which provides the natural stopping space.
+      return Math.max(0, horizontalElement.scrollWidth - window.innerWidth);
     }
 
     const syncActiveIndex = (progress: number) => {

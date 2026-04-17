@@ -53,7 +53,9 @@ export function TiltCard({
 
     // Check for reduced motion preference
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(motionQuery.matches);
+    requestAnimationFrame(() => {
+      setPrefersReducedMotion(motionQuery.matches);
+    });
     const handleMotionChange = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
     motionQuery.addEventListener('change', handleMotionChange);
 
