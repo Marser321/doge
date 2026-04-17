@@ -25,12 +25,14 @@ type PropertyCoordinates = {
 
 type Employee = {
   id: string;
+  employee_id?: string;
   full_name: string;
   capacity_size: number | null;
 };
 
 type Shift = {
   id: string;
+  employee_id?: string;
   shift_start: string;
   shift_end: string;
 };
@@ -178,25 +180,41 @@ async function fetchLiveAvailability(payload: AvailabilityPayload): Promise<Crew
 
   const available: CrewCandidate[] = [];
 
+  const employeeIds = employees.map((emp) => (emp as Employee).id);
+
+  const { data: allShifts, error: shiftError } = await insforge.database
+    .from("shifts")
+    .select("id, employee_id, shift_start, shift_end")
+    .in("employee_id", employeeIds)
+    .gte("shift_start", dayStart)
+    .lte("shift_end", dayEnd);
+
+  if (shiftError) {
+    return [];
+  }
+
+  const shiftsByEmployee = new Map<string, Shift[]>();
+  if (allShifts) {
+    for (const shift of allShifts as Shift[]) {
+      if (shift.employee_id) {
+        if (!shiftsByEmployee.has(shift.employee_id)) {
+          shiftsByEmployee.set(shift.employee_id, []);
+        }
+        shiftsByEmployee.get(shift.employee_id)!.push(shift);
+      }
+    }
+  }
+
   for (const emp of employees) {
     const employee = emp as Employee;
-    const { data: shifts, error: shiftError } = await insforge.database
-      .from("shifts")
-      .select("id, shift_start, shift_end")
-      .eq("employee_id", employee.id)
-      .gte("shift_start", dayStart)
-      .lte("shift_end", dayEnd);
-
-    if (shiftError) {
-      continue;
-    }
+    const shifts = shiftsByEmployee.get(employee.id) || [];
 
     const hasOverlap =
-      (shifts as Shift[])?.some((shift) => {
+      shifts.some((shift) => {
         const shiftStart = new Date(shift.shift_start).getTime();
         const shiftEnd = new Date(shift.shift_end).getTime();
         return requestedStart < shiftEnd && requestedEnd > shiftStart;
-      }) ?? false;
+      });
 
     if (hasOverlap) {
       continue;
