@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowLeft, Home, Camera, FileText, Upload, X, ImageIcon, Film, Send, CheckCircle, ShieldCheck } from 'lucide-react'
 import { useLanguage } from '@/components/LanguageProvider'
 
@@ -256,8 +257,7 @@ export default function ResidentialVipPage() {
                           className="relative aspect-square rounded-2xl overflow-hidden border border-accent/10 group"
                         >
                           {file.type === 'image' ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={file.preview} alt="Preview" className="w-full h-full object-cover" />
+                            <Image src={file.preview} alt="Preview" fill className="object-cover" unoptimized />
                           ) : (
                             <div className="w-full h-full bg-accent/10 flex items-center justify-center">
                               <Film className="w-8 h-8 text-accent" />
