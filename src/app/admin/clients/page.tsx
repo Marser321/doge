@@ -38,10 +38,11 @@ export default function ClientsDashboard() {
     }
   }
 
+  const term = searchTerm.toLowerCase()
   const filteredClients = clients.filter(client => 
-    client.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    (client.company || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (client.email || '').toLowerCase().includes(searchTerm.toLowerCase())
+    client.name.toLowerCase().includes(term) ||
+    (client.company || '').toLowerCase().includes(term) ||
+    (client.email || '').toLowerCase().includes(term)
   )
 
   if (loading) {
