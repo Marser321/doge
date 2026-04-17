@@ -1,0 +1,10 @@
+[test]
+coverage = false
+
+[install]
+registry = "https://registry.npmjs.org/"
+
+[module]
+# alias
+"~/*" = "./src/*"
+"@/*" = "./src/*"
