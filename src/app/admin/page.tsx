@@ -71,11 +71,11 @@ export default function AdminDashboard() {
            <h1 className="text-3xl font-michroma font-bold silver-text">Platform Overview</h1>
         </div>
         <div className="flex gap-3">
-           <button className="px-5 py-2.5 rounded-xl border border-white/10 text-white font-medium hover:bg-white/5 transition-all text-sm cursor-hover-target shadow-lg shadow-black/20">
-             Download Report
+           <button disabled className="px-5 py-2.5 rounded-xl border border-white/10 text-zinc-500 font-medium bg-black/20 cursor-not-allowed transition-all text-sm" title="Coming Soon">
+             Report (Soon)
            </button>
-           <button className="px-5 py-2.5 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm cursor-hover-target shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-             View Live Map
+           <button disabled className="px-5 py-2.5 rounded-xl bg-white/20 text-zinc-400 font-bold cursor-not-allowed transition-all text-sm" title="Coming Soon">
+             Map (Soon)
            </button>
         </div>
       </div>
@@ -117,7 +117,6 @@ export default function AdminDashboard() {
          <div className="lg:col-span-2 glass-panel p-6 rounded-2xl border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
             <div className="flex items-center justify-between mb-8">
                <h3 className="text-lg font-bold font-michroma text-white">Recent Activity</h3>
-               <button className="text-sm text-zinc-400 hover:text-white transition-colors">View All</button>
             </div>
             
             <div className="space-y-4">

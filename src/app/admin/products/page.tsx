@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Plus, Search, Filter, MoreHorizontal, ExternalLink, Box, TrendingUp, AlertTriangle, Star } from 'lucide-react'
 import { db, Product } from '@/lib/db'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function ProductsDashboard() {
   const [products, setProducts] = useState<Product[]>([])
@@ -65,9 +66,9 @@ export default function ProductsDashboard() {
             <h1 className="text-2xl font-michroma font-bold text-white tracking-wide">Product Catalog</h1>
             <p className="text-zinc-400 text-sm mt-1">Manage inventory, affiliate products, and store curated items.</p>
           </div>
-          <button className="px-5 py-2.5 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target">
+          <Link href="/admin/products/new" className="px-5 py-2.5 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target">
             <Plus className="w-4 h-4" /> Add Product
-          </button>
+          </Link>
        </div>
 
        {/* Stats Grid */}

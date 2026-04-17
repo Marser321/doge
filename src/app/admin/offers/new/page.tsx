@@ -57,7 +57,15 @@ export default function NewOfferForm() {
       }
 
       const { error: submitError } = await db.offers.create(payload)
-      if (submitError) throw new Error(submitError.message || 'Error creating offer')
+      if (submitError) {
+        if (submitError.code === '23505' || submitError.message?.toLowerCase().includes('unique constraint')) {
+          throw new Error('This promo code is already in use. Please choose a different one.')
+        }
+        if (submitError.code === '23514' || submitError.message?.toLowerCase().includes('check constraint')) {
+          throw new Error('Check constraints violated (e.g. discount percent cannot exceed 100).')
+        }
+        throw new Error(submitError.message || 'Error creating offer')
+      }
 
       router.push('/admin/offers')
       router.refresh()
@@ -124,7 +132,18 @@ export default function NewOfferForm() {
 
              <div>
                <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Discount Amount *</label>
-               <input required name="discount_amount" value={formData.discount_amount || ''} onChange={handleInputChange} type="number" min="0" step="0.01" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white font-michroma focus:outline-none focus:border-accent/50" placeholder="e.g. 10" />
+               <input 
+                 required 
+                 name="discount_amount" 
+                 value={formData.discount_amount === 0 ? '' : formData.discount_amount} 
+                 onChange={handleInputChange} 
+                 type="number" 
+                 min="0" 
+                 max={formData.discount_type === 'percent' ? 100 : undefined}
+                 step="0.01" 
+                 className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white font-michroma focus:outline-none focus:border-accent/50" 
+                 placeholder={formData.discount_type === 'percent' ? "e.g. 15 (Max 100)" : "e.g. 50"} 
+               />
              </div>
 
              <div>

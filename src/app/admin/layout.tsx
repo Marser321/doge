@@ -62,9 +62,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Footer actions */}
         <div className="p-4 border-t border-white/5 space-y-2 shrink-0">
-           <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition-all w-full text-left text-sm font-medium">
-             <Settings className="w-5 h-5 text-zinc-500" />
-             Settings
+           <button disabled className="flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-500 cursor-not-allowed transition-all w-full text-left text-sm font-medium" title="Coming Soon">
+             <Settings className="w-5 h-5 text-zinc-600" />
+             Settings (Soon)
            </button>
            <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all w-full text-left text-sm font-medium group">
              <LogOut className="w-5 h-5 text-zinc-500 group-hover:text-red-400 transition-colors" />
