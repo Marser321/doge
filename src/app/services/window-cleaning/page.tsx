@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowLeft, Droplets, Camera, FileText, Upload, X, ImageIcon, Film, Send, CheckCircle, ShieldCheck } from 'lucide-react'
 import { useLanguage } from '@/components/LanguageProvider'
+import { ServiceVisualBanner } from '@/components/services/ServiceVisualBanner'
 
 type DescriptionMethod = 'photos' | 'text'
 
@@ -165,6 +166,8 @@ export default function WindowCleaningPage() {
             {t('wc.subtitle')}
           </p>
         </motion.div>
+
+        <ServiceVisualBanner visualId="windowCleaning" lang={lang} />
 
         {/* Method Toggle */}
         <motion.div

@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx supabase start
+      - run: npx supabase db reset
+      - run: npx supabase db lint --local --level warning
+      - run: npx supabase test db
+      - name: Verify Supabase type generation
+        run: |
+          npx supabase gen types typescript --local > /tmp/database.types.ts
+          test -s /tmp/database.types.ts
+          grep -q "service_requests" /tmp/database.types.ts
+          grep -q "create_order_with_items" /tmp/database.types.ts
+          if grep -q "bootstrap shape" src/lib/database.types.ts; then
+            cp /tmp/database.types.ts src/lib/database.types.ts
+          else
+            diff -u src/lib/database.types.ts /tmp/database.types.ts
+          fi
+      - name: Export local Supabase environment
+        run: |
+          eval "$(npx supabase status -o env)"
+          echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${PUBLISHABLE_KEY:-$ANON_KEY}" >> "$GITHUB_ENV"
+          echo "SUPABASE_SECRET_KEY=${SECRET_KEY:-$SERVICE_ROLE_KEY}" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_APP_URL=http://127.0.0.1:3100" >> "$GITHUB_ENV"
+          echo "RATE_LIMIT_PEPPER=ci-only-rate-limit-pepper" >> "$GITHUB_ENV"
+          echo "CRON_SECRET=ci-only-cron-secret" >> "$GITHUB_ENV"
+      - run: npm test
+      - run: npm run lint
+      - run: npm audit --omit=dev --audit-level=high
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e -- --project=chromium

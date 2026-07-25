@@ -6,8 +6,15 @@ import { motion } from 'framer-motion'
 import { CheckCircle, Zap } from 'lucide-react'
 import { TiltCard } from '@/components/TiltCard'
 import { MagneticButton } from '@/components/shared/MagneticButton'
+import type { TranslationKey } from '@/data/i18n'
 
-export const SubscriptionsSection = ({ isMobile, t }: { isMobile: boolean, t: any }) => {
+export const SubscriptionsSection = ({ isMobile, t }: { isMobile: boolean, t: (key: TranslationKey) => string }) => {
+  const plans = [
+    { id: 'bronce', nameKey: 'mem.plan.bronce' as TranslationKey, price: 150, freqKey: 'mem.monthly' as TranslationKey, popular: false, featureKeys: ['mem.feat.sanit1', 'mem.feat.agenda', 'mem.feat.support'] as TranslationKey[] },
+    { id: 'plata', nameKey: 'mem.plan.plata' as TranslationKey, price: 250, freqKey: 'mem.biweekly' as TranslationKey, popular: true, featureKeys: ['mem.feat.sanit2', 'mem.feat.priority', 'mem.feat.premium'] as TranslationKey[] },
+    { id: 'oro', nameKey: 'mem.plan.oro' as TranslationKey, price: 450, freqKey: 'mem.weekly' as TranslationKey, popular: false, featureKeys: ['mem.feat.sanit4', 'mem.feat.vipSlots', 'mem.feat.audit'] as TranslationKey[] },
+  ];
+
   return (
     <>
             {/* 3.2 SUSCRIPCIONES (Noir Memberships) */}
@@ -24,17 +31,13 @@ export const SubscriptionsSection = ({ isMobile, t }: { isMobile: boolean, t: an
                   viewport={{ once: true }}
                   className="text-center max-w-4xl mx-auto mb-12 md:mb-16"
                 >
-                  <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] bg-accent/5 px-4 py-2 rounded-full border border-accent/10">Membresías Exclusivas</span>
-                  <h2 className="font-michroma text-3xl md:text-5xl lg:text-6xl font-black text-foreground mt-10 mb-8 tracking-tighter uppercase leading-[1.1]">Estabilidad <br/> <span className="silver-text">Premium.</span></h2>
-                  <p className="text-accent text-lg md:text-xl font-medium max-w-2xl mx-auto">Asegure su cupo en la agenda más solicitada de Miami. Miembros oro cuentan con prioridad absoluta y beneficios tácticos mensuales.</p>
+                  <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] bg-accent/5 px-4 py-2 rounded-full border border-accent/10">{t('mem.badge')}</span>
+                  <h2 className="font-michroma text-3xl md:text-5xl lg:text-6xl font-black text-foreground mt-10 mb-8 tracking-tighter uppercase leading-[1.1]">{t('mem.title')} <br/> <span className="silver-text">{t('mem.title2')}</span></h2>
+                  <p className="text-accent text-lg md:text-xl font-medium max-w-2xl mx-auto">{t('mem.subtitle2')}</p>
                 </motion.div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-                  {[
-                    { id: 'bronce', name: 'Bronce', price: 150, freq: 'Mensual', popular: false, features: ['1 Sanitación Mensual', 'Acceso a Agenda', 'Soporte Estándar'] },
-                    { id: 'plata', name: 'Plata', price: 250, freq: 'Quincenal', popular: true, features: ['2 Sanitaciones/Mes', 'Prioridad de Agenda', 'Insumos Premium'] },
-                    { id: 'oro', name: 'Oro VIP', price: 450, freq: 'Semanal', popular: false, features: ['4 Sanitaciones/Mes', 'Turnos VIP Fijos', 'Auditoría Fotográfica Garantizada'] },
-                  ].map((plan, idx) => (
+                  {plans.map((plan, idx) => (
                     <motion.div
                       key={plan.id}
                       initial={{ opacity: 0, y: isMobile ? 30 : 50, scale: 0.98 }}
@@ -51,19 +54,19 @@ export const SubscriptionsSection = ({ isMobile, t }: { isMobile: boolean, t: an
                         }`}>
                           {plan.popular && (
                             <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-accent text-background text-[9px] font-black px-6 py-2 rounded-full tracking-[0.2em] uppercase shadow-xl whitespace-nowrap">
-                              Most Requested
+                              {t('mem.mostRequested')}
                             </div>
                           )}
-                          <h3 className={`text-2xl md:text-3xl font-black mb-2 uppercase font-michroma ${plan.popular ? 'text-background' : 'text-foreground'}`}>{plan.name}</h3>
-                          <p className={`text-[9px] font-black uppercase tracking-[0.3em] mb-10 ${plan.popular ? 'text-background/70' : 'text-taupe'}`}>{plan.freq}</p>
+                          <h3 className={`text-2xl md:text-3xl font-black mb-2 uppercase font-michroma ${plan.popular ? 'text-background' : 'text-foreground'}`}>{t(plan.nameKey)}</h3>
+                          <p className={`text-[9px] font-black uppercase tracking-[0.3em] mb-10 ${plan.popular ? 'text-background/70' : 'text-taupe'}`}>{t(plan.freqKey)}</p>
                           <div className="mb-8 border-b border-accent/10 pb-8">
                             <span className="text-4xl font-black text-foreground font-michroma">${plan.price}</span>
-                            <span className={`text-[10px] font-bold ml-2 uppercase tracking-widest ${plan.popular ? 'text-background/70' : 'text-taupe'}`}>/visita</span>
+                            <span className={`text-[10px] font-bold ml-2 uppercase tracking-widest ${plan.popular ? 'text-background/70' : 'text-taupe'}`}>{t('mem.perVisit')}</span>
                           </div>
                           <ul className="space-y-4 mb-10 flex-grow">
-                            {plan.features.map((item, i) => (
+                            {plan.featureKeys.map((key, i) => (
                               <li key={i} className={`flex items-center text-xs font-bold uppercase tracking-tight ${plan.popular ? 'text-background/80' : 'text-accent'}`}>
-                                <CheckCircle className={`w-4 h-4 mr-3 shrink-0 ${plan.popular ? 'text-background' : 'text-accent/60'}`} /> {item}
+                                <CheckCircle className={`w-4 h-4 mr-3 shrink-0 ${plan.popular ? 'text-background' : 'text-accent/60'}`} /> {t(key)}
                               </li>
                             ))}
                           </ul>

@@ -1,23 +1,15 @@
-import { expect, test, describe } from "bun:test";
-import { t, TranslationKey, Lang } from "./i18n";
+import { describe, expect, test } from 'vitest';
+import { t, TranslationKey, Lang } from './i18n';
 
-describe("i18n translation function (t)", () => {
-  test("translates a known key to English", () => {
-    expect(t("nav.services", "en")).toBe("Services");
+describe('i18n translation function', () => {
+  test('translates known keys in both supported languages', () => {
+    expect(t('nav.services', 'en')).toBe('Services');
+    expect(t('nav.services', 'es')).toBe('Servicios');
   });
 
-  test("translates a known key to Spanish", () => {
-    expect(t("nav.services", "es")).toBe("Servicios");
-  });
-
-  test("returns the key itself if the translation key does not exist", () => {
-    const unknownKey = "unknown.key.that.does.not.exist" as TranslationKey;
-    expect(t(unknownKey, "en")).toBe("unknown.key.that.does.not.exist");
-    expect(t(unknownKey, "es")).toBe("unknown.key.that.does.not.exist");
-  });
-
-  test("returns the key itself if the language is undefined or invalid", () => {
-    const invalidLang = "fr" as Lang;
-    expect(t("nav.services", invalidLang)).toBe("nav.services");
+  test('fails visibly for an unknown key or language', () => {
+    const unknownKey = 'unknown.key.that.does.not.exist' as TranslationKey;
+    expect(t(unknownKey, 'en')).toBe(unknownKey);
+    expect(t('nav.services', 'fr' as Lang)).toBe('nav.services');
   });
 });

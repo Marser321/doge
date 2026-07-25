@@ -1,286 +1,31 @@
-import { insforge } from "@/lib/insforge";
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
 
-type DispatchMode = "mock" | "live";
-type WindshieldStatus = "first_job" | "availability_checked";
+import { requireStaff } from '@/lib/server/auth';
+import { availableTeams } from '@/lib/server/repository';
+import { badRequest, errorResponse, rateLimit, requireSameOrigin } from '@/lib/server/http';
 
-type AvailabilityPayload = {
-  property_id: string;
-  team_size_required: number;
-  date_start: string;
-  date_end: string;
-  service_duration_minutes?: number;
-};
+export const runtime = 'nodejs';
 
-type CrewCandidate = {
-  employee_id: string;
-  employee_name: string;
-  travel_time_minutes: number;
-  windshield_status: WindshieldStatus;
-};
-
-type PropertyCoordinates = {
-  lat: number | null;
-  lng: number | null;
-};
-
-type Employee = {
-  id: string;
-  employee_id?: string;
-  full_name: string;
-  capacity_size: number | null;
-};
-
-type Shift = {
-  id: string;
-  employee_id?: string;
-  shift_start: string;
-  shift_end: string;
-};
-
-const dispatchMode: DispatchMode =
-  process.env.DISPATCH_MODE === "live" ? "live" : "mock";
-
-function json(data: unknown, status = 200): Response {
-  return Response.json(data, { status });
-}
-
-function parsePayload(input: unknown): { data?: AvailabilityPayload; errors: string[] } {
-  if (!input || typeof input !== "object") {
-    return { errors: ["Request body must be a JSON object"] };
-  }
-
-  const raw = input as Record<string, unknown>;
-  const propertyId = raw.property_id;
-  const teamSize = raw.team_size_required;
-  const dateStart = raw.date_start;
-  const dateEnd = raw.date_end;
-  const serviceDuration = raw.service_duration_minutes;
-
-  const errors: string[] = [];
-
-  if (typeof propertyId !== "string" || propertyId.trim().length === 0) {
-    errors.push("property_id is required and must be a non-empty string");
-  }
-
-  if (typeof teamSize !== "number" || !Number.isInteger(teamSize) || teamSize <= 0) {
-    errors.push("team_size_required must be a positive integer");
-  }
-
-  if (typeof dateStart !== "string" || Number.isNaN(Date.parse(dateStart))) {
-    errors.push("date_start must be a valid ISO date string");
-  }
-
-  if (typeof dateEnd !== "string" || Number.isNaN(Date.parse(dateEnd))) {
-    errors.push("date_end must be a valid ISO date string");
-  }
-
-  if (
-    typeof serviceDuration !== "undefined" &&
-    (typeof serviceDuration !== "number" ||
-      !Number.isInteger(serviceDuration) ||
-      serviceDuration <= 0)
-  ) {
-    errors.push("service_duration_minutes must be a positive integer when provided");
-  }
-
-  if (
-    typeof dateStart === "string" &&
-    typeof dateEnd === "string" &&
-    !Number.isNaN(Date.parse(dateStart)) &&
-    !Number.isNaN(Date.parse(dateEnd))
-  ) {
-    const start = new Date(dateStart).getTime();
-    const end = new Date(dateEnd).getTime();
-    if (end <= start) {
-      errors.push("date_end must be greater than date_start");
-    }
-  }
-
-  if (errors.length > 0) {
-    return { errors };
-  }
-
-  const propertyIdSafe = propertyId as string;
-  const teamSizeSafe = teamSize as number;
-  const dateStartSafe = dateStart as string;
-  const dateEndSafe = dateEnd as string;
-
-  return {
-    errors: [],
-    data: {
-      property_id: propertyIdSafe.trim(),
-      team_size_required: teamSizeSafe,
-      date_start: dateStartSafe,
-      date_end: dateEndSafe,
-      service_duration_minutes:
-        typeof serviceDuration === "number" ? serviceDuration : undefined,
-    },
-  };
-}
-
-function buildMockAvailability(payload: AvailabilityPayload): CrewCandidate[] {
-  const hourSeed = new Date(payload.date_start).getUTCHours();
-  const capacitySeed = payload.team_size_required;
-
-  const crews: CrewCandidate[] = [
-    {
-      employee_id: "mock-alpha",
-      employee_name: "Equipo Alpha",
-      travel_time_minutes: Math.max(8, 12 + capacitySeed - (hourSeed % 3)),
-      windshield_status: "availability_checked",
-    },
-    {
-      employee_id: "mock-bravo",
-      employee_name: "Equipo Bravo",
-      travel_time_minutes: Math.max(10, 16 + (hourSeed % 5)),
-      windshield_status: "availability_checked",
-    },
-    {
-      employee_id: "mock-charlie",
-      employee_name: "Equipo Charlie",
-      travel_time_minutes: 0,
-      windshield_status: "first_job",
-    },
-  ];
-
-  return crews.sort((a, b) => a.travel_time_minutes - b.travel_time_minutes);
-}
-
-async function fetchLiveAvailability(payload: AvailabilityPayload): Promise<CrewCandidate[]> {
-  const { data: properties, error: propertyError } = await insforge.database
-    .from("properties")
-    .select("lat, lng")
-    .eq("id", payload.property_id);
-
-  const property = properties?.[0] as PropertyCoordinates | undefined;
-
-  if (propertyError || !property) {
-    throw new Error("Property not found");
-  }
-
-  const { data: employees, error: employeeError } = await insforge.database
-    .from("employees")
-    .select("id, full_name, capacity_size")
-    .eq("status", "activo")
-    .gte("capacity_size", payload.team_size_required);
-
-  if (employeeError) {
-    throw new Error("Failed to fetch employees");
-  }
-
-  if (!employees || employees.length === 0) {
-    return [];
-  }
-
-  const day = payload.date_start.split("T")[0];
-  const dayStart = `${day}T00:00:00Z`;
-  const dayEnd = `${day}T23:59:59Z`;
-  const requestedStart = new Date(payload.date_start).getTime();
-  const requestedEnd = new Date(payload.date_end).getTime();
-
-  const available: CrewCandidate[] = [];
-
-  const employeeIds = employees.map((emp) => (emp as Employee).id);
-
-  const { data: allShifts, error: shiftError } = await insforge.database
-    .from("shifts")
-    .select("id, employee_id, shift_start, shift_end")
-    .in("employee_id", employeeIds)
-    .gte("shift_start", dayStart)
-    .lte("shift_end", dayEnd);
-
-  if (shiftError) {
-    return [];
-  }
-
-  const shiftsByEmployee = new Map<string, Shift[]>();
-  if (allShifts) {
-    for (const shift of allShifts as Shift[]) {
-      if (shift.employee_id) {
-        if (!shiftsByEmployee.has(shift.employee_id)) {
-          shiftsByEmployee.set(shift.employee_id, []);
-        }
-        shiftsByEmployee.get(shift.employee_id)!.push(shift);
-      }
-    }
-  }
-
-  for (const emp of employees) {
-    const employee = emp as Employee;
-    const shifts = shiftsByEmployee.get(employee.id) || [];
-
-    const hasOverlap =
-      shifts.some((shift) => {
-        const shiftStart = new Date(shift.shift_start).getTime();
-        const shiftEnd = new Date(shift.shift_end).getTime();
-        return requestedStart < shiftEnd && requestedEnd > shiftStart;
-      });
-
-    if (hasOverlap) {
-      continue;
-    }
-
-    available.push({
-      employee_id: employee.id,
-      employee_name: employee.full_name,
-      travel_time_minutes: 0,
-      windshield_status:
-        property.lat !== null && property.lng !== null
-          ? "availability_checked"
-          : "first_job",
-    });
-  }
-
-  return available.sort((a, b) => a.travel_time_minutes - b.travel_time_minutes);
-}
+const schema = z.object({
+  team_size_required: z.number().int().positive(),
+  date_start: z.string().datetime(),
+  date_end: z.string().datetime(),
+}).refine((value) => new Date(value.date_end) > new Date(value.date_start), {
+  message: 'El final debe ser posterior al inicio.',
+});
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as unknown;
-    const parsed = parsePayload(body);
-
-    if (!parsed.data) {
-      return json({ error: "Invalid request payload", details: parsed.errors }, 400);
-    }
-
-    if (dispatchMode === "mock") {
-      return json({
-        mode: "mock",
-        availableCrews: buildMockAvailability(parsed.data),
-      });
-    }
-
-    const availableCrews = await fetchLiveAvailability(parsed.data);
-
-    if (availableCrews.length === 0) {
-      return json(
-        { error: "No crew with sufficient capacity available" },
-        404,
-      );
-    }
-
-    return json({ mode: "live", availableCrews });
+    requireSameOrigin(request);
+    const limited = await rateLimit(request, 'dispatch', 30, 15 * 60_000);
+    if (limited) return limited;
+    await requireStaff(['owner', 'manager', 'dispatcher']);
+    const parsed = schema.safeParse(await request.json());
+    if (!parsed.success) return badRequest(parsed.error.issues[0]?.message || 'Datos inválidos.');
+    const teams = await availableTeams(parsed.data.date_start, parsed.data.date_end, parsed.data.team_size_required);
+    return NextResponse.json({ mode: 'live', available_teams: teams });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unexpected dispatch error";
-
-    if (
-      message === "Property not found" ||
-      message.includes("Invalid request payload")
-    ) {
-      return json({ error: message }, 400);
-    }
-
-    if (message.includes("missing Supabase")) {
-      return json(
-        {
-          error:
-            "Dispatch service is unavailable. Configure DISPATCH_MODE=mock or provide live credentials.",
-        },
-        503,
-      );
-    }
-
-    return json({ error: "Internal dispatch service error" }, 500);
+    return errorResponse(error, 'No fue posible calcular la disponibilidad.');
   }
 }

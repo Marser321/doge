@@ -1,7 +1,7 @@
 # 🐍 UROBOROS: Deep Audit Skill (Auditoría Profunda de Rendimiento y Funcionamiento)
 
 ## 🎯 Objetivo de la Skill
-**Uroboros** es un protocolo de auditoría profunda, reactiva y continua. Está diseñado para agentes o desarrolladores encargados de llevar llevar una aplicación Next.js + InsForge a producción. Identifica, diagnostica y resuelve errores de rendimiento, memory leaks, fallas silenciosas y cuellos de botella. 
+**Uroboros** es un protocolo de auditoría profunda, reactiva y continua. Está diseñado para agentes o desarrolladores encargados de llevar una aplicación Next.js + Supabase a producción. Identifica, diagnostica y resuelve errores de rendimiento, memory leaks, fallas silenciosas y cuellos de botella.
 Al igual que el Uroboros que muerde su propia cola, este proceso es un ciclo continuo: *Analizar -> Diagnosticar -> Reparar -> Validar (Repetir)*.
 
 ---
@@ -13,10 +13,10 @@ Al igual que el Uroboros que muerde su propia cola, este proceso es un ciclo con
 - **Mapeo de CRUDs:** Revisar en detalle las páginas de creación y modificación (`Products`, `Clients`, `Subscriptions`, `Offers`, `Orders`).
 - **Estados de Carga:** Identificar cualquier flujo donde falten indicadores de carga (`isSubmitting`) que pudieran permitir dobles o múltiples envíos (`Race Conditions`).
 
-### Fase 2: Rendimiento y Lógica de Backend InsForge (El Cuerpo)
-- **Consultas N+1:** Detectar si los listados de datos ejecutan sentencias a la base de datos dentro de bucles en lugar de utilizar operaciones eficientes (`JOINs` a nivel de DB o referencias `Supabase/InsForge SDK`).
+### Fase 2: Rendimiento y Lógica de Backend Supabase (El Cuerpo)
+- **Consultas N+1:** Detectar si los listados de datos ejecutan sentencias a la base de datos dentro de bucles en lugar de utilizar joins, vistas o RPCs eficientes.
 - **Paginación y Limitación:** Asegurarse de que en listados largos (ej. `Orders` u `Offers`) se esté implementando el modificador `.limit()` o `.range()`. Evita la saturación en memoria en el cliente.
-- **Rollback y Tolerancia a Fallos:** Auditar a nivel profundo el bloque `try/catch`. Cualquier error regresado por InsForge (`{ error }`) debe reportarse al usuario con UI de retroalimentación (`Toasts`/Alertas) y el estado de la UI (Optimistic UI) debe restaurarse al original si hay un error.
+- **Rollback y Tolerancia a Fallos:** Auditar a nivel profundo el bloque `try/catch`. Cualquier error de Supabase debe reportarse al usuario y el estado optimista de la UI debe restaurarse.
 
 ### Fase 3: UX, Performance Visual y Memoria (La Cola)
 - **SSR vs CSR:** Detectar componentes que descargan demasiado JavaScript al navegador. ¿Las tablas del admin pueden extraer más lógica al servidor y usar `'use client'` estrictamente de manera atómica?

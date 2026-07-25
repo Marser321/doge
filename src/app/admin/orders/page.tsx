@@ -1,219 +1,134 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from 'react'
-import { Search, Filter, MoreHorizontal, ShoppingCart, DollarSign, Package, Clock, ExternalLink } from 'lucide-react'
-import { db } from '@/lib/db'
-import { format } from 'date-fns'
-import { es } from 'date-fns/locale/es'
+import { FormEvent, useEffect, useState } from 'react';
+import { LoaderCircle, PackageCheck, Plus, ShoppingCart, X } from 'lucide-react';
 
-export default function OrdersDashboard() {
-  const [orders, setOrders] = useState<any[]>([])
-  const [searchTerm, setSearchTerm] = useState('')
-  const [loading, setLoading] = useState(true)
+import { db, type Client, type Offer, type Product } from '@/lib/db';
 
-  useEffect(() => {
-    async function fetchOrders() {
-      try {
-        const { data, error } = await db.orders.getAll()
-        if (data) setOrders(data)
-      } catch (error) {
-        console.error('Error fetching orders:', error)
-      } finally {
-        setLoading(false)
-      }
+type OrderRow = {
+  id: string;
+  order_number: string;
+  customer_name: string;
+  customer_email: string | null;
+  status: 'draft' | 'confirmed' | 'fulfilled' | 'cancelled' | 'refunded';
+  payment_status: string;
+  total_cents: number;
+  created_at: string;
+  order_items?: Array<{ id: string; product_name: string; quantity: number }>;
+};
+
+export default function OrdersPage() {
+  const [orders, setOrders] = useState<OrderRow[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [lines, setLines] = useState([{ key: 'line-1', product_id: '', quantity: 1 }]);
+  const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState<boolean | string>(false);
+  const [error, setError] = useState('');
+
+  async function load() {
+    const [orderResult, clientResult, productResult, offerResult] = await Promise.all([
+      db.orders.getAll(),
+      db.clients.getAll(),
+      db.products.getAll(),
+      db.offers.getAll(),
+    ]);
+    setOrders((orderResult.data || []) as OrderRow[]);
+    setClients(clientResult.data || []);
+    setProducts(productResult.data || []);
+    setOffers(offerResult.data || []);
+    setError(orderResult.error?.message || clientResult.error?.message || productResult.error?.message || offerResult.error?.message || '');
+    setLoading(false);
+  }
+  useEffect(() => { load(); }, []);
+
+  async function create(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setBusy(true);
+    setError('');
+    const form = new FormData(event.currentTarget);
+    const client = clients.find((item) => item.id === form.get('client_id'));
+    const result = await db.orders.create({
+      client_id: client?.id || null,
+      customer_name: String(form.get('customer_name') || client?.name || ''),
+      customer_email: String(form.get('customer_email') || client?.email || ''),
+      customer_phone: String(form.get('customer_phone') || client?.phone || ''),
+      delivery_address: String(form.get('delivery_address') || client?.address || ''),
+      channel: 'concierge',
+      status: String(form.get('status')),
+      payment_status: String(form.get('payment_status')),
+      offer_id: String(form.get('offer_id') || '') || null,
+      notes: String(form.get('notes') || ''),
+    }, lines.map(({ product_id, quantity }) => ({ product_id, quantity })));
+    if (result.error) setError(result.error.message);
+    else {
+      setShowForm(false);
+      setLines([{ key: 'line-1', product_id: '', quantity: 1 }]);
+      event.currentTarget.reset();
     }
-
-    fetchOrders()
-  }, [])
-
-  const term = searchTerm.toLowerCase()
-  const filteredOrders = orders.filter(o => 
-    o.order_number.toLowerCase().includes(term) ||
-    o.customer_name.toLowerCase().includes(term) ||
-    (o.customer_email || '').toLowerCase().includes(term)
-  )
-
-  const getStatusBadge = (status: string) => {
-    switch(status) {
-      case 'Delivered':
-        return 'bg-green-500/10 text-green-400 border-green-500/20'
-      case 'Shipped':
-        return 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-      case 'Pending':
-        return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
-      case 'Cancelled':
-        return 'bg-red-500/10 text-red-400 border-red-500/20'
-      default:
-        return 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
-    }
+    await load();
+    setBusy(false);
   }
 
-  const getPaymentBadge = (status: string) => {
-    return status === 'Paid' 
-      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
-      : 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
+  async function transition(order: OrderRow, status: string) {
+    setBusy(order.id);
+    const result = await db.orders.updateStatus(order.id, status);
+    if (result.error) setError(result.error.message);
+    else await load();
+    setBusy(false);
   }
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="w-8 h-8 border-4 border-white/10 border-t-white rounded-full animate-spin"></div>
-      </div>
-    )
-  }
-
-  const totalRevenue = orders.reduce((acc, curr) => acc + curr.total, 0)
+  if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle className="size-6 animate-spin text-zinc-500" /></div>;
 
   return (
-    <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out space-y-6">
-       
-       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-michroma font-bold text-white tracking-wide">Sales & Orders</h1>
-            <p className="text-zinc-400 text-sm mt-1">Monitor store transactions and affiliate conversion events.</p>
-          </div>
-          <div className="flex gap-3">
-             <button className="px-5 py-2.5 rounded-xl border border-white/10 text-white font-medium hover:bg-white/5 transition-all text-sm shadow-lg shadow-black/20">
-               Export CSV
-             </button>
-          </div>
-       </div>
+    <div className="mx-auto max-w-7xl space-y-7 pb-20">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Venta concierge</p><h1 className="mt-2 text-3xl font-semibold text-white">Órdenes</h1><p className="mt-2 text-sm text-zinc-400">Los precios se leen del catálogo y el inventario se descuenta al confirmar.</p></div>
+        <button onClick={() => setShowForm(true)} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-black"><Plus className="size-4" /> Nueva orden</button>
+      </div>
+      {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
+      <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025]">
+        {orders.length ? <div className="divide-y divide-white/10">{orders.map((order) => (
+          <article key={order.id} className="grid gap-4 px-5 py-4 lg:grid-cols-[1fr_160px_140px_180px] lg:items-center">
+            <div><p className="font-medium text-white">{order.order_number} · {order.customer_name}</p><p className="mt-1 text-xs text-zinc-500">{order.order_items?.map((item) => `${item.quantity}× ${item.product_name}`).join(', ') || 'Sin líneas'}</p></div>
+            <p className="font-mono text-white">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(order.total_cents) / 100)}</p>
+            <span className="w-fit rounded-full border border-white/10 px-2.5 py-1 text-xs text-zinc-300">{order.payment_status}</span>
+            <select disabled={busy === order.id || ['cancelled', 'refunded'].includes(order.status)} value={order.status} onChange={(event) => transition(order, event.target.value)} className="rounded-xl border border-white/10 bg-zinc-950 px-3 py-2 text-sm text-white disabled:opacity-50">
+              <option value={order.status}>{order.status}</option>
+              {order.status === 'draft' && <><option value="confirmed">confirmed</option><option value="cancelled">cancelled</option></>}
+              {order.status === 'confirmed' && <><option value="fulfilled">fulfilled</option><option value="cancelled">cancelled</option></>}
+              {order.status === 'fulfilled' && <option value="refunded">refunded</option>}
+            </select>
+          </article>
+        ))}</div> : <div className="py-20 text-center text-sm text-zinc-500"><ShoppingCart className="mx-auto mb-3 size-8" />Todavía no hay órdenes.</div>}
+      </section>
 
-       {/* Stats Grid */}
-       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="glass-panel p-4 rounded-xl border border-white/5 flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-white/5 text-white">
-              <ShoppingCart className="w-5 h-5" />
+      {showForm && (
+        <div className="fixed inset-0 z-[70] grid place-items-center bg-black/75 p-4 backdrop-blur-sm">
+          <form onSubmit={create} className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-white/10 bg-zinc-950 p-6">
+            <div className="flex items-start justify-between"><div><p className="text-xs uppercase tracking-wide text-red-300">Orden interna</p><h2 className="mt-1 text-xl font-semibold">Venta asistida</h2></div><button type="button" onClick={() => setShowForm(false)} className="rounded-lg p-2 text-zinc-500 hover:bg-white/5"><X className="size-5" /></button></div>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <label className="text-sm text-zinc-400 sm:col-span-2">Cliente registrado<select name="client_id" defaultValue="" className="mt-2 w-full rounded-xl border border-white/10 bg-zinc-950 px-3 py-3 text-white"><option value="">Venta sin cliente vinculado</option>{clients.map((client) => <option key={client.id} value={client.id}>{client.name}</option>)}</select></label>
+              <label className="text-sm text-zinc-400">Nombre<input name="customer_name" placeholder="Se completa desde el cliente o como venta concierge" className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-white" /></label>
+              <label className="text-sm text-zinc-400">Email<input name="customer_email" type="email" className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-white" /></label>
+              <label className="text-sm text-zinc-400">Teléfono<input name="customer_phone" className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-white" /></label>
+              <label className="text-sm text-zinc-400">Entrega<input name="delivery_address" className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-white" /></label>
+              <label className="text-sm text-zinc-400">Estado<select name="status" defaultValue="draft" className="mt-2 w-full rounded-xl border border-white/10 bg-zinc-950 px-3 py-3 text-white"><option value="draft">Borrador</option><option value="confirmed">Confirmada</option></select></label>
+              <label className="text-sm text-zinc-400">Pago<select name="payment_status" defaultValue="unpaid" className="mt-2 w-full rounded-xl border border-white/10 bg-zinc-950 px-3 py-3 text-white"><option value="unpaid">Pendiente</option><option value="paid">Pagado</option></select></label>
+              <label className="text-sm text-zinc-400 sm:col-span-2">Oferta<select name="offer_id" defaultValue="" className="mt-2 w-full rounded-xl border border-white/10 bg-zinc-950 px-3 py-3 text-white"><option value="">Sin oferta</option>{offers.filter((offer) => offer.status === 'Active' && ['products', 'both'].includes(offer.applies_to)).map((offer) => <option key={offer.id} value={offer.id}>{offer.title} · {offer.code}</option>)}</select></label>
             </div>
-            <div>
-              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Total Orders</p>
-              <p className="text-xl font-michroma font-bold text-white">{orders.length}</p>
+            <div className="mt-6 space-y-3">
+              <p className="text-sm font-semibold text-white">Productos</p>
+              {lines.map((line) => <div key={line.key} className="grid grid-cols-[1fr_90px_auto] gap-3"><select required value={line.product_id} onChange={(event) => setLines((current) => current.map((candidate) => candidate.key === line.key ? { ...candidate, product_id: event.target.value } : candidate))} className="rounded-xl border border-white/10 bg-zinc-950 px-3 py-3 text-white"><option value="">Selecciona producto</option>{products.filter((product) => product.is_active).map((product) => <option key={product.id} value={product.id}>{product.name} · ${product.price}</option>)}</select><input required type="number" min="1" value={line.quantity} onChange={(event) => setLines((current) => current.map((candidate) => candidate.key === line.key ? { ...candidate, quantity: Number(event.target.value) } : candidate))} className="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-white" /><button type="button" disabled={lines.length === 1} onClick={() => setLines((current) => current.filter((candidate) => candidate.key !== line.key))} className="rounded-xl p-3 text-zinc-500 disabled:opacity-30"><X className="size-4" /></button></div>)}
+              <button type="button" onClick={() => setLines((current) => [...current, { key: crypto.randomUUID(), product_id: '', quantity: 1 }])} className="inline-flex items-center gap-2 text-sm text-zinc-300"><Plus className="size-4" /> Añadir producto</button>
             </div>
-          </div>
-          <div className="glass-panel p-4 rounded-xl border border-white/5 flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-green-500/10 text-green-400 border-green-500/20">
-              <DollarSign className="w-5 h-5" />
-            </div>
-            <div>
-              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Total Revenue</p>
-              <p className="text-xl font-michroma font-bold text-white">${totalRevenue.toLocaleString()}</p>
-            </div>
-          </div>
-          <div className="glass-panel p-4 rounded-xl border border-white/5 flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 border-blue-500/20">
-               <Package className="w-5 h-5" />
-            </div>
-            <div>
-              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">In Shredding/Logistics</p>
-              <p className="text-xl font-michroma font-bold text-white">
-                {orders.filter(o => o.status === 'Shipped' || o.status === 'Pending').length}
-              </p>
-            </div>
-          </div>
-       </div>
-
-       {/* Toolbar */}
-       <div className="flex flex-col sm:flex-row gap-4">
-         <div className="relative flex-1">
-           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-           <input 
-             type="text" 
-             placeholder="Search by order #, customer name or email..." 
-             className="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-white/30 transition-colors"
-             value={searchTerm}
-             onChange={(e) => setSearchTerm(e.target.value)}
-           />
-         </div>
-       </div>
-
-       {/* Orders Table */}
-       <div className="glass-panel rounded-2xl border border-white/10 overflow-hidden shadow-2xl shadow-black/50">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-white/5 bg-white/5">
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Order / Date</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Customer</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Type</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Total</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Status</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Payment</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {filteredOrders.map((o) => (
-                  <tr key={o.id} className="hover:bg-white/[0.02] transition-colors group">
-                    <td className="p-4">
-                      <p className="font-bold text-white text-sm">{o.order_number}</p>
-                      <p className="text-[10px] text-zinc-500 flex items-center gap-1 mt-0.5">
-                        <Clock className="w-3 h-3" />
-                        {format(new Date(o.created_at), 'MMM d, HH:mm', { locale: es })}
-                      </p>
-                    </td>
-                    <td className="p-4">
-                      <div>
-                        <p className="font-medium text-white text-sm">{o.customer_name}</p>
-                        <p className="text-[10px] text-zinc-500">{o.customer_email}</p>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">
-                        {o.order_type.replace('_', ' ')}
-                      </span>
-                    </td>
-                    <td className="p-4">
-                      <p className="font-michroma font-bold text-white text-sm">${o.total.toLocaleString()}</p>
-                    </td>
-                    <td className="p-4">
-                      <select 
-                        value={o.status}
-                        onChange={async (e) => {
-                          const newStatus = e.target.value;
-                          const previousStatus = o.status;
-                          try {
-                            setOrders(orders.map(order => order.id === o.id ? { ...order, status: newStatus } : order));
-                            const { error } = await db.orders.updateStatus(o.id, newStatus);
-                            if (error) {
-                              setOrders(orders.map(order => order.id === o.id ? { ...order, status: previousStatus } : order));
-                              alert('Failed to update: ' + error.message);
-                            }
-                          } catch (err: any) {
-                            setOrders(orders.map(order => order.id === o.id ? { ...order, status: previousStatus } : order));
-                            alert('An unexpected error occurred: ' + err.message);
-                          }
-                        }}
-                        className={`bg-black/50 border border-white/10 rounded px-2 py-1 text-[10px] font-bold uppercase tracking-wider focus:outline-none focus:border-white/30 cursor-pointer ${getStatusBadge(o.status)}`}
-                      >
-                        <option value="Pending" className="bg-zinc-900 text-white">Pending</option>
-                        <option value="Shipped" className="bg-zinc-900 text-white">Shipped</option>
-                        <option value="Delivered" className="bg-zinc-900 text-white">Delivered</option>
-                        <option value="Cancelled" className="bg-zinc-900 text-white">Cancelled</option>
-                      </select>
-                    </td>
-                    <td className="p-4">
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getPaymentBadge(o.payment_status)}`}>
-                        {o.payment_status}
-                      </span>
-                    </td>
-                    <td className="p-4 text-right">
-                      <button className="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-white transition-colors cursor-not-allowed opacity-50" title="Details view coming soon">
-                        <MoreHorizontal className="w-5 h-5" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          
-          {filteredOrders.length === 0 && (
-             <div className="p-12 text-center text-zinc-500">
-               <p>No orders found matching your criteria.</p>
-             </div>
-          )}
-       </div>
-
+            <label className="mt-5 block text-sm text-zinc-400">Notas<textarea name="notes" rows={3} className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-white" /></label>
+            <button disabled={busy === true || lines.some((line) => !line.product_id)} className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold disabled:opacity-40">{busy === true ? <LoaderCircle className="size-4 animate-spin" /> : <PackageCheck className="size-4" />} Crear orden</button>
+          </form>
+        </div>
+      )}
     </div>
-  )
+  );
 }

@@ -7,12 +7,13 @@ import Image from 'next/image'
 import { PrecisionReveal } from '@/components/shared/PrecisionReveal'
 import { CheckCircle } from 'lucide-react'
 import { PrecisionProtocolScroll } from '@/components/PrecisionProtocolScroll'
+import type { TranslationKey } from '@/data/i18n'
 
-export const StorytellingSection = () => {
+export const StorytellingSection = ({ t }: { t: (key: TranslationKey) => string }) => {
   return (
     <>
             {/* 3.12 B2B ELITE & CATÁLOGO COMERCIAL (Precision Storytelling Narrative) */}
-            <PrecisionProtocolScroll />
+            <PrecisionProtocolScroll t={t} />
 
 
             {/* 3.15 STORYTELLING PORTFOLIO (Cinematic Immersive - 2026) */}
@@ -25,19 +26,19 @@ export const StorytellingSection = () => {
                     viewport={{ once: true }}
                     className="max-w-xl"
                   >
-                    <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] mb-8 block">La Diferencia DOGE</span>
-                    <h2 className="font-michroma text-3xl md:text-5xl lg:text-6xl text-foreground mb-8 tracking-tighter uppercase leading-[1]">Grado de <br/> <span className="silver-text">Precisión.</span></h2>
+                    <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] mb-8 block">{t('story.badge')}</span>
+                    <h2 className="font-michroma text-3xl md:text-5xl lg:text-6xl text-foreground mb-8 tracking-tighter uppercase leading-[1]">{t('story.title')} <br/> <span className="silver-text">{t('story.title2')}</span></h2>
                     <p className="text-accent text-lg md:text-xl font-medium leading-relaxed mb-12">
-                      En el mercado de Miami, la limpieza no es un gasto, es una <span className="text-foreground">estrategia de preservación</span>. Aplicamos protocolos de precisión para recuperar materiales nobles y mantener sus activos en estado de revista.
+                      {t('story.desc')} <span className="text-foreground">{t('story.desc_bold')}</span>
                     </p>
                     <div className="grid grid-cols-2 gap-8 py-8 border-y border-white/5">
                       <div>
-                        <span className="text-3xl font-black block mb-2">99.8%</span>
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Pureza de Aire HEPA</span>
+                        <span className="text-3xl font-black block mb-2">{t('story.stat1.value')}</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">{t('story.stat1.label')}</span>
                       </div>
                       <div>
-                        <span className="text-3xl font-black block mb-2">12M+</span>
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Patrimonio Protegido</span>
+                        <span className="text-3xl font-black block mb-2">{t('story.stat2.value')}</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">{t('story.stat2.label')}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -63,7 +64,7 @@ export const StorytellingSection = () => {
                      <Image src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=2670&auto=format&fit=crop" alt="Standard Clean" fill className="object-cover grayscale" />
                      <div className="absolute inset-0 bg-black/40"></div>
                      <div className="absolute top-8 left-8">
-                       <span className="text-[10px] font-black tracking-widest text-white/50 uppercase">Servicio Convencional</span>
+                       <span className="text-[10px] font-black tracking-widest text-white/50 uppercase">{t('story.conventional')}</span>
                      </div>
                   </motion.div>
 
@@ -77,7 +78,7 @@ export const StorytellingSection = () => {
                      <Image src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2670&auto=format&fit=crop" alt="Doge standard" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                      <div className="absolute top-8 right-8 bg-white text-black px-6 py-2 rounded-full font-black text-[10px] uppercase tracking-widest shadow-xl">
-                       Titanium Standard
+                       {t('story.titanium')}
                      </div>
                   </motion.div>
                 </div>

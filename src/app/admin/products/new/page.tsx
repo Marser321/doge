@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowLeft, Save, Sparkles, Image as ImageIcon, Plus, Trash2, Box } from 'lucide-react'
 import Link from 'next/link'
 import { db } from '@/lib/db'
+import { apiRequest } from '@/lib/api-client'
 
 export default function NewProductForm() {
   const router = useRouter()
@@ -39,7 +40,7 @@ export default function NewProductForm() {
     { label: '', value: '' }
   ])
 
-  const [imageUrl, setImageUrl] = useState('')
+  const [imageFile, setImageFile] = useState<File | null>(null)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
@@ -132,14 +133,16 @@ export default function NewProductForm() {
       if (submitError) throw new Error(submitError.message || 'Error creating product in database.')
 
       // 3. Dependent Image linking & Rollback Mechanism
-      if (imageUrl && imageUrl.trim() !== '' && newProduct?.id) {
+      if (imageFile && newProduct?.id) {
          try {
-           const { error: imageError } = await db.products.addImage(newProduct.id, imageUrl)
-           if (imageError) throw new Error("Fallo forzado por base de datos de imagen: " + imageError.message)
+           const media = new FormData()
+           media.set('product_id', newProduct.id)
+           media.set('photo', imageFile)
+           await apiRequest('/api/products/media', { method: 'POST', body: media, auth: 'required' })
          } catch (imgLinkError: any) {
-           // Rollback (Destruir el producto previamente creado)
+           // Compensating archive: do not leave a half-published catalogue item.
            await db.products.delete(newProduct.id)
-           throw new Error(`Inserción de imagen rechazada. Proceso completo abortado limpiamente por Uroboros Core. Log: ${imgLinkError.message}`)
+           throw new Error(`No fue posible guardar la imagen; el producto quedó archivado. ${imgLinkError.message}`)
          }
       }
 
@@ -292,14 +295,14 @@ export default function NewProductForm() {
 
                  <div className="space-y-6">
                     <div>
-                      <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Main Image URL</label>
+                      <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Imagen principal</label>
                       <div className="flex gap-2">
                          <div className="w-12 h-12 rounded-xl border border-white/10 bg-black/50 flex items-center justify-center shrink-0 overflow-hidden">
-                            {imageUrl ? <img src={imageUrl} alt="preview" className="w-full h-full object-cover" /> : <ImageIcon className="w-5 h-5 text-zinc-600" />}
+                            <ImageIcon className={`w-5 h-5 ${imageFile ? 'text-emerald-400' : 'text-zinc-600'}`} />
                          </div>
-                         <input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} type="url" className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-accent/50" placeholder="https://..." />
+                         <input onChange={(e) => setImageFile(e.target.files?.[0] || null)} type="file" accept="image/jpeg,image/png,image/webp" className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm file:mr-3 file:border-0 file:bg-white/10 file:text-white" />
                       </div>
-                      <p className="text-[10px] text-zinc-500 mt-2">Uploading local images requires InsForge Storage (coming soon). Please provide a remote URL.</p>
+                      <p className="text-[10px] text-zinc-500 mt-2">Se normaliza a WebP y se publica desde Supabase Storage.</p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">

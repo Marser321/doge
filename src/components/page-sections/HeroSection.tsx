@@ -47,37 +47,37 @@ export const HeroSection = ({
                 >
                   <motion.div variants={fadeInUp} className="mb-6">
                     <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 text-zinc-400 text-[10px] font-black uppercase tracking-[0.3em]">
-                      <ShieldCheck className="w-3 h-3" /> Professional Standard
+                      <ShieldCheck className="w-3 h-3" /> {t('hero.badge')}
                     </span>
                   </motion.div>
 
                   <TextScrubber
-                    text="Limpieza de Élite."
-                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-foreground leading-[0.85] tracking-[-0.05em] uppercase mb-12"
+                    text={t('hero.title')}
+                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-foreground leading-[1.1] tracking-[-0.02em] uppercase mb-12"
                   />
 
                   <motion.p variants={fadeInUp} className="text-lg md:text-xl text-accent mb-10 md:mb-12 leading-relaxed font-medium max-w-lg">
-                    Limpieza de precisión y conservación de activos inmobiliarios en Miami. <span className="text-foreground font-bold">Un estándar superior para quienes no aceptan menos que la perfección.</span>
+                    {t('hero.desc')} <span className="text-foreground font-bold">{t('hero.desc_bold')}</span>
                   </motion.p>
 
                   <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-8 items-center">
                     <MagneticButton href="/booking" className="inline-flex items-center justify-center px-10 py-6 text-sm font-black uppercase tracking-[0.2em] text-black bg-white rounded-xl shadow-2xl hover:bg-zinc-200 transition-all group cursor-hover-target w-full sm:w-auto cta-glow btn-whimsy hover:shadow-[0_0_40px_8px_rgba(255,255,255,0.15)] relative">
                       <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 pointer-events-none" />
-                      <span className="relative z-10 flex items-center">Agendar Cuadrilla <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-2 transition-transform" /></span>
+                      <span className="relative z-10 flex items-center">{t('hero.cta')} <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-2 transition-transform" /></span>
                     </MagneticButton>
                     <div className="flex gap-4 items-center justify-center sm:justify-start">
                       <div className="flex -space-x-3 cursor-hover-target opacity-60 grayscale hover:grayscale-0 transition-all">
                         {[1, 2, 3].map((i) => (
                           <div key={i} className="w-10 h-10 rounded-full bg-zinc-800 border-2 border-slate-950 flex justify-center items-center text-xs font-bold shadow-xl">
-                            <Image src={`https://ui-avatars.com/api/?background=27272a&color=fff&name=V+${i}`} alt="Avatar" width={40} height={40} className="rounded-full" />
+                            <Image src={`https://ui-avatars.com/api/?background=27272a&color=fff&name=V+${i}`} alt={`Verified Miami VIP Client ${i}`} width={40} height={40} className="rounded-full" />
                           </div>
                         ))}
                       </div>
                       <div className="border-l border-white/10 pl-4">
-                        <div className="flex text-taupe mb-0.5 scale-75 origin-left">
-                          {[1, 2, 3, 4, 5].map((i) => <Star key={i} className="w-4 h-4 fill-current"/>)}
+                        <div className="flex mb-0.5 scale-75 origin-left gap-0.5">
+                          {[1, 2, 3, 4, 5].map((i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400"/>)}
                         </div>
-                        <span className="text-[10px] font-black text-taupe uppercase tracking-widest">Inversores VIP Miami</span>
+                        <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest">{t('hero.social')}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -96,6 +96,7 @@ export const HeroSection = ({
                       src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2670&auto=format&fit=crop"
                       alt="Luxury Property Miami"
                       fill
+                      priority
                       className="object-cover opacity-60 transition-transform duration-[20s] hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
@@ -111,8 +112,8 @@ export const HeroSection = ({
                           <CheckCircle className="w-6 h-6"/>
                         </div>
                         <div>
-                          <p className="text-xs font-black text-white uppercase tracking-wider">Audit Complete</p>
-                          <p className="text-[10px] font-bold text-taupe uppercase tracking-tighter">Status: Protected</p>
+                          <p className="text-xs font-black text-white uppercase tracking-wider">{t('hero.auditComplete')}</p>
+                          <p className="text-[10px] font-bold text-taupe uppercase tracking-tighter">{t('hero.statusProtected')}</p>
                         </div>
                       </div>
                     </motion.div>
@@ -128,8 +129,8 @@ export const HeroSection = ({
                           <ShieldCheck className="w-5 h-5 text-white"/>
                         </div>
                         <div>
-                          <span className="block font-bold text-sm tracking-tight uppercase">Garantía VIP</span>
-                          <span className="text-[9px] font-black text-taupe uppercase tracking-[0.2em] leading-none">Security Active</span>
+                          <span className="block font-bold text-sm tracking-tight uppercase">{t('hero.vipGuarantee')}</span>
+                          <span className="text-[9px] font-black text-taupe uppercase tracking-[0.2em] leading-none">{t('hero.securityActive')}</span>
                         </div>
                       </div>
                       <div className="w-32 bg-white/5 h-1 rounded-full overflow-hidden">

@@ -41,21 +41,28 @@ export default function LandingPage() {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
 
-    // Aura Cursor Scroll Reaction
+    // Aura Cursor Scroll Reaction (rAF Throttled for smooth 60fps)
+    let ticking = false;
     const handleScroll = () => {
-      const aura = document.getElementById('aura-cursor');
-      if (aura) {
-        const currentScroll = window.scrollY;
-        const lastScroll = lastScrollYRef.current;
-        const speed = Math.abs(currentScroll - lastScroll);
-        const scale = 1 + Math.min(speed / 50, 2);
-        const opacity = 0.4 + Math.min(speed / 100, 0.6);
-        aura.style.transform = `translate(-50%, -50%) scale(${scale})`;
-        aura.style.opacity = opacity.toString();
-        lastScrollYRef.current = currentScroll;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const aura = document.getElementById('aura-cursor');
+          if (aura) {
+            const currentScroll = window.scrollY;
+            const lastScroll = lastScrollYRef.current;
+            const speed = Math.abs(currentScroll - lastScroll);
+            const scale = 1 + Math.min(speed / 50, 2);
+            const opacity = 0.4 + Math.min(speed / 100, 0.6);
+            aura.style.transform = `translate(-50%, -50%) scale(${scale})`;
+            aura.style.opacity = opacity.toString();
+            lastScrollYRef.current = currentScroll;
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -107,21 +114,21 @@ export default function LandingPage() {
 
       <FeaturedProducts />
       
-      <ValuePropositionSection isMobile={isMobile} />
+      <ValuePropositionSection isMobile={isMobile} t={t} />
 
-      <ServicesSection />
+      <ServicesSection t={t} />
 
-      <StorytellingSection />
+      <StorytellingSection t={t} />
 
       <SubscriptionsSection isMobile={isMobile} t={t} />
 
-      <TestimonialsSection />
+      <TestimonialsSection t={t} />
 
-      <CTASection />
+      <CTASection t={t} />
 
-      <MapSection />
+      <MapSection t={t} />
 
-      <FooterSection theme={theme} />
+      <FooterSection theme={theme} t={t} />
 
     </div>
   )

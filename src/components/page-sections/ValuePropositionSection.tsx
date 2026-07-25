@@ -5,8 +5,9 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { ShieldCheck, Leaf, Clock } from 'lucide-react'
 import { TiltCard } from '@/components/TiltCard'
+import type { TranslationKey } from '@/data/i18n'
 
-export const ValuePropositionSection = ({ isMobile }: { isMobile: boolean }) => {
+export const ValuePropositionSection = ({ isMobile, t }: { isMobile: boolean, t: (key: TranslationKey) => string }) => {
   return (
     <>
             {/* 3. VALUE PROPOSITION (Titanium Cards + TiltCard 3D) */}
@@ -15,11 +16,11 @@ export const ValuePropositionSection = ({ isMobile }: { isMobile: boolean }) => 
               <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
               <div className="max-w-7xl mx-auto px-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16">
-                  {[
-                    { icon: Leaf, color: "zinc", title: "Eco-Lujo Residencial", desc: "Equipos certificados usan insumos biodegradables y WFP para cristales. Suelo de roble o mármol protegido al 100%.", yOffset: 0 },
-                    { icon: ShieldCheck, color: "zinc", title: "Auditoría Digital", desc: "Al terminar, recibe un informe fotográfico blindado del estado de su llave, ventanas y grifería preventivamente.", yOffset: 40 },
-                    { icon: Clock, color: "zinc", title: "Logística de Precisión", desc: "Nuestro despachador GPS optimiza rutas para llegar exactamente a la hora. En Miami, el tiempo es el activo más caro.", yOffset: 80 }
-                  ].map((prop, idx) => (
+                  {([
+                    { icon: Leaf, color: "zinc", titleKey: 'val.surface.title' as TranslationKey, descKey: 'val.surface.desc' as TranslationKey, yOffset: 0 },
+                    { icon: ShieldCheck, color: "zinc", titleKey: 'val.audit.title' as TranslationKey, descKey: 'val.audit.desc' as TranslationKey, yOffset: 40 },
+                    { icon: Clock, color: "zinc", titleKey: 'val.logistics.title' as TranslationKey, descKey: 'val.logistics.desc' as TranslationKey, yOffset: 80 }
+                  ]).map((prop, idx) => (
                     <motion.div
                       key={idx}
                       initial={{ opacity: 0, y: isMobile ? 50 : 100 + prop.yOffset }}
@@ -34,9 +35,9 @@ export const ValuePropositionSection = ({ isMobile }: { isMobile: boolean }) => 
                           <div className="relative w-14 h-14 bg-accent/20 rounded-xl flex items-center justify-center mb-8 group-hover:rotate-6 group-hover:scale-110 transition-transform duration-500 border border-white/5">
                             <prop.icon className="w-7 h-7 text-foreground" />
                           </div>
-                          <h3 className="text-xl md:text-2xl font-black text-foreground mb-4 tracking-tight uppercase font-michroma">{prop.title}</h3>
+                          <h3 className="text-xl md:text-2xl font-black text-foreground mb-4 tracking-tight uppercase font-michroma">{t(prop.titleKey)}</h3>
                           <p className="text-accent leading-relaxed font-medium">
-                            {prop.desc}
+                            {t(prop.descKey)}
                           </p>
                         </div>
                       </TiltCard>

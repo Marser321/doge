@@ -1,10 +1,9 @@
-import { insforge } from './lib/insforge';
-
-async function queryConfig() {
-  const { data, error } = await insforge.database.from('products').select('*').limit(1);
-  console.log('PRODUCTS:', JSON.stringify(data?.[0], null, 2));
-
-  const { data: imgData, error: imgErr } = await insforge.database.from('product_images').select('*').limit(1);
-  console.log('PRODUCT IMAGES:', imgData, imgErr);
+/**
+ * Kept as a manual connectivity probe for local development.
+ * Run through the application APIs so RLS and server auth are exercised.
+ */
+export async function queryHealth(baseUrl = 'http://127.0.0.1:3100') {
+  const response = await fetch(`${baseUrl}/api/catalog/products`);
+  if (!response.ok) throw new Error(`Catalog health check failed: ${response.status}`);
+  return response.json();
 }
-queryConfig();

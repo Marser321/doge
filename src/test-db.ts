@@ -1,20 +1,9 @@
-import { insforge } from './lib/insforge';
+import 'server-only';
 
-async function testSchema() {
-  const tables = ['clients', 'subscription_tiers', 'subscriptions', 'offers', 'products', 'product_images', 'orders', 'order_items', 'service_requests', 'kpi_snapshots'];
-  
-  for (const table of tables) {
-    try {
-      const { data, error } = await insforge.database.from(table).select('*').limit(1);
-      if (error) {
-        console.log(`Table ${table} error:`, error);
-      } else {
-        console.log(`Table ${table} EXISTS. rows:`, data?.length);
-      }
-    } catch (e: any) {
-      console.log(`Table ${table} threw:`, e.message);
-    }
-  }
+import { getServiceSupabase } from './lib/server/supabase';
+
+export async function testDatabaseConnection() {
+  const { data, error } = await getServiceSupabase().from('service_catalog').select('id').limit(1);
+  if (error) throw new Error(error.message);
+  return { connected: true, rows: data?.length || 0 };
 }
-
-testSchema();

@@ -9,10 +9,16 @@ import { useLanguage } from '@/components/LanguageProvider'
 export default function MembershipPage() {
   const { lang, t } = useLanguage()
   const [name, setName] = useState('')
-  const [contact, setContact] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
+  const [city, setCity] = useState('Miami')
+  const [consent, setConsent] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState('plata')
   const [submitted, setSubmitted] = useState(false)
+  const [reference, setReference] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('doge-theme') as 'dark' | 'light'
@@ -25,7 +31,6 @@ export default function MembershipPage() {
     {
       id: 'bronce',
       name: 'Bronce',
-      price: 150,
       freqEs: 'Mensual',
       freqEn: 'Monthly',
       popular: false,
@@ -33,7 +38,6 @@ export default function MembershipPage() {
     {
       id: 'plata',
       name: 'Plata',
-      price: 250,
       freqEs: 'Quincenal',
       freqEn: 'Biweekly',
       popular: true,
@@ -41,7 +45,6 @@ export default function MembershipPage() {
     {
       id: 'oro',
       name: 'Oro VIP',
-      price: 450,
       freqEs: 'Semanal',
       freqEn: 'Weekly',
       popular: false,
@@ -50,18 +53,38 @@ export default function MembershipPage() {
 
   const chosen = plans.find(p => p.id === selectedPlan) || plans[1]
 
-  const isValid = name.trim() && contact.trim() && address.trim()
+  const isValid = name.trim() && email.trim() && phone.trim() && address.trim() && city.trim() && consent
 
-  const handleSubmit = () => {
-    const message = encodeURIComponent(
-      `Hola DOGE.S.M LLC, quiero suscribirme a la membresía.\n\n` +
-      `📋 Plan: ${chosen.name} (${lang === 'es' ? chosen.freqEs : chosen.freqEn} — $${chosen.price}/visita)\n` +
-      `👤 Nombre: ${name}\n` +
-      `📞 Contacto: ${contact}\n` +
-      `📍 Dirección: ${address}`
-    )
-    window.open(`https://wa.me/17869283948?text=${message}`, '_blank', 'noopener,noreferrer')
-    setSubmitted(true)
+  const handleSubmit = async () => {
+    if (!isValid || loading) return
+    setLoading(true)
+    setError('')
+    const form = new FormData()
+    form.set('name', name)
+    form.set('email', email)
+    form.set('phone', phone)
+    form.set('address', address)
+    form.set('city', city)
+    form.set('property_type', 'Residencial')
+    form.set('service_code', 'residential-vip')
+    form.set('locale', lang)
+    form.set('consent', 'accepted')
+    form.set('notes', `Interés en plan ${chosen.name} · ${lang === 'es' ? chosen.freqEs : chosen.freqEn}. Requiere evaluación y cotización.`)
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Idempotency-Key': crypto.randomUUID() },
+        body: form,
+      })
+      const payload = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(payload.error || 'No fue posible registrar la solicitud.')
+      setReference(String(payload.reference || ''))
+      setSubmitted(true)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'No fue posible registrar la solicitud.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (submitted) {
@@ -90,6 +113,7 @@ export default function MembershipPage() {
               ? `Tu solicitud de membresía ${chosen.name} ha sido enviada. Nuestro equipo te contactará para confirmar tu suscripción.`
               : `Your ${chosen.name} membership application has been sent. Our team will contact you to confirm your subscription.`}
           </p>
+          {reference && <p className="mb-8 font-mono text-sm text-accent">{reference}</p>}
           <Link href="/" className="inline-flex py-5 px-12 bg-foreground text-background rounded-2xl font-black uppercase tracking-[0.2em] shadow-2xl font-michroma">
             {lang === 'es' ? 'Volver al Inicio' : 'Back to Home'}
           </Link>
@@ -177,11 +201,11 @@ export default function MembershipPage() {
                   </span>
                   <h3 className="text-xl font-black uppercase font-michroma mb-3">{plan.name}</h3>
                   <div>
-                    <span className="text-3xl font-black font-michroma">${plan.price}</span>
-                    <span className={`text-[10px] font-bold ml-1 uppercase tracking-widest ${
+                    <span className="text-base font-black font-michroma">{lang === 'es' ? 'Evaluación previa' : 'Assessment first'}</span>
+                    <span className={`block text-[9px] font-bold mt-1 uppercase tracking-widest ${
                       selectedPlan === plan.id ? 'opacity-60' : 'text-accent'
                     }`}>
-                      {lang === 'es' ? '/visita' : '/visit'}
+                      {lang === 'es' ? 'Precio por cotización' : 'Quoted pricing'}
                     </span>
                   </div>
                   {selectedPlan === plan.id && (
@@ -206,10 +230,11 @@ export default function MembershipPage() {
             className="lg:col-span-2 space-y-6"
           >
             <div>
-              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+              <label htmlFor="membership-name" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
                 {t('membership.nameLabel')}
               </label>
               <input
+                id="membership-name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -219,23 +244,39 @@ export default function MembershipPage() {
             </div>
 
             <div>
-              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
-                {t('membership.contactLabel')}
+              <label htmlFor="membership-email" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                Email
               </label>
               <input
-                type="text"
-                value={contact}
-                onChange={(e) => setContact(e.target.value)}
-                placeholder={lang === 'es' ? 'Teléfono o email' : 'Phone or email'}
+                id="membership-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="nombre@ejemplo.com"
                 className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
               />
             </div>
 
             <div>
-              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+              <label htmlFor="membership-phone" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                {lang === 'es' ? 'Teléfono' : 'Phone'}
+              </label>
+              <input
+                id="membership-phone"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+1 305 000 0000"
+                className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="membership-address" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
                 {t('membership.addressLabel')}
               </label>
               <input
+                id="membership-address"
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
@@ -244,11 +285,30 @@ export default function MembershipPage() {
               />
             </div>
 
+            <div>
+              <label htmlFor="membership-city" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                {lang === 'es' ? 'Ciudad' : 'City'}
+              </label>
+              <input
+                id="membership-city"
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors"
+              />
+            </div>
+
+            <label className="flex items-start gap-3 text-sm text-accent">
+              <input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} className="mt-1" />
+              <span>{lang === 'es' ? 'Autorizo a DOGE a contactarme sobre esta solicitud de servicio recurrente.' : 'I authorize DOGE to contact me about this recurring service request.'}</span>
+            </label>
+            {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">{error}</p>}
+
             {/* Submit */}
             <motion.button
               whileHover={isValid ? { scale: 1.02, y: -2 } : {}}
               onClick={handleSubmit}
-              disabled={!isValid}
+              disabled={!isValid || loading}
               className={`w-full py-6 rounded-2xl font-black uppercase tracking-[0.3em] shadow-2xl font-michroma flex items-center justify-center gap-3 transition-all relative group overflow-hidden ${
                 isValid
                   ? 'bg-foreground text-background cursor-pointer cta-glow hover:shadow-[0_0_40px_8px_rgba(255,255,255,0.15)]'
@@ -260,7 +320,7 @@ export default function MembershipPage() {
               )}
               <span className="relative z-10 flex items-center gap-3">
                 <Send className="w-5 h-5" />
-                {t('membership.submit')}
+                {loading ? (lang === 'es' ? 'Enviando…' : 'Sending…') : t('membership.submit')}
               </span>
             </motion.button>
           </motion.div>

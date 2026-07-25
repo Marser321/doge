@@ -8,16 +8,7 @@ import { ArrowRight, Star, ShoppingCart } from 'lucide-react'
 import { db, Product } from '@/lib/db'
 import { TiltCard } from './TiltCard'
 
-// Helper for images
-const getImageUrl = (slug: string) => {
-  const urlMap: Record<string, string> = {
-    'dyson_v15': 'https://images.unsplash.com/photo-1558317374-067fb5f30001?q=80&w=2670&auto=format&fit=crop',
-    'karcher_sc3': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=2670&auto=format&fit=crop',
-    'bissell_big_green': '/products/bissell_big_green.png',
-    'mold_control': '/products/mold_control.png'
-  }
-  return urlMap[slug] || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=2670&auto=format&fit=crop'
-}
+const getImageUrl = (product: Product) => product.product_images?.find((image) => image.is_primary)?.image_url || product.product_images?.[0]?.image_url || '/products/product-placeholder.svg'
 
 export function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([])
@@ -67,7 +58,7 @@ export function FeaturedProducts() {
           <div className="text-center py-12 border border-dashed border-white/10 rounded-3xl bg-white/[0.02]">
             <p className="text-zinc-500 font-bold uppercase tracking-wider text-sm mb-2">No hay productos destacados</p>
             <p className="text-zinc-600 text-xs max-w-md mx-auto">Selecciona los productos desde el panel administrativo marcando la estrella para que aparezcan en esta sección.</p>
-            <Link href="/admin/products" className="mt-4 inline-block px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-accent text-xs font-bold transition-colors">Ir al Admin</Link>
+            <Link href="/store" className="mt-4 inline-block rounded-lg bg-white/5 px-4 py-2 text-xs font-bold text-accent transition-colors hover:bg-white/10">Ver catálogo</Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -90,7 +81,7 @@ export function FeaturedProducts() {
                     
                     <div className={`h-48 relative overflow-hidden bg-gradient-to-br ${product.accent_gradient || 'from-zinc-800 to-zinc-950'} flex justify-center items-center p-6`}>
                       <Image 
-                        src={getImageUrl(product.slug)} 
+                        src={getImageUrl(product)}
                         alt={product.name} 
                         fill 
                         className="object-contain group-hover:scale-110 transition-transform duration-700 p-8 drop-shadow-2xl" 

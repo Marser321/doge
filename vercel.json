@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/internal/email-dispatch",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/internal/subscriptions/generate",
+      "schedule": "15 9 * * *"
+    }
+  ]
+}

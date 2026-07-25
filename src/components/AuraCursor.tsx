@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { usePathname } from 'next/navigation';
 
 function getInitialTheme(): 'dark' | 'light' {
   if (typeof document === 'undefined') {
@@ -18,11 +19,12 @@ export default function SqueegeeCursor() {
   const [isOnGlass, setIsOnGlass] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'light'>(getInitialTheme);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     let mounted = true;
     requestAnimationFrame(() => {
-      if (mounted) setIsTouchDevice(window.matchMedia('(pointer: coarse)').matches);
+      if (mounted) setIsTouchDevice(!window.matchMedia('(pointer: fine) and (hover: hover)').matches);
     });
     return () => { mounted = false; };
   }, []);
@@ -65,6 +67,7 @@ export default function SqueegeeCursor() {
   }, [mouseX, mouseY]);
 
   useEffect(() => {
+    if (isTouchDevice || pathname.startsWith('/admin') || pathname.startsWith('/login') || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     document.body.classList.add('custom-cursor');
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -119,7 +122,7 @@ export default function SqueegeeCursor() {
       document.body.classList.remove('custom-cursor');
       observer.disconnect();
     };
-  }, [updatePosition]);
+  }, [isTouchDevice, pathname, updatePosition]);
 
   // Theme-aware colors
   const primaryColor = theme === 'dark' ? '#94a3b8' : '#334155'; // Silver vs Charcoal
@@ -136,7 +139,7 @@ export default function SqueegeeCursor() {
       ? 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))'
       : 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))';
 
-  if (isTouchDevice) return null;
+  if (isTouchDevice || pathname.startsWith('/admin') || pathname.startsWith('/login')) return null;
 
   return (
     <motion.div

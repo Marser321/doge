@@ -67,7 +67,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     },
     {
       title: lang === 'es' ? 'Control Florida' : 'Florida Control',
-      desc: lang === 'es' ? 'Anti-Humedad 24/7' : 'Anti-Moisture 24/7',
+      desc: lang === 'es' ? 'Control de humedad' : 'Moisture control',
       href: '/services/florida-control',
       category: 'services',
       icon: Zap,
@@ -76,28 +76,28 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     {
       title: 'Dyson V15 Detect Absolute',
       desc: lang === 'es' ? 'Sensor piezo de polvo forense' : 'Forensic dust piezo sensor',
-      href: '/products/dyson_v15',
+      href: '/store',
       category: 'products',
       icon: ShoppingCart,
     },
     {
       title: 'Kärcher SC 3 Carbon Elite',
       desc: lang === 'es' ? 'Vapor continuo sin químicos' : 'Continuous steam without chemicals',
-      href: '/products/karcher_sc3',
+      href: '/store',
       category: 'products',
       icon: ShoppingCart,
     },
     {
       title: 'Bissell Big Green Professional',
       desc: lang === 'es' ? 'Extracción profunda táctica' : 'Tactical deep extraction',
-      href: '/products/bissell_big_green',
+      href: '/store',
       category: 'products',
       icon: ShoppingCart,
     },
     {
       title: lang === 'es' ? 'Nano-Sellador de Hongos' : 'Nano Mold Sealer',
       desc: lang === 'es' ? 'Protección química prolongada' : 'Extended chemical protection',
-      href: '/products/mold_control',
+      href: '/store',
       category: 'products',
       icon: ShoppingCart,
     },
@@ -122,13 +122,6 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
       href: '/booking',
       category: 'pages',
       icon: Sparkles,
-    },
-    {
-      title: lang === 'es' ? 'Mi Cuenta' : 'My Account',
-      desc: lang === 'es' ? 'Perfil, pagos e historial' : 'Profile, payments and history',
-      href: '/account',
-      category: 'pages',
-      icon: Home,
     },
   ], [lang])
 

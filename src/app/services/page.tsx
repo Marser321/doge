@@ -2,11 +2,25 @@
 
 import React, { useEffect } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, Droplets, Home, ShieldCheck, Zap, ArrowRight, Sparkles, Lock } from 'lucide-react'
+import { ArrowLeft, Droplets, Home, ShieldCheck, Zap, ArrowRight, Sparkles, Lock, type LucideIcon } from 'lucide-react'
 import { useLanguage } from '@/components/LanguageProvider'
+import { serviceImagery, type ServiceVisualId } from '@/content/service-imagery'
 
-const SERVICES = [
+type Service = {
+  id: string
+  icon: LucideIcon
+  nameEs: string
+  nameEn: string
+  descEs: string
+  descEn: string
+  active: boolean
+  accent: string
+  visual: ServiceVisualId
+}
+
+const SERVICES: Service[] = [
   {
     id: 'window-cleaning',
     icon: Droplets,
@@ -16,6 +30,7 @@ const SERVICES = [
     descEn: 'WFP pure water technology. Spotless glass with no marks or chemicals. Upload photos of your windows and get an estimate within hours.',
     active: true,
     accent: 'from-blue-500/20 to-cyan-500/20',
+    visual: 'windowCleaning',
   },
   {
     id: 'residential-vip',
@@ -26,6 +41,7 @@ const SERVICES = [
     descEn: 'Medical-grade HEPA disinfection. Deep treatment for luxury furniture, marble and oak.',
     active: true,
     accent: 'from-amber-500/20 to-orange-500/20',
+    visual: 'residentialVip',
   },
   {
     id: 'post-construction',
@@ -36,16 +52,18 @@ const SERVICES = [
     descEn: 'Intensive removal of construction dust, heavy materials and building debris.',
     active: true,
     accent: 'from-zinc-500/20 to-slate-500/20',
+    visual: 'postConstruction',
   },
   {
     id: 'florida-control',
     icon: Zap,
     nameEs: 'Control Florida Anti-Humedad',
     nameEn: 'Florida Anti-Moisture Control',
-    descEs: 'Control de humedad 24/7 para propiedades costeras. Prevención de moho y corrosión.',
-    descEn: '24/7 moisture control for coastal properties. Mold and corrosion prevention.',
+    descEs: 'Evaluación y control de humedad para propiedades costeras.',
+    descEn: 'Moisture assessment and control for coastal properties.',
     active: true,
     accent: 'from-emerald-500/20 to-teal-500/20',
+    visual: 'floridaControl',
   },
 ]
 
@@ -112,6 +130,8 @@ export default function ServicesPage() {
               {service.active ? (
                 <Link href={`/services/${service.id}`} className="block">
                   <div className="luxury-glass p-8 md:p-10 rounded-[32px] overflow-hidden group cursor-hover-target shadow-xl flex flex-col justify-between min-h-[300px] hover:border-accent/40 transition-all relative">
+                    <Image src={serviceImagery[service.visual].src} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover opacity-25 transition-opacity duration-700 group-hover:opacity-45" />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-background via-background/75 to-background/15"></div>
                     <div className={`absolute inset-0 bg-gradient-to-br ${service.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-700`}></div>
 
                     <div className="relative z-10">

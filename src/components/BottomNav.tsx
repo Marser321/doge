@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Sparkles, Map, Store, Search, ShieldCheck } from 'lucide-react'
+import { Sparkles, Store, Search, CalendarPlus, Layers3 } from 'lucide-react'
 import { useLanguage } from './LanguageProvider'
 import SearchModal from './SearchModal'
 
@@ -11,6 +11,8 @@ export default function BottomNav() {
   const pathname = usePathname();
   const { t } = useLanguage();
   const [searchOpen, setSearchOpen] = useState(false);
+
+  if (pathname.startsWith('/admin') || pathname.startsWith('/login')) return null;
 
   // Helper to determine if a tab is active
   const isActive = (path: string) => {
@@ -21,10 +23,10 @@ export default function BottomNav() {
 
   const TABS = [
     { name: t('bnav.services'), href: '/services', icon: Sparkles, disabled: false, isSearch: false },
-    { name: t('bnav.miami'), href: '/#confianza', icon: Map, disabled: false, isSearch: false },
-    { name: t('bnav.guarantee'), href: '/#confianza', icon: ShieldCheck, disabled: false, isSearch: false },
+    { name: t('nav.memberships'), href: '/#suscripciones', icon: Layers3, disabled: false, isSearch: false },
     { name: t('bnav.search'), href: '', icon: Search, disabled: false, isSearch: true },
-    { name: t('bnav.store'), href: '/store', icon: Store, disabled: false, isSearch: false }
+    { name: t('bnav.store'), href: '/store', icon: Store, disabled: false, isSearch: false },
+    { name: 'Solicitud', href: '/booking', icon: CalendarPlus, disabled: false, isSearch: false }
   ];
 
   return (

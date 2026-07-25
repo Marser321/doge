@@ -98,8 +98,8 @@ export const TRANSLATIONS = {
   // ── Value Props ──────────────────────────────
   'val.eco.title': { es: 'Eco-Lujo Residencial', en: 'Eco-Luxury Residential' },
   'val.eco.desc': {
-    es: 'Equipos certificados usan insumos biodegradables y WFP para cristales. Suelo de roble o mármol protegido al 100%.',
-    en: 'Certified teams use biodegradable supplies and WFP for glass. Oak or marble floors 100% protected.',
+    es: 'Seleccionamos insumos y métodos adecuados para cristales, madera y piedra según la evaluación de cada superficie.',
+    en: 'We select methods and supplies suited to glass, wood, and stone after evaluating each surface.',
   },
   'val.audit.title': { es: 'Auditoría Digital', en: 'Digital Audit' },
   'val.audit.desc': {
@@ -131,15 +131,15 @@ export const TRANSLATIONS = {
   'svc.wfp.title': { es: 'Cristal WFP', en: 'Crystal WFP' },
   'svc.wfp.desc': { es: 'Tecnología de Agua Pura', en: 'Pure Water Technology' },
   'svc.control.title': { es: 'Control Florida', en: 'Florida Control' },
-  'svc.control.desc': { es: 'Anti-Humedad 24/7', en: 'Anti-Moisture 24/7' },
+  'svc.control.desc': { es: 'Control de humedad', en: 'Moisture control' },
 
   // ── Memberships ──────────────────────────────
   'mem.badge': { es: 'Membresías Exclusivas', en: 'Exclusive Memberships' },
   'mem.title': { es: 'Estabilidad', en: 'Stability' },
   'mem.title2': { es: 'Premium.', en: 'Premium.' },
   'mem.subtitle': {
-    es: 'Asegure su cupo en la agenda más solicitada de Miami. Miembros oro cuentan con prioridad absoluta y beneficios tácticos mensuales.',
-    en: 'Secure your spot on Miami\'s most requested agenda. Gold members have absolute priority and monthly tactical benefits.',
+    es: 'Las membresías organizan visitas recurrentes y beneficios definidos en la propuesta de servicio.',
+    en: 'Memberships organize recurring visits and benefits defined in the service proposal.',
   },
   'mem.cta': { es: 'Solicitar Membresía', en: 'Apply for Membership' },
   'mem.monthly': { es: 'Mensual', en: 'Monthly' },
@@ -159,8 +159,8 @@ export const TRANSLATIONS = {
   'trust.title': { es: 'Cero Riesgos.', en: 'Zero Risk.' },
   'trust.title2': { es: 'Total Garantía.', en: 'Total Guarantee.' },
   'trust.desc': {
-    es: 'Cumplimos 100% con las regulaciones de Florida. Personal asegurado (General Liability) y altamente capacitado para proteger su activo.',
-    en: 'We 100% comply with Florida regulations. Insured staff (General Liability) and highly trained to protect your asset.',
+    es: 'La cobertura y las credenciales aplicables se confirman en la propuesta antes de contratar el servicio.',
+    en: 'Applicable coverage and credentials are confirmed in the proposal before service is engaged.',
   },
 
   // ── CTA Final ────────────────────────────────
@@ -351,6 +351,122 @@ export const TRANSLATIONS = {
   'legal.privacy.title': { es: 'Privacidad.', en: 'Privacy.' },
   'legal.back': { es: 'Volver', en: 'Back' },
   'legal.lastUpdated': { es: 'Última actualización', en: 'Last updated' },
+  // ── Value Props (Surface Care — used in ValuePropositionSection) ────
+  'val.surface.title': { es: 'Cuidado de superficies', en: 'Surface Care' },
+  'val.surface.desc': {
+    es: 'Seleccionamos métodos e insumos según el tipo de cristal, madera o piedra de cada propiedad.',
+    en: 'We select methods and supplies based on the type of glass, wood or stone of each property.',
+  },
+
+  // ── Storytelling Section ─────────────────────
+  'story.badge': { es: 'La Diferencia DOGE', en: 'The DOGE Difference' },
+  'story.title': { es: 'Grado de', en: 'Degree of' },
+  'story.title2': { es: 'Precisión.', en: 'Precision.' },
+  'story.desc': {
+    es: 'En el mercado de Miami, la limpieza no es un gasto, es una estrategia de preservación.',
+    en: 'In the Miami market, cleaning is not an expense, it is a preservation strategy.',
+  },
+  'story.desc_bold': {
+    es: 'Aplicamos protocolos de precisión para recuperar materiales nobles y mantener sus activos en estado de revista.',
+    en: 'We apply precision protocols to recover noble materials and keep your assets in showcase condition.',
+  },
+  'story.stat1.value': { es: '99.8%', en: '99.8%' },
+  'story.stat1.label': { es: 'Pureza de Aire HEPA', en: 'HEPA Air Purity' },
+  'story.stat2.value': { es: '12M+', en: '12M+' },
+  'story.stat2.label': { es: 'Patrimonio Protegido', en: 'Protected Assets' },
+  'story.conventional': { es: 'Servicio Convencional', en: 'Conventional Service' },
+  'story.titanium': { es: 'Titanium Standard', en: 'Titanium Standard' },
+
+  // ── Precision Protocol Scroll (B2B Grid) ─────
+  'pps.badge': { es: 'Servicios', en: 'Services' },
+  'pps.title': { es: 'Cuidado técnico, coordinado con criterio.', en: 'Technical care, coordinated with judgment.' },
+  'pps.subtitle': {
+    es: 'Seleccionamos el alcance después de conocer la propiedad, el acceso y la prioridad real del trabajo.',
+    en: 'We define the scope after understanding the property, access and the real priority of the job.',
+  },
+  'pps.cta': { es: 'Solicitar evaluación', en: 'Request evaluation' },
+  'pps.retail.title': { es: 'Vitrinas y retail', en: 'Storefronts & Retail' },
+  'pps.retail.cat': { es: 'Comercial', en: 'Commercial' },
+  'pps.retail.desc': {
+    es: 'Limpieza programada de frentes vidriados y superficies de atención al público.',
+    en: 'Scheduled cleaning of glass storefronts and customer-facing surfaces.',
+  },
+  'pps.residential.title': { es: 'Residencias', en: 'Residences' },
+  'pps.residential.cat': { es: 'Residencial', en: 'Residential' },
+  'pps.residential.desc': {
+    es: 'Mantenimiento de ventanales, barandas y áreas de alto uso, ajustado a cada propiedad.',
+    en: 'Maintenance of large windows, railings and high-use areas, tailored to each property.',
+  },
+  'pps.offices.title': { es: 'Edificios y oficinas', en: 'Buildings & Offices' },
+  'pps.offices.cat': { es: 'Facilities', en: 'Facilities' },
+  'pps.offices.desc': {
+    es: 'Planes de mantenimiento para áreas comunes, accesos y cristal exterior.',
+    en: 'Maintenance plans for common areas, entrances and exterior glass.',
+  },
+  'pps.hospitality.title': { es: 'Hospitalidad', en: 'Hospitality' },
+  'pps.hospitality.cat': { es: 'Operación', en: 'Operations' },
+  'pps.hospitality.desc': {
+    es: 'Coordinación discreta de tareas para lobbies, zonas comunes y espacios de huéspedes.',
+    en: 'Discreet task coordination for lobbies, common areas and guest spaces.',
+  },
+  'pps.marina.title': { es: 'Marinas', en: 'Marinas' },
+  'pps.marina.cat': { es: 'Náutico', en: 'Nautical' },
+  'pps.marina.desc': {
+    es: 'Limpieza de vidrios y superficies expuestas al ambiente marino, previa evaluación.',
+    en: 'Glass and surface cleaning in marine environments, upon prior evaluation.',
+  },
+  'pps.exterior.title': { es: 'Exteriores', en: 'Exteriors' },
+  'pps.exterior.cat': { es: 'Superficies', en: 'Surfaces' },
+  'pps.exterior.desc': {
+    es: 'Lavado a presión y recuperación de superficies exteriores según material y condición.',
+    en: 'Pressure washing and exterior surface recovery based on material and condition.',
+  },
+
+  // ── Subscription Plan Names & Features ───────
+  'mem.plan.bronce': { es: 'Bronce', en: 'Bronze' },
+  'mem.plan.plata': { es: 'Plata', en: 'Silver' },
+  'mem.plan.oro': { es: 'Oro VIP', en: 'Gold VIP' },
+  'mem.feat.sanit1': { es: '1 Sanitación Mensual', en: '1 Monthly Sanitation' },
+  'mem.feat.agenda': { es: 'Acceso a Agenda', en: 'Calendar Access' },
+  'mem.feat.support': { es: 'Soporte Estándar', en: 'Standard Support' },
+  'mem.feat.sanit2': { es: '2 Sanitaciones/Mes', en: '2 Sanitations/Month' },
+  'mem.feat.priority': { es: 'Prioridad de Agenda', en: 'Scheduling Priority' },
+  'mem.feat.premium': { es: 'Insumos Premium', en: 'Premium Supplies' },
+  'mem.feat.sanit4': { es: '4 Sanitaciones/Mes', en: '4 Sanitations/Month' },
+  'mem.feat.vipSlots': { es: 'Turnos VIP Fijos', en: 'Fixed VIP Slots' },
+  'mem.feat.audit': { es: 'Auditoría Fotográfica Garantizada', en: 'Guaranteed Photo Audit' },
+  'mem.subtitle2': {
+    es: 'Planes de visitas recurrentes y beneficios detallados antes de confirmar el servicio.',
+    en: 'Recurring visit plans and detailed benefits before confirming the service.',
+  },
+
+  // ── Trust / Testimonials — Detail Strings ────
+  'trust.liability': { es: 'USA General Liability', en: 'USA General Liability' },
+  'trust.liabilitySub': { es: 'Cobertura Completa', en: 'Full Coverage' },
+  'trust.geofencing': { es: 'Protocolo Geofencing', en: 'Geofencing Protocol' },
+  'trust.geofencingSub': { es: 'Rastreo en Vivo del Equipo', en: 'Live Team Tracking' },
+  'trust.testimonial': {
+    es: 'Delegar mi propiedad desde el exterior era un riesgo constante. Con DOGE veo el estado de mis activos en tiempo real con reportes tácticos de alta resolución.',
+    en: 'Delegating my property from abroad was a constant risk. With DOGE I see the state of my assets in real time with high-resolution tactical reports.',
+  },
+  'trust.testimonialRole': { es: 'Fundador @ Luxury Real Estate', en: 'Founder @ Luxury Real Estate' },
+
+  // ── Hero — Floating Card Strings ─────────────
+  'hero.auditComplete': { es: 'Auditoría Completa', en: 'Audit Complete' },
+  'hero.statusProtected': { es: 'Estado: Protegido', en: 'Status: Protected' },
+  'hero.vipGuarantee': { es: 'Garantía VIP', en: 'VIP Guarantee' },
+  'hero.securityActive': { es: 'Seguridad Activa', en: 'Security Active' },
+
+  // ── Footer — Extra Strings ──────────────────
+  'footer.cleaningTactics': { es: 'Tácticas de Limpieza', en: 'Cleaning Tactics' },
+  'footer.licenses': { es: 'Licencias', en: 'Licenses' },
+  'footer.floridaRegistry': { es: 'Registro Florida', en: 'Florida Registry' },
+  'footer.privacy': { es: 'Privacidad', en: 'Privacy' },
+  'footer.location': { es: 'Miami, Florida, Estados Unidos', en: 'Miami, Florida, United States' },
+  'footer.copyright': { es: 'Titanium Noir Standard.', en: 'Titanium Noir Standard.' },
+
+  // ── Map Section — Extra ─────────────────────
+  'map.region': { es: 'Miami y Sur de Florida, EE.UU.', en: 'Miami & South Florida, USA' },
 } as const
 
 export type TranslationKey = keyof typeof TRANSLATIONS

@@ -10,10 +10,9 @@
 /* ─── DESIGN TOKENS ─────────────────────────────────────────────────── */
 
 :root {
-  /* DARK THEME — Titanium Noir (2026 Refined) */
+  /* DARK THEME — Crystal Noir (Clean Glass) */
   --background: #09090b;
-  --bg-radial: radial-gradient(circle at 50% 0%, rgba(63, 63, 70, 0.12) 0%, transparent 60%),
-               radial-gradient(ellipse at 80% 100%, rgba(39, 39, 42, 0.15) 0%, transparent 60%);
+  --bg-radial: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(148, 163, 184, 0.06) 0%, transparent 70%);
   --foreground: #f4f4f5;
   --accent: #a1a1aa;
   --taupe: #71717a;
@@ -22,7 +21,12 @@
   --card-bg: rgba(24, 24, 27, 0.4);
   --silver-gradient: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
   --footer-bg: #09090b;
-  --noise-opacity: 0.025;
+  --noise-opacity: 0.008;
+
+  /* Strategic Semantic Color Tokens */
+  --emerald-accent: #10b981;
+  --gold-accent: #f59e0b;
+  --sky-accent: #0284c7;
 
   /* Haptic Motion Tokens */
   --ease-haptic: cubic-bezier(0.32, 0.72, 0, 1);
@@ -30,10 +34,9 @@
 }
 
 [data-theme='light'] {
-  /* LIGHT THEME — Quiet Luxury Ice (Glass & Crystal) */
+  /* LIGHT THEME — Crystal Ice (Clean & Airy) */
   --background: #fafafa;
-  --bg-radial: radial-gradient(circle at 50% 0%, rgba(228, 228, 231, 0.6) 0%, transparent 60%),
-               radial-gradient(ellipse at 80% 100%, rgba(212, 212, 216, 0.4) 0%, transparent 60%);
+  --bg-radial: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(186, 199, 214, 0.12) 0%, transparent 70%);
   --foreground: #09090b;
   --accent: #52525b;
   --taupe: #71717a;
@@ -42,7 +45,11 @@
   --card-bg: #f4f4f5;
   --silver-gradient: linear-gradient(180deg, #18181b 0%, #52525b 100%);
   --footer-bg: #fafafa;
-  --noise-opacity: 0.02;
+  --noise-opacity: 0.005;
+
+  --emerald-accent: #059669;
+  --gold-accent: #d97706;
+  --sky-accent: #0369a1;
 }
 
 /* ─── THEME BRIDGE (var → Tailwind v4) ──────────────────────────────── */
@@ -54,6 +61,9 @@
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
   --color-taupe: var(--taupe);
+  --color-emerald-accent: var(--emerald-accent);
+  --color-gold-accent: var(--gold-accent);
+  --color-sky-accent: var(--sky-accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-michroma: var(--font-michroma);
@@ -84,18 +94,18 @@
     font-family: var(--font-michroma), var(--font-geist-sans), sans-serif;
   }
 
-  /* Hide native cursor when custom squeegee cursor is active */
-  body.custom-cursor,
-  body.custom-cursor * {
-    cursor: none !important;
+  @media (pointer: fine) and (hover: hover) {
+    body.custom-cursor,
+    body.custom-cursor * {
+      cursor: none !important;
+    }
   }
 
-  /* Scrollbar: hidden everywhere (luxury UX — Lenis handles scroll) */
-  ::-webkit-scrollbar { display: none; }
-  * {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+  * { scrollbar-width: thin; scrollbar-color: rgba(161, 161, 170, .65) transparent; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(161, 161, 170, .55); border: 3px solid transparent; border-radius: 999px; background-clip: padding-box; }
+  ::-webkit-scrollbar-thumb:hover { background-color: rgba(244, 244, 245, .8); }
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -105,7 +115,7 @@
    pseudo-classes (hover:, md:, dark:, group-hover:, etc.).
    ══════════════════════════════════════════════════════════════════════ */
 
-/* Luxury Noise Overlay — fixed grain texture across the viewport */
+/* Crystal Sheen Overlay — subtle diagonal light sweep (clean glass feel) */
 @utility bg-noise {
   position: fixed;
   inset: 0;
@@ -114,24 +124,31 @@
   pointer-events: none;
   z-index: 50;
   opacity: var(--noise-opacity);
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.02) 75%,
+    transparent 100%
+  );
   transition: opacity 0.5s ease;
 }
 
-/* Glassmorphism — Standard panel (16px blur, themed) */
+/* Glassmorphism — restrained, readable panels */
 @utility glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--glass-border);
   transition: background 0.5s ease, border-color 0.5s ease;
 }
 
-/* Glassmorphism — Heavy panel (24px blur, deeper opacity) */
+/* Glassmorphism — heavier variant, reserved for overlays */
 @utility glass-panel-heavy {
   background: color-mix(in srgb, var(--glass-bg) 88%, black 12%);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid color-mix(in srgb, var(--glass-border) 90%, white 10%);
 }
 
@@ -181,13 +198,13 @@
    Patterns: luxury-glass, magnetic, btn-whimsy, celebrations
    ══════════════════════════════════════════════════════════════════════ */
 
-/* Luxury Glass — Top-tier glassmorphism (blur 30px + saturate 200%)
+/* Luxury Glass — restrained glassmorphism
    Use for hero nav, feature sections, premium CTAs only.
    Heavier than glass-panel — reserve for high-impact areas. */
 @utility luxury-glass {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(30px) saturate(200%);
-  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: background 0.5s ease, border-color 0.5s ease,
               box-shadow 0.5s ease;
@@ -245,6 +262,15 @@
 @keyframes ring-pulse-kf {
   0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
   100% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════════════

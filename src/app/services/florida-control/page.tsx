@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowLeft, Zap, Camera, FileText, Upload, X, ImageIcon, Film, Send, CheckCircle, ShieldCheck } from 'lucide-react'
 import { useLanguage } from '@/components/LanguageProvider'
+import { ServiceVisualBanner } from '@/components/services/ServiceVisualBanner'
 
 type DescriptionMethod = 'photos' | 'text'
 
@@ -156,7 +157,7 @@ export default function FloridaControlPage() {
           className="mb-12 md:mb-16"
         >
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/20 bg-accent/5 text-accent text-[10px] font-black uppercase tracking-[0.3em] mb-8">
-            <ShieldCheck className="w-4 h-4" /> {lang === 'es' ? 'Anti-Humedad 24/7' : 'Anti-Moisture 24/7'}
+            <ShieldCheck className="w-4 h-4" /> {lang === 'es' ? 'Control de humedad' : 'Moisture control'}
           </span>
           <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter uppercase leading-[1.1] text-foreground font-michroma">
             {t('fc.title')} <br className="hidden md:block" /> <span className="silver-text">{t('fc.title2')}</span>
@@ -165,6 +166,8 @@ export default function FloridaControlPage() {
             {t('fc.subtitle')}
           </p>
         </motion.div>
+
+        <ServiceVisualBanner visualId="floridaControl" lang={lang} />
 
         {/* Method Toggle */}
         <motion.div

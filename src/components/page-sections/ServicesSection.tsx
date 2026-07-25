@@ -7,8 +7,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, Home, Droplets, CheckCircle, ShieldCheck, Zap } from 'lucide-react'
 import { MagneticButton } from '@/components/shared/MagneticButton'
+import { serviceImagery } from '@/content/service-imagery'
+import type { TranslationKey } from '@/data/i18n'
 
-export const ServicesSection = () => {
+export const ServicesSection = ({ t }: { t: (key: TranslationKey) => string }) => {
   return (
     <>
             {/* 3.1 SERVICIOS (Bento Grid Architecture - 2026 Luxury) */}
@@ -21,11 +23,11 @@ export const ServicesSection = () => {
                   className="mb-16 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-8"
                 >
                   <div>
-                    <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Especialidades Tácticas</span>
-                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tighter uppercase font-michroma leading-tight">Menú de <br/> <span className="silver-text">Operaciones.</span></h2>
+                    <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">{t('svc.badge')}</span>
+                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tighter uppercase font-michroma leading-tight">{t('svc.title')} <br/> <span className="silver-text">{t('svc.title2')}</span></h2>
                   </div>
                   <p className="text-accent max-w-sm font-medium border-l border-accent/10 pl-6 h-fit">
-                    Sistemas de limpieza de precisión diseñados para la <span className="text-foreground">preservación extrema</span> de activos inmobiliarios.
+                    {t('svc.subtitle')}
                   </p>
                 </motion.div>
 
@@ -33,20 +35,21 @@ export const ServicesSection = () => {
                   {/* Main Service - Large Bento */}
                   <motion.div
                     whileHover={{ y: -5 }}
-                    className="md:col-span-2 md:row-span-2 luxury-glass p-10 md:p-12 rounded-[32px] overflow-hidden relative group cursor-hover-target shadow-2xl flex flex-col justify-between min-h-[400px]"
+                  className="md:col-span-2 md:row-span-2 luxury-glass p-10 md:p-12 rounded-[32px] overflow-hidden relative group cursor-hover-target shadow-2xl flex flex-col justify-between min-h-[400px]"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50"></div>
+                    <Image src={serviceImagery.residentialVip.src} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover opacity-35 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-50" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-zinc-950/92 via-zinc-950/68 to-zinc-950/20"></div>
                     <div className="relative z-10">
                       <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-8 border border-white/10">
                         <Home className="w-8 h-8 text-foreground" />
                       </div>
-                      <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tight font-michroma mb-6">Residencial <br/> VIP Elite.</h3>
+                      <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tight font-michroma mb-6">{t('svc.residential.title')}</h3>
                       <p className="text-accent font-medium text-lg leading-relaxed max-w-sm">
-                        Desinfección de mobiliario de lujo y tratamiento de polvos profundos con equipos de grado médico HEPA.
+                        {t('svc.residential.desc')}
                       </p>
                     </div>
                     <div className="relative z-10 pt-12 flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-accent">Protocolo de Precisión Activo</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-accent">{t('svc.residential.badge')}</span>
                       <ArrowRight className="w-6 h-6 text-accent group-hover:translate-x-2 transition-transform" />
                     </div>
                   </motion.div>
@@ -60,10 +63,10 @@ export const ServicesSection = () => {
                       <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-4 border border-white/10">
                         <ShieldCheck className="w-6 h-6 text-foreground" />
                       </div>
-                      <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight font-michroma">Post-Construcción</h3>
-                      <p className="text-accent text-sm font-medium max-w-xs">Retiro intensivo de polvo obra y materiales pesados.</p>
+                      <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight font-michroma">{t('svc.post.title')}</h3>
+                      <p className="text-accent text-sm font-medium max-w-xs">{t('svc.post.desc')}</p>
                     </div>
-                    <Image src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2670&auto=format&fit=crop" alt="Post construction" width={150} height={150} className="rounded-2xl grayscale opacity-20 group-hover:opacity-40 transition-opacity" />
+                    <Image src={serviceImagery.postConstruction.src} alt="" width={150} height={150} sizes="150px" className="rounded-2xl object-cover grayscale opacity-30 group-hover:opacity-55 transition-opacity" />
                   </motion.div>
 
                   {/* Sub Service 2 - WFP */}
@@ -71,11 +74,13 @@ export const ServicesSection = () => {
                     whileHover={{ y: -5 }}
                     className="luxury-glass p-8 rounded-[32px] overflow-hidden relative group cursor-hover-target shadow-xl flex flex-col justify-between"
                   >
+                    <Image src={serviceImagery.windowCleaning.src} alt="" fill sizes="(min-width: 768px) 25vw, 100vw" className="object-cover opacity-25 transition duration-700 group-hover:opacity-40" />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-zinc-950/90 via-zinc-950/55 to-zinc-950/10"></div>
                     <div className="relative z-10">
                       <Droplets className="w-8 h-8 text-foreground mb-4" />
-                      <h3 className="text-lg font-black uppercase font-michroma tracking-tighter">Cristal <br/> WFP</h3>
+                      <h3 className="text-lg font-black uppercase font-michroma tracking-tighter">{t('svc.wfp.title')}</h3>
                     </div>
-                    <p className="text-accent text-xs font-bold uppercase tracking-widest">Tecnología de Agua Pura</p>
+                    <p className="text-accent text-xs font-bold uppercase tracking-widest">{t('svc.wfp.desc')}</p>
                   </motion.div>
 
                   {/* Sub Service 3 - Audit */}
@@ -83,11 +88,13 @@ export const ServicesSection = () => {
                     whileHover={{ y: -5 }}
                     className="luxury-glass p-8 rounded-[32px] overflow-hidden relative group cursor-hover-target shadow-xl flex flex-col justify-between bg-foreground/5"
                   >
+                    <Image src={serviceImagery.floridaControl.src} alt="" fill sizes="(min-width: 768px) 25vw, 100vw" className="object-cover opacity-25 transition duration-700 group-hover:opacity-40" />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-zinc-950/90 via-zinc-950/55 to-zinc-950/10"></div>
                     <div className="relative z-10">
                       <Zap className="w-8 h-8 text-foreground mb-4" />
-                      <h3 className="text-lg font-black uppercase font-michroma tracking-tighter">Control <br/> Florida</h3>
+                      <h3 className="text-lg font-black uppercase font-michroma tracking-tighter">{t('svc.control.title')}</h3>
                     </div>
-                    <p className="text-accent text-xs font-bold uppercase tracking-widest">Anti-Humedad 24/7</p>
+                    <p className="text-accent text-xs font-bold uppercase tracking-widest">{t('svc.control.desc')}</p>
                   </motion.div>
                 </div>
               </div>

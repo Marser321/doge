@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800" fill="none">
+  <rect width="800" height="800" fill="#18181B"/>
+  <rect x="108" y="108" width="584" height="584" rx="40" stroke="#3F3F46" stroke-width="2"/>
+  <path d="M300 470h200M340 400h120" stroke="#A1A1AA" stroke-width="22" stroke-linecap="round"/>
+  <circle cx="400" cy="280" r="52" stroke="#A1A1AA" stroke-width="18"/>
+  <text x="400" y="590" fill="#A1A1AA" font-family="Arial, sans-serif" font-size="32" font-weight="700" text-anchor="middle" letter-spacing="8">DOGE</text>
+</svg>

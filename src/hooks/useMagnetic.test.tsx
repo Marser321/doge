@@ -1,10 +1,10 @@
 import { renderHook, act } from '@testing-library/react';
 import { useMagnetic } from './useMagnetic';
-import { expect, test, describe, beforeEach, mock } from 'bun:test';
+import { expect, test, describe, beforeEach, vi } from 'vitest';
 
 // Mock framer-motion to simplify testing
 // We mock useSpring to just return the underlying motion value, making it synchronous
-mock.module('framer-motion', () => ({
+vi.mock('framer-motion', () => ({
   useMotionValue: (initial: number) => {
     let value = initial;
     return {
@@ -16,10 +16,10 @@ mock.module('framer-motion', () => ({
 }));
 
 describe('useMagnetic', () => {
-  let mockMatchMedia: ReturnType<typeof mock>;
+  let mockMatchMedia: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    mockMatchMedia = mock((query: string) => ({
+    mockMatchMedia = vi.fn((query: string) => ({
       matches: false,
       media: query,
       onchange: null,

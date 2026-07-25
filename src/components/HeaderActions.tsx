@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Moon, Globe, ShoppingCart, MoreVertical, User, CreditCard, History, Settings, LogOut, X, ArrowRight, Shield } from 'lucide-react'
+import { Sun, Moon, Globe, ShoppingCart, MoreVertical, User, LogOut, X, ArrowRight, BriefcaseBusiness, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { useLanguage } from './LanguageProvider'
 
@@ -39,11 +39,9 @@ export default function HeaderActions({ theme, onToggleTheme }: HeaderActionsPro
   }, [])
 
   const MENU_ITEMS = [
-    { icon: User, label: t('nav.myAccount'), href: '/account', disabled: false },
-    { icon: CreditCard, label: t('nav.paymentMethods'), href: '/account', disabled: false },
-    { icon: History, label: t('nav.serviceHistory'), href: '/account', disabled: false },
-    { icon: Shield, label: 'Admin (CEO)', href: '/admin', disabled: false },
-    { icon: Settings, label: t('nav.settings'), href: '/account', disabled: false },
+    { icon: BriefcaseBusiness, label: t('nav.services'), href: '/services', disabled: false },
+    { icon: Sparkles, label: t('nav.memberships'), href: '/#suscripciones', disabled: false },
+    { icon: User, label: 'Acceso operativo', href: '/login', disabled: false },
   ]
 
   return (
@@ -51,7 +49,7 @@ export default function HeaderActions({ theme, onToggleTheme }: HeaderActionsPro
       {/* Language Toggle */}
       <button
         onClick={toggleLang}
-        className="p-2 rounded-full border border-white/10 hover:bg-white/5 transition-all cursor-hover-target flex items-center gap-1.5 group"
+        className="min-w-[44px] min-h-[44px] p-2 rounded-full border border-white/10 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 transition-all cursor-hover-target flex items-center justify-center gap-1.5 group"
         aria-label="Toggle Language"
         id="lang-toggle"
       >
@@ -64,7 +62,7 @@ export default function HeaderActions({ theme, onToggleTheme }: HeaderActionsPro
       {/* Theme Toggle */}
       <button
         onClick={onToggleTheme}
-        className="p-2 rounded-full border border-white/10 hover:bg-white/5 transition-all cursor-hover-target"
+        className="min-w-[44px] min-h-[44px] p-2 rounded-full border border-white/10 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 transition-all cursor-hover-target flex items-center justify-center"
         aria-label="Toggle Theme"
         id="theme-toggle"
       >
@@ -78,7 +76,7 @@ export default function HeaderActions({ theme, onToggleTheme }: HeaderActionsPro
       {/* Cart Icon */}
       <Link
         href="/store"
-        className="p-2 rounded-full border border-white/10 hover:bg-white/5 transition-all cursor-hover-target relative"
+        className="min-w-[44px] min-h-[44px] p-2 rounded-full border border-white/10 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 transition-all cursor-hover-target flex items-center justify-center relative"
         aria-label="Shopping Cart"
         id="cart-icon"
       >
@@ -89,7 +87,7 @@ export default function HeaderActions({ theme, onToggleTheme }: HeaderActionsPro
       <div className="relative" ref={menuRef}>
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="p-2 rounded-full border border-white/10 hover:bg-white/5 transition-all cursor-hover-target"
+          className="min-w-[44px] min-h-[44px] p-2 rounded-full border border-white/10 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 transition-all cursor-hover-target flex items-center justify-center"
           aria-label="Account Menu"
           aria-expanded={menuOpen}
           id="account-menu-trigger"

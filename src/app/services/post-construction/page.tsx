@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowLeft, ShieldCheck, Camera, FileText, Upload, X, ImageIcon, Film, Send, CheckCircle } from 'lucide-react'
 import { useLanguage } from '@/components/LanguageProvider'
+import { ServiceVisualBanner } from '@/components/services/ServiceVisualBanner'
 
 type DescriptionMethod = 'photos' | 'text'
 
@@ -165,6 +166,8 @@ export default function PostConstructionPage() {
             {t('pc.subtitle')}
           </p>
         </motion.div>
+
+        <ServiceVisualBanner visualId="postConstruction" lang={lang} />
 
         {/* Method Toggle */}
         <motion.div

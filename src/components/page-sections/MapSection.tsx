@@ -3,8 +3,9 @@
 
 import React from 'react'
 import { MapPin } from 'lucide-react'
+import type { TranslationKey } from '@/data/i18n'
 
-export const MapSection = () => {
+export const MapSection = ({ t }: { t: (key: TranslationKey) => string }) => {
   return (
     <>
             {/* 4.5 MAPA DE COBERTURA */}
@@ -12,10 +13,10 @@ export const MapSection = () => {
               <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center mb-12 md:mb-16">
                   <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/10 bg-accent/5 text-accent text-[10px] font-black uppercase tracking-[0.3em] mb-6">
-                    <MapPin className="w-3 h-3" /> Area of Operations
+                    <MapPin className="w-3 h-3" /> {t('map.badge')}
                   </span>
-                  <h2 className="font-michroma text-3xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tighter uppercase leading-tight">Despliegue <br/> <span className="silver-text">Logístico.</span></h2>
-                  <p className="text-accent font-bold mt-6 text-sm uppercase tracking-[0.2em]">Miami & South Florida, USA</p>
+                  <h2 className="font-michroma text-3xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tighter uppercase leading-tight">{t('map.title')} <br/> <span className="silver-text">{t('map.title2')}</span></h2>
+                  <p className="text-accent font-bold mt-6 text-sm uppercase tracking-[0.2em]">{t('map.region')}</p>
                 </div>
 
                 <div className="w-full h-[500px] md:h-[650px] rounded-2xl overflow-hidden shadow-titanium border border-white/5 bg-zinc-900 group">
