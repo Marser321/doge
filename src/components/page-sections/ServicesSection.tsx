@@ -5,11 +5,18 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, Droplets, Sofa, Waves } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { serviceImagery } from '@/content/service-imagery'
+import { getService } from '@/content/services'
 import type { TranslationKey } from '@/data/i18n'
 
 export const ServicesSection = ({ t }: { t: (key: TranslationKey) => string }) => {
+  // Los iconos salen del catalogo para que un cambio en ServiceToolIcons se
+  // propague a la grilla, al buscador y a este bento a la vez.
+  const WindowIcon = getService('window-cleaning').icon
+  const PressureIcon = getService('pressure-washing').icon
+  const CarpetIcon = getService('carpet-cleaning').icon
+
   return (
     <>
             {/* 3.1 SERVICIOS (Bento Grid Architecture - 2026 Luxury) */}
@@ -41,7 +48,7 @@ export const ServicesSection = ({ t }: { t: (key: TranslationKey) => string }) =
                       <div className="absolute inset-0 bg-gradient-to-br from-zinc-950/92 via-zinc-950/68 to-zinc-950/20"></div>
                       <div className="relative z-10">
                         <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-8 border border-white/10">
-                          <Droplets className="w-8 h-8 text-foreground" />
+                          <WindowIcon className="w-8 h-8 text-foreground" />
                         </div>
                         <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tight font-michroma mb-6">{t('svc.window.title')}</h3>
                         <p className="text-accent font-medium text-lg leading-relaxed max-w-sm">
@@ -63,7 +70,7 @@ export const ServicesSection = ({ t }: { t: (key: TranslationKey) => string }) =
                     >
                       <div className="relative z-10 flex flex-col gap-2">
                         <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-4 border border-white/10">
-                          <Waves className="w-6 h-6 text-foreground" />
+                          <PressureIcon className="w-6 h-6 text-foreground" />
                         </div>
                         <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight font-michroma">{t('svc.pressure.title')}</h3>
                         <p className="text-accent text-sm font-medium max-w-xs">{t('svc.pressure.desc')}</p>
@@ -81,7 +88,7 @@ export const ServicesSection = ({ t }: { t: (key: TranslationKey) => string }) =
                       <Image src={serviceImagery.carpetCleaning.src} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover opacity-25 transition duration-700 group-hover:opacity-40" />
                       <div className="absolute inset-0 bg-gradient-to-tr from-zinc-950/90 via-zinc-950/55 to-zinc-950/10"></div>
                       <div className="relative z-10">
-                        <Sofa className="w-8 h-8 text-foreground mb-4" />
+                        <CarpetIcon className="w-8 h-8 text-foreground mb-4" />
                         <h3 className="text-lg font-black uppercase font-michroma tracking-tighter">{t('svc.carpet.title')}</h3>
                       </div>
                       <p className="relative z-10 text-accent text-xs font-bold uppercase tracking-widest">{t('svc.carpet.desc')}</p>

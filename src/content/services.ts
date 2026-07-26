@@ -1,7 +1,19 @@
-import { Droplets, Sofa, Waves, type LucideIcon } from 'lucide-react';
+import type { ComponentType } from 'react';
 
+import {
+  CarpetCleaningToolIcon,
+  PressureWashingToolIcon,
+  WindowCleaningToolIcon,
+} from '@/components/services/ServiceToolIcons';
 import type { ServiceVisualId } from '@/content/service-imagery';
 import type { Lang } from '@/data/i18n';
+
+/**
+ * Los iconos de servicio representan la herramienta especializada del oficio.
+ * El tipo es deliberadamente amplio para que convivan los SVG propios de
+ * `ServiceToolIcons` y cualquier icono de lucide-react.
+ */
+export type ServiceIcon = ComponentType<{ className?: string }>;
 
 /** Codes must match `service_catalog.code` in Supabase. */
 export type ServiceId = 'window-cleaning' | 'pressure-washing' | 'carpet-cleaning';
@@ -20,7 +32,7 @@ export type EquipmentImage = {
 export type ServiceDefinition = {
   id: ServiceId;
   keyPrefix: ServiceKeyPrefix;
-  icon: LucideIcon;
+  icon: ServiceIcon;
   name: LocalizedText;
   description: LocalizedText;
   /** Short blurb for the search palette. */
@@ -41,7 +53,7 @@ export const SERVICES: ServiceDefinition[] = [
   {
     id: 'window-cleaning',
     keyPrefix: 'wc',
-    icon: Droplets,
+    icon: WindowCleaningToolIcon,
     name: { es: 'Limpieza de Cristales', en: 'Window Cleaning' },
     description: {
       es: 'Tecnología WFP de agua pura. Cristales impecables sin marcas ni químicos. Sube fotos de tus ventanas y recibe un estimado en horas.',
@@ -56,7 +68,7 @@ export const SERVICES: ServiceDefinition[] = [
   {
     id: 'pressure-washing',
     keyPrefix: 'pw',
-    icon: Waves,
+    icon: PressureWashingToolIcon,
     name: { es: 'Lavado a Presión', en: 'Pressure Washing' },
     description: {
       es: 'Recuperación de entradas, terrazas, pavimentos y fachadas con presión calibrada según el material. Sin dañar la piedra ni el sellado.',
@@ -77,7 +89,7 @@ export const SERVICES: ServiceDefinition[] = [
   {
     id: 'carpet-cleaning',
     keyPrefix: 'cc',
-    icon: Sofa,
+    icon: CarpetCleaningToolIcon,
     name: { es: 'Limpieza de Alfombras', en: 'Carpet Cleaning' },
     description: {
       es: 'Extracción por inyección de agua caliente para alfombras, tapetes y tapicería. Retira manchas y olores en profundidad con secado rápido.',

@@ -13,7 +13,8 @@ interface SearchResult {
   desc: string
   href: string
   category: 'services' | 'products' | 'pages'
-  icon: typeof Sparkles
+  /** Acepta tanto iconos de lucide-react como los SVG propios de servicio. */
+  icon: React.ComponentType<{ className?: string }>
 }
 
 interface SearchModalProps {
