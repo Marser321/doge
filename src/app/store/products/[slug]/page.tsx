@@ -4,12 +4,15 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, ExternalLink, MessageCircle, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, ChevronRight, ExternalLink, MessageCircle, ShoppingBag } from 'lucide-react';
+import { useLanguage } from '@/components/LanguageProvider';
+import { resolveDepartment, resolveSubcategory } from '@/content/store-taxonomy';
 import { db, Product } from '@/lib/db';
 
 const productImage = (product: Product) => product.product_images?.find((image) => image.is_primary)?.image_url || product.product_images?.[0]?.image_url || '/products/product-placeholder.svg';
 
 export default function StoreProductPage() {
+  const { lang } = useLanguage();
   const params = useParams<{ slug: string }>();
   const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug;
   const [product, setProduct] = useState<Product | null>(null);
@@ -48,6 +51,8 @@ export default function StoreProductPage() {
 
   const isAffiliate = product.sale_type === 'amazon_affiliate' && Boolean(product.amazon_affiliate_url);
   const contactUrl = `https://wa.me/17869283948?text=${encodeURIComponent(`Hola DOGE.S.M LLC, quisiera consultar por ${product.name}.`)}`;
+  const department = resolveDepartment(product.category);
+  const subcategory = resolveSubcategory(product.category);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -61,6 +66,17 @@ export default function StoreProductPage() {
           <Image src={productImage(product)} alt={product.name} fill priority sizes="(min-width: 768px) 50vw, 100vw" className="object-contain p-10" />
         </div>
         <div className="flex flex-col justify-center">
+          {department && (
+            <nav className="mb-4 flex items-center gap-1.5 text-xs font-medium text-zinc-500">
+              <Link href={`/store?dept=${department.id}`} className="transition hover:text-foreground">{department.label[lang]}</Link>
+              {subcategory && (
+                <>
+                  <ChevronRight className="size-3" aria-hidden="true" />
+                  <span className="text-accent">{subcategory.label[lang]}</span>
+                </>
+              )}
+            </nav>
+          )}
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">{product.brand || 'DOGE'}</p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-6xl">{product.name}</h1>
           {product.tagline && <p className="mt-5 text-lg text-accent">{product.tagline}</p>}

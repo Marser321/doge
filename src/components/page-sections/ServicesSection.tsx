@@ -5,8 +5,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, Home, Droplets, CheckCircle, ShieldCheck, Zap } from 'lucide-react'
-import { MagneticButton } from '@/components/shared/MagneticButton'
+import { ArrowRight, Droplets, Sofa, Waves } from 'lucide-react'
 import { serviceImagery } from '@/content/service-imagery'
 import type { TranslationKey } from '@/data/i18n'
 
@@ -32,69 +31,61 @@ export const ServicesSection = ({ t }: { t: (key: TranslationKey) => string }) =
                 </motion.div>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-full">
-                  {/* Main Service - Large Bento */}
-                  <motion.div
-                    whileHover={{ y: -5 }}
-                  className="md:col-span-2 md:row-span-2 luxury-glass p-10 md:p-12 rounded-[32px] overflow-hidden relative group cursor-hover-target shadow-2xl flex flex-col justify-between min-h-[400px]"
-                  >
-                    <Image src={serviceImagery.residentialVip.src} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover opacity-35 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-50" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-zinc-950/92 via-zinc-950/68 to-zinc-950/20"></div>
-                    <div className="relative z-10">
-                      <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-8 border border-white/10">
-                        <Home className="w-8 h-8 text-foreground" />
+                  {/* Main Service - Window Cleaning */}
+                  <motion.div whileHover={{ y: -5 }} className="md:col-span-2 md:row-span-2">
+                    <Link
+                      href="/services/window-cleaning"
+                      className="luxury-glass p-10 md:p-12 rounded-[32px] overflow-hidden relative group cursor-hover-target shadow-2xl flex flex-col justify-between min-h-[400px] h-full"
+                    >
+                      <Image src={serviceImagery.windowCleaning.src} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover opacity-35 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-50" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-zinc-950/92 via-zinc-950/68 to-zinc-950/20"></div>
+                      <div className="relative z-10">
+                        <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-8 border border-white/10">
+                          <Droplets className="w-8 h-8 text-foreground" />
+                        </div>
+                        <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tight font-michroma mb-6">{t('svc.window.title')}</h3>
+                        <p className="text-accent font-medium text-lg leading-relaxed max-w-sm">
+                          {t('svc.window.desc')}
+                        </p>
                       </div>
-                      <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tight font-michroma mb-6">{t('svc.residential.title')}</h3>
-                      <p className="text-accent font-medium text-lg leading-relaxed max-w-sm">
-                        {t('svc.residential.desc')}
-                      </p>
-                    </div>
-                    <div className="relative z-10 pt-12 flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-accent">{t('svc.residential.badge')}</span>
-                      <ArrowRight className="w-6 h-6 text-accent group-hover:translate-x-2 transition-transform" />
-                    </div>
-                  </motion.div>
-
-                  {/* Sub Service 1 - Post Constr */}
-                  <motion.div
-                    whileHover={{ y: -5 }}
-                    className="md:col-span-2 luxury-glass p-8 md:p-10 rounded-[32px] overflow-hidden relative group cursor-hover-target shadow-xl flex items-center justify-between"
-                  >
-                    <div className="relative z-10 flex flex-col gap-2">
-                      <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-4 border border-white/10">
-                        <ShieldCheck className="w-6 h-6 text-foreground" />
+                      <div className="relative z-10 pt-12 flex items-center justify-between">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-accent">{t('svc.window.badge')}</span>
+                        <ArrowRight className="w-6 h-6 text-accent group-hover:translate-x-2 transition-transform" />
                       </div>
-                      <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight font-michroma">{t('svc.post.title')}</h3>
-                      <p className="text-accent text-sm font-medium max-w-xs">{t('svc.post.desc')}</p>
-                    </div>
-                    <Image src={serviceImagery.postConstruction.src} alt="" width={150} height={150} sizes="150px" className="rounded-2xl object-cover grayscale opacity-30 group-hover:opacity-55 transition-opacity" />
+                    </Link>
                   </motion.div>
 
-                  {/* Sub Service 2 - WFP */}
-                  <motion.div
-                    whileHover={{ y: -5 }}
-                    className="luxury-glass p-8 rounded-[32px] overflow-hidden relative group cursor-hover-target shadow-xl flex flex-col justify-between"
-                  >
-                    <Image src={serviceImagery.windowCleaning.src} alt="" fill sizes="(min-width: 768px) 25vw, 100vw" className="object-cover opacity-25 transition duration-700 group-hover:opacity-40" />
-                    <div className="absolute inset-0 bg-gradient-to-tr from-zinc-950/90 via-zinc-950/55 to-zinc-950/10"></div>
-                    <div className="relative z-10">
-                      <Droplets className="w-8 h-8 text-foreground mb-4" />
-                      <h3 className="text-lg font-black uppercase font-michroma tracking-tighter">{t('svc.wfp.title')}</h3>
-                    </div>
-                    <p className="text-accent text-xs font-bold uppercase tracking-widest">{t('svc.wfp.desc')}</p>
+                  {/* Sub Service 1 - Pressure Washing */}
+                  <motion.div whileHover={{ y: -5 }} className="md:col-span-2">
+                    <Link
+                      href="/services/pressure-washing"
+                      className="luxury-glass p-8 md:p-10 rounded-[32px] overflow-hidden relative group cursor-hover-target shadow-xl flex items-center justify-between h-full"
+                    >
+                      <div className="relative z-10 flex flex-col gap-2">
+                        <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-4 border border-white/10">
+                          <Waves className="w-6 h-6 text-foreground" />
+                        </div>
+                        <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight font-michroma">{t('svc.pressure.title')}</h3>
+                        <p className="text-accent text-sm font-medium max-w-xs">{t('svc.pressure.desc')}</p>
+                      </div>
+                      <Image src={serviceImagery.pressureWashing.src} alt="" width={150} height={150} sizes="150px" className="rounded-2xl object-cover grayscale opacity-30 group-hover:opacity-55 transition-opacity" />
+                    </Link>
                   </motion.div>
 
-                  {/* Sub Service 3 - Audit */}
-                  <motion.div
-                    whileHover={{ y: -5 }}
-                    className="luxury-glass p-8 rounded-[32px] overflow-hidden relative group cursor-hover-target shadow-xl flex flex-col justify-between bg-foreground/5"
-                  >
-                    <Image src={serviceImagery.floridaControl.src} alt="" fill sizes="(min-width: 768px) 25vw, 100vw" className="object-cover opacity-25 transition duration-700 group-hover:opacity-40" />
-                    <div className="absolute inset-0 bg-gradient-to-tr from-zinc-950/90 via-zinc-950/55 to-zinc-950/10"></div>
-                    <div className="relative z-10">
-                      <Zap className="w-8 h-8 text-foreground mb-4" />
-                      <h3 className="text-lg font-black uppercase font-michroma tracking-tighter">{t('svc.control.title')}</h3>
-                    </div>
-                    <p className="text-accent text-xs font-bold uppercase tracking-widest">{t('svc.control.desc')}</p>
+                  {/* Sub Service 2 - Carpet Cleaning */}
+                  <motion.div whileHover={{ y: -5 }} className="md:col-span-2">
+                    <Link
+                      href="/services/carpet-cleaning"
+                      className="luxury-glass p-8 rounded-[32px] overflow-hidden relative group cursor-hover-target shadow-xl flex flex-col justify-between h-full min-h-[180px]"
+                    >
+                      <Image src={serviceImagery.carpetCleaning.src} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover opacity-25 transition duration-700 group-hover:opacity-40" />
+                      <div className="absolute inset-0 bg-gradient-to-tr from-zinc-950/90 via-zinc-950/55 to-zinc-950/10"></div>
+                      <div className="relative z-10">
+                        <Sofa className="w-8 h-8 text-foreground mb-4" />
+                        <h3 className="text-lg font-black uppercase font-michroma tracking-tighter">{t('svc.carpet.title')}</h3>
+                      </div>
+                      <p className="relative z-10 text-accent text-xs font-bold uppercase tracking-widest">{t('svc.carpet.desc')}</p>
+                    </Link>
                   </motion.div>
                 </div>
               </div>

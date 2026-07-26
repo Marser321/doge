@@ -4,9 +4,11 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowLeft, ShieldCheck, Camera, FileText, Upload, X, ImageIcon, Film, Send, CheckCircle } from 'lucide-react'
+import { ArrowLeft, Camera, FileText, Upload, X, ImageIcon, Film, Send, CheckCircle, ShieldCheck } from 'lucide-react'
 import { useLanguage } from '@/components/LanguageProvider'
 import { ServiceVisualBanner } from '@/components/services/ServiceVisualBanner'
+import type { ServiceDefinition } from '@/content/services'
+import type { TranslationKey } from '@/data/i18n'
 
 type DescriptionMethod = 'photos' | 'text'
 
@@ -17,7 +19,14 @@ interface FilePreview {
   type: 'image' | 'video'
 }
 
-export default function PostConstructionPage() {
+const WHATSAPP_NUMBER = '17869283948'
+
+/**
+ * Single intake form shared by every service page. The per-service copy is
+ * resolved from the definition's `keyPrefix`, so adding a service means adding
+ * an entry in `@/content/services` and its translation block — never a clone.
+ */
+export function ServiceEstimateForm({ service }: { service: ServiceDefinition }) {
   const { lang, t } = useLanguage()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [method, setMethod] = useState<DescriptionMethod>('photos')
@@ -30,6 +39,9 @@ export default function PostConstructionPage() {
   const [submitted, setSubmitted] = useState(false)
   const [dragOver, setDragOver] = useState(false)
 
+  const ServiceIcon = service.icon
+  const own = (suffix: string) => t(`${service.keyPrefix}.${suffix}` as TranslationKey)
+
   useEffect(() => {
     const savedTheme = localStorage.getItem('doge-theme') as 'dark' | 'light'
     if (savedTheme) {
@@ -41,7 +53,7 @@ export default function PostConstructionPage() {
     if (!newFiles) return
     const additions: FilePreview[] = Array.from(newFiles)
       .filter(f => f.type.startsWith('image/') || f.type.startsWith('video/'))
-      .slice(0, 10 - files.length)
+      .slice(0, 10 - files.length) // Max 10 files
       .map(file => ({
         id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
         file,
@@ -66,21 +78,20 @@ export default function PostConstructionPage() {
   }, [handleFiles])
 
   const handleSubmit = () => {
-    const fileCount = files.length
     const desc = method === 'photos'
-      ? `${fileCount} foto(s)/video(s) subidos`
+      ? `${files.length} ${t('estimate.waFiles')}`
       : textDescription
 
     const message = encodeURIComponent(
-      `Hola DOGE.S.M LLC, solicito un estimado para Limpieza Post-Construcción.\n\n` +
-      `📸 Descripción: ${desc}\n` +
-      `👤 Nombre: ${name}\n` +
-      `📞 Contacto: ${contact}\n` +
-      `📍 Dirección: ${address}\n` +
-      (notes ? `📝 Notas: ${notes}` : '')
+      `${t('estimate.waIntro')} ${service.name[lang]}.\n\n` +
+      `📸 ${t('estimate.waDescription')}: ${desc}\n` +
+      `👤 ${t('estimate.waName')}: ${name}\n` +
+      `📞 ${t('estimate.waContact')}: ${contact}\n` +
+      `📍 ${t('estimate.waAddress')}: ${address}\n` +
+      (notes ? `📝 ${t('estimate.waNotes')}: ${notes}` : '')
     )
 
-    window.open(`https://wa.me/17869283948?text=${message}`, '_blank', 'noopener,noreferrer')
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank', 'noopener,noreferrer')
     setSubmitted(true)
   }
 
@@ -105,20 +116,18 @@ export default function PostConstructionPage() {
             <CheckCircle className="w-12 h-12 text-accent" />
           </motion.div>
           <h2 className="text-4xl md:text-5xl font-black text-foreground uppercase tracking-tighter mb-6 font-michroma">
-            {lang === 'es' ? 'Solicitud' : 'Request'} <br />
-            <span className="silver-text">{lang === 'es' ? 'Enviada.' : 'Sent.'}</span>
+            {t('estimate.sentTitle')} <br />
+            <span className="silver-text">{t('estimate.sentTitle2')}</span>
           </h2>
           <p className="text-accent text-lg font-medium leading-relaxed mb-12">
-            {lang === 'es'
-              ? 'Tu solicitud ha sido enviada por WhatsApp. Nuestro equipo te contactará con un estimado personalizado en las próximas horas.'
-              : 'Your request has been sent via WhatsApp. Our team will contact you with a personalized estimate within hours.'}
+            {t('estimate.sentBody')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link href="/services" className="flex-1 py-5 border border-accent/10 rounded-2xl font-black uppercase tracking-widest text-accent hover:bg-foreground/5 transition-all text-center text-sm">
-              {lang === 'es' ? 'Más Servicios' : 'More Services'}
+              {t('estimate.moreServices')}
             </Link>
             <Link href="/" className="flex-1 py-5 bg-foreground text-background rounded-2xl font-black uppercase tracking-[0.2em] shadow-2xl font-michroma text-center text-sm">
-              {lang === 'es' ? 'Inicio' : 'Home'}
+              {t('estimate.home')}
             </Link>
           </div>
         </motion.div>
@@ -131,8 +140,8 @@ export default function PostConstructionPage() {
       <div className="bg-noise"></div>
 
       {/* Background */}
-      <div className="absolute top-[-10%] right-[-10%] w-[min(800px,80vw)] h-[min(800px,80vw)] bg-zinc-500/5 rounded-full blur-[120px] pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] left-[-10%] w-[min(600px,60vw)] h-[min(600px,60vw)] bg-slate-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute top-[-10%] right-[-10%] w-[min(800px,80vw)] h-[min(800px,80vw)] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] left-[-10%] w-[min(600px,60vw)] h-[min(600px,60vw)] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none"></div>
 
       {/* Navigation */}
       <nav className="relative z-50 px-6 md:px-12 py-8 flex items-center justify-between">
@@ -141,9 +150,9 @@ export default function PostConstructionPage() {
           <span className="font-bold text-xs uppercase tracking-[0.3em]">{lang === 'es' ? 'Servicios' : 'Services'}</span>
         </Link>
         <div className="flex items-center gap-3">
-          <ShieldCheck className="w-5 h-5 text-accent" />
+          <ServiceIcon className="w-5 h-5 text-accent" />
           <span className="font-black text-xl tracking-tighter uppercase text-foreground font-michroma">
-            {lang === 'es' ? 'Post-Obra' : 'Post-Build'}
+            {own('nav')}
           </span>
         </div>
       </nav>
@@ -157,17 +166,34 @@ export default function PostConstructionPage() {
           className="mb-12 md:mb-16"
         >
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/20 bg-accent/5 text-accent text-[10px] font-black uppercase tracking-[0.3em] mb-8">
-            <ShieldCheck className="w-4 h-4" /> {lang === 'es' ? 'Retiro Intensivo de Obra' : 'Intensive Construction Removal'}
+            <ShieldCheck className="w-4 h-4" /> {t('estimate.noSubscription')}
           </span>
           <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter uppercase leading-[1.1] text-foreground font-michroma">
-            {t('pc.title')} <br className="hidden md:block" /> <span className="silver-text">{t('pc.title2')}</span>
+            {own('title')} <br className="hidden md:block" /> <span className="silver-text">{own('title2')}</span>
           </h1>
           <p className="text-accent text-lg font-medium max-w-2xl leading-relaxed">
-            {t('pc.subtitle')}
+            {own('subtitle')}
           </p>
         </motion.div>
 
-        <ServiceVisualBanner visualId="postConstruction" lang={lang} />
+        <ServiceVisualBanner visualId={service.visual} lang={lang} />
+
+        {service.equipment && (
+          <figure className="mb-10">
+            <div className="relative h-56 overflow-hidden rounded-[28px] border border-foreground/10 bg-foreground/5 sm:h-72">
+              <Image
+                src={service.equipment.src}
+                alt={service.equipment.alt[lang]}
+                fill
+                sizes="(min-width: 1024px) 56rem, 100vw"
+                className="object-cover"
+              />
+            </div>
+            <figcaption className="mt-3 text-[10px] font-black uppercase tracking-[0.3em] text-accent/60">
+              {t('estimate.equipmentLabel')}
+            </figcaption>
+          </figure>
+        )}
 
         {/* Method Toggle */}
         <motion.div
@@ -185,7 +211,7 @@ export default function PostConstructionPage() {
                   : 'text-accent hover:text-foreground'
               }`}
             >
-              <Camera className="w-4 h-4" /> {t('pc.methodPhotos')}
+              <Camera className="w-4 h-4" /> {t('estimate.methodPhotos')}
             </button>
             <button
               onClick={() => setMethod('text')}
@@ -195,7 +221,7 @@ export default function PostConstructionPage() {
                   : 'text-accent hover:text-foreground'
               }`}
             >
-              <FileText className="w-4 h-4" /> {t('pc.methodText')}
+              <FileText className="w-4 h-4" /> {t('estimate.methodText')}
             </button>
           </div>
         </motion.div>
@@ -217,9 +243,10 @@ export default function PostConstructionPage() {
                   className="space-y-6"
                 >
                   <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent block">
-                    {t('pc.uploadLabel')}
+                    {t('estimate.uploadLabel')}
                   </label>
 
+                  {/* Drop Zone */}
                   <div
                     onDragOver={(e) => { e.preventDefault(); setDragOver(true) }}
                     onDragLeave={() => setDragOver(false)}
@@ -235,10 +262,10 @@ export default function PostConstructionPage() {
                       <Upload className="w-8 h-8 text-accent" />
                     </div>
                     <p className="text-accent font-medium text-sm">
-                      {t('pc.uploadHint')}
+                      {t('estimate.uploadHint')}
                     </p>
                     <p className="text-accent/40 text-[10px] font-bold uppercase tracking-widest">
-                      JPG, PNG, MP4 — Max 10 {lang === 'es' ? 'archivos' : 'files'}
+                      {t('estimate.uploadFormats')}
                     </p>
                     <input
                       ref={fileInputRef}
@@ -250,6 +277,7 @@ export default function PostConstructionPage() {
                     />
                   </div>
 
+                  {/* File Previews */}
                   {files.length > 0 && (
                     <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                       {files.map((file) => (
@@ -293,12 +321,12 @@ export default function PostConstructionPage() {
                   className="space-y-6"
                 >
                   <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent block">
-                    {t('pc.textLabel')}
+                    {t('estimate.textLabel')}
                   </label>
                   <textarea
                     value={textDescription}
                     onChange={(e) => setTextDescription(e.target.value)}
-                    placeholder={t('pc.textPlaceholder')}
+                    placeholder={own('textPlaceholder')}
                     rows={8}
                     className="w-full bg-foreground/5 border border-accent/10 rounded-2xl p-6 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors resize-none placeholder:text-accent/30"
                   />
@@ -316,29 +344,57 @@ export default function PostConstructionPage() {
           >
             <div>
               <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
-                {t('wc.nameLabel')}
+                {t('estimate.nameLabel')}
               </label>
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t('wc.namePlaceholder')} className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30" />
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
-                {t('wc.contactLabel')}
-              </label>
-              <input type="text" value={contact} onChange={(e) => setContact(e.target.value)} placeholder={t('wc.contactPlaceholder')} className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30" />
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
-                {t('wc.addressLabel')}
-              </label>
-              <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder={t('wc.addressPlaceholder')} className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30" />
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
-                {t('wc.notesLabel')}
-              </label>
-              <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder={t('wc.notesPlaceholder')} rows={3} className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors resize-none placeholder:text-accent/30" />
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder={t('estimate.namePlaceholder')}
+                className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
+              />
             </div>
 
+            <div>
+              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                {t('estimate.contactLabel')}
+              </label>
+              <input
+                type="text"
+                value={contact}
+                onChange={(e) => setContact(e.target.value)}
+                placeholder={t('estimate.contactPlaceholder')}
+                className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
+              />
+            </div>
+
+            <div>
+              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                {t('estimate.addressLabel')}
+              </label>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder={t('estimate.addressPlaceholder')}
+                className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
+              />
+            </div>
+
+            <div>
+              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                {t('estimate.notesLabel')}
+              </label>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder={t('estimate.notesPlaceholder')}
+                rows={3}
+                className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors resize-none placeholder:text-accent/30"
+              />
+            </div>
+
+            {/* Submit CTA */}
             <motion.button
               whileHover={isValid ? { scale: 1.02, y: -2 } : {}}
               onClick={handleSubmit}
@@ -354,16 +410,15 @@ export default function PostConstructionPage() {
               )}
               <span className="relative z-10 flex items-center gap-3">
                 <Send className="w-5 h-5" />
-                {t('pc.submit')}
+                {t('estimate.submit')}
               </span>
             </motion.button>
 
+            {/* Info Note */}
             <div className="bg-accent/5 p-4 rounded-xl border border-accent/10 flex items-start gap-3">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mt-1 shrink-0"></div>
               <span className="text-[10px] font-bold text-accent uppercase tracking-widest leading-relaxed">
-                {lang === 'es'
-                  ? 'Recibirás un estimado personalizado por WhatsApp en las próximas horas. Sin compromiso.'
-                  : 'You\'ll receive a personalized estimate via WhatsApp within hours. No commitment.'}
+                {t('estimate.note')}
               </span>
             </div>
           </motion.div>

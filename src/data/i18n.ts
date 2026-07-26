@@ -120,18 +120,19 @@ export const TRANSLATIONS = {
     es: 'Sistemas de limpieza de precisión diseñados para la preservación extrema de activos inmobiliarios.',
     en: 'Precision cleaning systems designed for the extreme preservation of real estate assets.',
   },
-  'svc.residential.title': { es: 'Residencial VIP Elite.', en: 'VIP Elite Residential.' },
-  'svc.residential.desc': {
-    es: 'Desinfección de mobiliario de lujo y tratamiento de polvos profundos con equipos de grado médico HEPA.',
-    en: 'Luxury furniture disinfection and deep dust treatment with medical-grade HEPA equipment.',
+  'svc.window.title': { es: 'Limpieza de Cristales.', en: 'Window Cleaning.' },
+  'svc.window.desc': {
+    es: 'Tecnología WFP de agua pura para ventanales, barandas y frentes vidriados. Sin marcas, sin químicos agresivos.',
+    en: 'WFP pure water technology for windows, railings and glass storefronts. No streaks, no aggressive chemicals.',
   },
-  'svc.residential.badge': { es: 'Protocolo de Precisión Activo', en: 'Active Precision Protocol' },
-  'svc.post.title': { es: 'Post-Construcción', en: 'Post-Construction' },
-  'svc.post.desc': { es: 'Retiro intensivo de polvo obra y materiales pesados.', en: 'Intensive removal of construction dust and heavy materials.' },
-  'svc.wfp.title': { es: 'Cristal WFP', en: 'Crystal WFP' },
-  'svc.wfp.desc': { es: 'Tecnología de Agua Pura', en: 'Pure Water Technology' },
-  'svc.control.title': { es: 'Control Florida', en: 'Florida Control' },
-  'svc.control.desc': { es: 'Control de humedad', en: 'Moisture control' },
+  'svc.window.badge': { es: 'Protocolo de Precisión Activo', en: 'Active Precision Protocol' },
+  'svc.pressure.title': { es: 'Lavado a Presión', en: 'Pressure Washing' },
+  'svc.pressure.desc': {
+    es: 'Recuperación de entradas, terrazas y fachadas con presión calibrada según el material.',
+    en: 'Recovery of driveways, terraces and facades with pressure calibrated to each material.',
+  },
+  'svc.carpet.title': { es: 'Alfombras', en: 'Carpets' },
+  'svc.carpet.desc': { es: 'Extracción por Agua Caliente', en: 'Hot-Water Extraction' },
 
   // ── Memberships ──────────────────────────────
   'mem.badge': { es: 'Membresías Exclusivas', en: 'Exclusive Memberships' },
@@ -196,31 +197,82 @@ export const TRANSLATIONS = {
   'services.requestEstimate': { es: 'Solicitar Estimado', en: 'Request Estimate' },
   'services.comingSoon': { es: 'Próximamente', en: 'Coming Soon' },
 
+  // ── Estimate Form (shared by every service) ───
+  'estimate.noSubscription': { es: 'Sin Suscripción Necesaria', en: 'No Subscription Needed' },
+  'estimate.uploadLabel': { es: 'Sube fotos o videos', en: 'Upload photos or videos' },
+  'estimate.uploadHint': { es: 'Arrastra archivos aquí o haz clic para seleccionar', en: 'Drag files here or click to select' },
+  'estimate.uploadFormats': { es: 'JPG, PNG, MP4 — Máx. 10 archivos', en: 'JPG, PNG, MP4 — Max 10 files' },
+  'estimate.textLabel': { es: 'O describe por texto', en: 'Or describe by text' },
+  'estimate.nameLabel': { es: 'Nombre completo', en: 'Full name' },
+  'estimate.namePlaceholder': { es: 'Tu nombre', en: 'Your name' },
+  'estimate.contactLabel': { es: 'Teléfono o correo electrónico', en: 'Phone or email' },
+  'estimate.contactPlaceholder': { es: 'Tu teléfono o email', en: 'Your phone or email' },
+  'estimate.addressLabel': { es: 'Dirección', en: 'Address' },
+  'estimate.addressPlaceholder': { es: 'Dirección de la propiedad', en: 'Property address' },
+  'estimate.notesLabel': { es: 'Notas adicionales (opcional)', en: 'Additional notes (optional)' },
+  'estimate.notesPlaceholder': { es: 'Cualquier detalle extra...', en: 'Any extra details...' },
+  'estimate.submit': { es: 'Solicitar Estimado', en: 'Request Estimate' },
+  'estimate.methodPhotos': { es: 'Fotos / Videos', en: 'Photos / Videos' },
+  'estimate.methodText': { es: 'Describir por Texto', en: 'Describe by Text' },
+  'estimate.note': {
+    es: 'Recibirás tu estimado personalizado en las próximas horas. Sin compromiso.',
+    en: 'You\'ll receive your personalized estimate within hours. No commitment.',
+  },
+  'estimate.sentTitle': { es: 'Solicitud', en: 'Request' },
+  'estimate.sentTitle2': { es: 'Enviada.', en: 'Sent.' },
+  'estimate.sentBody': {
+    es: 'Tu solicitud ha sido enviada. Nuestro equipo te contactará con tu estimado personalizado en las próximas horas.',
+    en: 'Your request has been sent. Our team will contact you with your personalized estimate within hours.',
+  },
+  'estimate.moreServices': { es: 'Más Servicios', en: 'More Services' },
+  'estimate.home': { es: 'Inicio', en: 'Home' },
+  'estimate.equipmentLabel': { es: 'Equipo de trabajo', en: 'Service equipment' },
+  'estimate.waIntro': { es: 'Hola DOGE.S.M LLC, solicito un estimado para', en: 'Hello DOGE.S.M LLC, I would like an estimate for' },
+  'estimate.waFiles': { es: 'archivo(s) subido(s)', en: 'file(s) uploaded' },
+  'estimate.waDescription': { es: 'Descripción', en: 'Description' },
+  'estimate.waName': { es: 'Nombre', en: 'Name' },
+  'estimate.waContact': { es: 'Contacto', en: 'Contact' },
+  'estimate.waAddress': { es: 'Dirección', en: 'Address' },
+  'estimate.waNotes': { es: 'Notas', en: 'Notes' },
+
   // ── Window Cleaning Form ─────────────────────
+  'wc.nav': { es: 'Cristales', en: 'Windows' },
   'wc.title': { es: 'Limpieza de', en: 'Window' },
   'wc.title2': { es: 'Cristales.', en: 'Cleaning.' },
   'wc.subtitle': {
     es: 'Sube fotos o videos de las áreas que necesitas limpiar, o simplemente descríbelo por texto. Te enviamos un estimado personalizado.',
     en: 'Upload photos or videos of the areas you need cleaned, or simply describe it by text. We\'ll send you a personalized estimate.',
   },
-  'wc.uploadLabel': { es: 'Sube fotos o videos', en: 'Upload photos or videos' },
-  'wc.uploadHint': { es: 'Arrastra archivos aquí o haz clic para seleccionar', en: 'Drag files here or click to select' },
-  'wc.textLabel': { es: 'O describe por texto', en: 'Or describe by text' },
   'wc.textPlaceholder': {
     es: 'Ej: Tengo 8 ventanas grandes en el segundo piso que necesitan limpieza exterior...',
     en: 'E.g.: I have 8 large windows on the second floor that need exterior cleaning...',
   },
-  'wc.nameLabel': { es: 'Nombre completo', en: 'Full name' },
-  'wc.namePlaceholder': { es: 'Tu nombre', en: 'Your name' },
-  'wc.contactLabel': { es: 'Teléfono o correo electrónico', en: 'Phone or email' },
-  'wc.contactPlaceholder': { es: 'Tu teléfono o email', en: 'Your phone or email' },
-  'wc.addressLabel': { es: 'Dirección', en: 'Address' },
-  'wc.addressPlaceholder': { es: 'Dirección de la propiedad', en: 'Property address' },
-  'wc.notesLabel': { es: 'Notas adicionales (opcional)', en: 'Additional notes (optional)' },
-  'wc.notesPlaceholder': { es: 'Cualquier detalle extra...', en: 'Any extra details...' },
-  'wc.submit': { es: 'Solicitar Estimado', en: 'Request Estimate' },
-  'wc.methodPhotos': { es: 'Fotos / Videos', en: 'Photos / Videos' },
-  'wc.methodText': { es: 'Describir por Texto', en: 'Describe by Text' },
+
+  // ── Pressure Washing Form ─────────────────────
+  'pw.nav': { es: 'Presión', en: 'Pressure' },
+  'pw.title': { es: 'Lavado a', en: 'Pressure' },
+  'pw.title2': { es: 'Presión.', en: 'Washing.' },
+  'pw.subtitle': {
+    es: 'Sube fotos o videos de la entrada, terraza o fachada a recuperar, o descríbelo por texto. Calibramos la presión según el material y te enviamos un estimado.',
+    en: 'Upload photos or videos of the driveway, terrace or facade to recover, or describe it by text. We calibrate pressure to the material and send you an estimate.',
+  },
+  'pw.textPlaceholder': {
+    es: 'Ej: Tengo una entrada de adoquines de unos 800 ft² con manchas de moho y óxido, más una terraza de piedra...',
+    en: 'E.g.: I have a paver driveway of about 800 ft² with mold and rust stains, plus a stone terrace...',
+  },
+
+  // ── Carpet Cleaning Form ──────────────────────
+  'cc.nav': { es: 'Alfombras', en: 'Carpets' },
+  'cc.title': { es: 'Limpieza de', en: 'Carpet' },
+  'cc.title2': { es: 'Alfombras.', en: 'Cleaning.' },
+  'cc.subtitle': {
+    es: 'Sube fotos o videos de las alfombras, tapetes o tapicería a tratar, o descríbelo por texto. Te enviamos un estimado personalizado.',
+    en: 'Upload photos or videos of the carpets, rugs or upholstery to treat, or describe it by text. We\'ll send you a personalized estimate.',
+  },
+  'cc.textPlaceholder': {
+    es: 'Ej: Tengo alfombra en tres habitaciones y un sofá de tela con manchas de café y olor a mascota...',
+    en: 'E.g.: I have carpet in three bedrooms and a fabric sofa with coffee stains and pet odor...',
+  },
 
   // ── Membership Page ──────────────────────────
   'membership.title': { es: 'Únete a', en: 'Join' },
@@ -241,60 +293,6 @@ export const TRANSLATIONS = {
   'bnav.guarantee': { es: 'Garantía', en: 'Guarantee' },
   'bnav.search': { es: 'Búsqueda', en: 'Search' },
   'bnav.store': { es: 'Tienda', en: 'Store' },
-
-  // ── Residential VIP Form ──────────────────────
-  'rvip.title': { es: 'Residencial', en: 'VIP Elite' },
-  'rvip.title2': { es: 'VIP Elite.', en: 'Residential.' },
-  'rvip.subtitle': {
-    es: 'Sube fotos de tu propiedad o describe las áreas que necesitan atención. Te enviamos un estimado personalizado para tu hogar de lujo.',
-    en: 'Upload photos of your property or describe areas that need attention. We\'ll send you a personalized estimate for your luxury home.',
-  },
-  'rvip.uploadLabel': { es: 'Sube fotos o videos', en: 'Upload photos or videos' },
-  'rvip.uploadHint': { es: 'Arrastra archivos aquí o haz clic para seleccionar', en: 'Drag files here or click to select' },
-  'rvip.textLabel': { es: 'O describe por texto', en: 'Or describe by text' },
-  'rvip.textPlaceholder': {
-    es: 'Ej: Necesito limpieza profunda de mi penthouse de 3 habitaciones en Brickell, incluyendo mármol y mobiliario de lujo...',
-    en: 'E.g.: I need a deep cleaning for my 3-bedroom penthouse in Brickell, including marble and luxury furniture...',
-  },
-  'rvip.submit': { es: 'Solicitar Estimado', en: 'Request Estimate' },
-  'rvip.methodPhotos': { es: 'Fotos / Videos', en: 'Photos / Videos' },
-  'rvip.methodText': { es: 'Describir por Texto', en: 'Describe by Text' },
-
-  // ── Post-Construction Form ────────────────────
-  'pc.title': { es: 'Post-', en: 'Post-' },
-  'pc.title2': { es: 'Construcción.', en: 'Construction.' },
-  'pc.subtitle': {
-    es: 'Sube fotos del área post-obra o describe el proyecto. Te enviamos un estimado para el retiro intensivo de polvo y materiales.',
-    en: 'Upload photos of the post-construction area or describe the project. We\'ll send you an estimate for intensive dust and material removal.',
-  },
-  'pc.uploadLabel': { es: 'Sube fotos o videos', en: 'Upload photos or videos' },
-  'pc.uploadHint': { es: 'Arrastra archivos aquí o haz clic para seleccionar', en: 'Drag files here or click to select' },
-  'pc.textLabel': { es: 'O describe por texto', en: 'Or describe by text' },
-  'pc.textPlaceholder': {
-    es: 'Ej: Acabo de terminar una remodelación de cocina y baño, quedan residuos de cemento y polvo fino en todas las superficies...',
-    en: 'E.g.: I just finished a kitchen and bathroom renovation, there are cement residues and fine dust on all surfaces...',
-  },
-  'pc.submit': { es: 'Solicitar Estimado', en: 'Request Estimate' },
-  'pc.methodPhotos': { es: 'Fotos / Videos', en: 'Photos / Videos' },
-  'pc.methodText': { es: 'Describir por Texto', en: 'Describe by Text' },
-
-  // ── Florida Control Form ──────────────────────
-  'fc.title': { es: 'Control', en: 'Florida' },
-  'fc.title2': { es: 'Florida.', en: 'Control.' },
-  'fc.subtitle': {
-    es: 'Sube fotos de las áreas afectadas por humedad o describe el problema. Te enviamos un plan de acción y estimado personalizado.',
-    en: 'Upload photos of moisture-affected areas or describe the issue. We\'ll send you an action plan and personalized estimate.',
-  },
-  'fc.uploadLabel': { es: 'Sube fotos o videos', en: 'Upload photos or videos' },
-  'fc.uploadHint': { es: 'Arrastra archivos aquí o haz clic para seleccionar', en: 'Drag files here or click to select' },
-  'fc.textLabel': { es: 'O describe por texto', en: 'Or describe by text' },
-  'fc.textPlaceholder': {
-    es: 'Ej: Tengo problemas de humedad en el clóset principal y en las paredes del baño, veo manchas de moho...',
-    en: 'E.g.: I have moisture issues in the master closet and bathroom walls, I can see mold spots...',
-  },
-  'fc.submit': { es: 'Solicitar Estimado', en: 'Request Estimate' },
-  'fc.methodPhotos': { es: 'Fotos / Videos', en: 'Photos / Videos' },
-  'fc.methodText': { es: 'Describir por Texto', en: 'Describe by Text' },
 
   // ── Account Page ──────────────────────────────
   'account.title': { es: 'Mi', en: 'My' },
@@ -344,6 +342,34 @@ export const TRANSLATIONS = {
   'search.services': { es: 'Servicios', en: 'Services' },
   'search.products': { es: 'Productos', en: 'Products' },
   'search.pages': { es: 'Páginas', en: 'Pages' },
+
+  // ── Store ─────────────────────────────────────
+  'store.back': { es: 'Volver', en: 'Back' },
+  'store.badge': { es: 'Equipamiento Táctico Florida', en: 'Florida Tactical Supply' },
+  'store.title': { es: 'Arsenal de', en: 'Maintenance' },
+  'store.title2': { es: 'Mantenimiento.', en: 'Arsenal.' },
+  'store.subtitle': {
+    es: 'Los mismos insumos químicos y electrónicos de despliegue que utilizan nuestras cuadrillas corporativas, ahora homologados para su hogar.',
+    en: 'The same chemical and electronic supplies our corporate crews deploy, now approved for your home.',
+  },
+  'store.departments': { es: 'Departamentos', en: 'Departments' },
+  'store.allDepartments': { es: 'Todos', en: 'All' },
+  'store.allInDepartment': { es: 'Todo el departamento', en: 'Entire department' },
+  'store.loading': { es: 'Cargando catálogo…', en: 'Loading catalog…' },
+  'store.emptyDepartment': {
+    es: 'Todavía no hay productos publicados en este departamento. Próximamente.',
+    en: 'No products published in this department yet. Coming soon.',
+  },
+  'store.emptyCatalog': { es: 'El catálogo está vacío por ahora.', en: 'The catalog is empty for now.' },
+  'store.estimatedPrice': { es: 'Inversión Estimada', en: 'Estimated Investment' },
+  'store.specs': { es: 'Especificaciones', en: 'Specifications' },
+  'store.concierge': { es: 'Contactar Concierge', en: 'Contact Concierge' },
+  'store.buyAmazon': { es: 'Comprar en Amazon', en: 'Buy on Amazon' },
+  'store.soldOut': { es: 'Agotado', en: 'Sold Out' },
+  'store.verifiedStock': { es: 'Stock Verificado', en: 'Verified Stock' },
+  'store.direct': { es: 'Directo', en: 'Direct' },
+  'store.amazonPartner': { es: 'Socio Amazon', en: 'Amazon Partner' },
+  'store.footerBadge': { es: 'Estándar Forense Autorizado', en: 'Authorized Forensic Standard' },
 
   // ── Legal Pages ───────────────────────────────
   'legal.licenses.title': { es: 'Licencias.', en: 'Licenses.' },

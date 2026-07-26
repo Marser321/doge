@@ -4,68 +4,10 @@ import React, { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, Droplets, Home, ShieldCheck, Zap, ArrowRight, Sparkles, Lock, type LucideIcon } from 'lucide-react'
+import { ArrowLeft, ShieldCheck, ArrowRight, Sparkles } from 'lucide-react'
 import { useLanguage } from '@/components/LanguageProvider'
-import { serviceImagery, type ServiceVisualId } from '@/content/service-imagery'
-
-type Service = {
-  id: string
-  icon: LucideIcon
-  nameEs: string
-  nameEn: string
-  descEs: string
-  descEn: string
-  active: boolean
-  accent: string
-  visual: ServiceVisualId
-}
-
-const SERVICES: Service[] = [
-  {
-    id: 'window-cleaning',
-    icon: Droplets,
-    nameEs: 'Limpieza de Cristales',
-    nameEn: 'Window Cleaning',
-    descEs: 'Tecnología WFP de agua pura. Cristales impecables sin marcas ni químicos. Sube fotos de tus ventanas y recibe un estimado en horas.',
-    descEn: 'WFP pure water technology. Spotless glass with no marks or chemicals. Upload photos of your windows and get an estimate within hours.',
-    active: true,
-    accent: 'from-blue-500/20 to-cyan-500/20',
-    visual: 'windowCleaning',
-  },
-  {
-    id: 'residential-vip',
-    icon: Home,
-    nameEs: 'Residencial VIP Elite',
-    nameEn: 'VIP Elite Residential',
-    descEs: 'Desinfección HEPA de grado médico. Tratamiento profundo para mobiliario de lujo, mármol y roble.',
-    descEn: 'Medical-grade HEPA disinfection. Deep treatment for luxury furniture, marble and oak.',
-    active: true,
-    accent: 'from-amber-500/20 to-orange-500/20',
-    visual: 'residentialVip',
-  },
-  {
-    id: 'post-construction',
-    icon: ShieldCheck,
-    nameEs: 'Post-Construcción',
-    nameEn: 'Post-Construction',
-    descEs: 'Retiro intensivo de polvo de obra, materiales pesados y residuos de construcción.',
-    descEn: 'Intensive removal of construction dust, heavy materials and building debris.',
-    active: true,
-    accent: 'from-zinc-500/20 to-slate-500/20',
-    visual: 'postConstruction',
-  },
-  {
-    id: 'florida-control',
-    icon: Zap,
-    nameEs: 'Control Florida Anti-Humedad',
-    nameEn: 'Florida Anti-Moisture Control',
-    descEs: 'Evaluación y control de humedad para propiedades costeras.',
-    descEn: 'Moisture assessment and control for coastal properties.',
-    active: true,
-    accent: 'from-emerald-500/20 to-teal-500/20',
-    visual: 'floridaControl',
-  },
-]
+import { serviceImagery } from '@/content/service-imagery'
+import { SERVICES } from '@/content/services'
 
 export default function ServicesPage() {
   const { lang, t } = useLanguage()
@@ -119,15 +61,16 @@ export default function ServicesPage() {
       {/* Services Grid */}
       <section className="px-6 md:px-12 pb-32 max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          {SERVICES.map((service, idx) => (
-            <motion.div
-              key={service.id}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="relative"
-            >
-              {service.active ? (
+          {SERVICES.map((service, idx) => {
+            const ServiceIcon = service.icon
+            return (
+              <motion.div
+                key={service.id}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="relative"
+              >
                 <Link href={`/services/${service.id}`} className="block">
                   <div className="luxury-glass p-8 md:p-10 rounded-[32px] overflow-hidden group cursor-hover-target shadow-xl flex flex-col justify-between min-h-[300px] hover:border-accent/40 transition-all relative">
                     <Image src={serviceImagery[service.visual].src} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover opacity-25 transition-opacity duration-700 group-hover:opacity-45" />
@@ -136,13 +79,13 @@ export default function ServicesPage() {
 
                     <div className="relative z-10">
                       <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mb-6 border border-white/10 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
-                        <service.icon className="w-7 h-7 text-foreground" />
+                        <ServiceIcon className="w-7 h-7 text-foreground" />
                       </div>
                       <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight font-michroma mb-4">
-                        {lang === 'es' ? service.nameEs : service.nameEn}
+                        {service.name[lang]}
                       </h3>
                       <p className="text-accent font-medium leading-relaxed max-w-md">
-                        {lang === 'es' ? service.descEs : service.descEn}
+                        {service.description[lang]}
                       </p>
                     </div>
 
@@ -158,29 +101,9 @@ export default function ServicesPage() {
                     </div>
                   </div>
                 </Link>
-              ) : (
-                <div className="luxury-glass p-8 md:p-10 rounded-[32px] overflow-hidden shadow-xl flex flex-col justify-between min-h-[300px] opacity-50 relative">
-                  <div className="relative z-10">
-                    <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mb-6 border border-white/10">
-                      <service.icon className="w-7 h-7 text-accent" />
-                    </div>
-                    <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight font-michroma mb-4 text-accent">
-                      {lang === 'es' ? service.nameEs : service.nameEn}
-                    </h3>
-                    <p className="text-accent/60 font-medium leading-relaxed max-w-md">
-                      {lang === 'es' ? service.descEs : service.descEn}
-                    </p>
-                  </div>
-                  <div className="relative z-10 pt-8 flex items-center justify-between">
-                    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-500/10 border border-zinc-500/20 text-zinc-500 text-[9px] font-black uppercase tracking-widest">
-                      <Lock className="w-3 h-3" />
-                      {t('services.comingSoon')}
-                    </span>
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          ))}
+              </motion.div>
+            )
+          })}
         </div>
       </section>
 

@@ -1,3 +1,5 @@
+import { isCategorySlug } from '@/content/store-taxonomy';
+
 export type CrmResource = 'clients' | 'subscriptions' | 'offers' | 'products';
 
 const fields: Record<CrmResource, readonly string[]> = {
@@ -43,6 +45,9 @@ export function validateCrmPayload(resource: CrmResource, payload: Record<string
     if (payload.sale_type !== undefined && !['own_stock', 'amazon_affiliate', 'whatsapp_concierge'].includes(text('sale_type'))) return 'El tipo de venta no es válido.';
     if (text('sale_type') === 'amazon_affiliate' && !text('amazon_affiliate_url')) return 'El producto afiliado requiere una URL.';
     if (payload.specs !== undefined && !Array.isArray(payload.specs)) return 'Las especificaciones deben ser una lista.';
+    if (payload.category !== undefined && payload.category !== null && text('category') && !isCategorySlug(text('category'))) {
+      return 'La categoría debe ser un departamento o subcategoría válida de la tienda.';
+    }
   }
   return null;
 }

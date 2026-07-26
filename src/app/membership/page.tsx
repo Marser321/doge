@@ -66,7 +66,7 @@ export default function MembershipPage() {
     form.set('address', address)
     form.set('city', city)
     form.set('property_type', 'Residencial')
-    form.set('service_code', 'residential-vip')
+    form.set('service_code', 'window-cleaning')
     form.set('locale', lang)
     form.set('consent', 'accepted')
     form.set('notes', `Interés en plan ${chosen.name} · ${lang === 'es' ? chosen.freqEs : chosen.freqEn}. Requiere evaluación y cotización.`)

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, CalendarDays, CheckCircle2, ImagePlus, LoaderCircle, ShieldCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { SERVICES } from '@/content/services';
 import { newYorkDate } from '@/lib/domain';
 
 type SubmissionState = 'idle' | 'submitting' | 'error';
@@ -108,10 +109,9 @@ export default function BookingPage() {
                 <label className={labelClass}>Servicio
                   <select required name="service_code" className={inputClass} defaultValue="">
                     <option value="" disabled>Selecciona una opción</option>
-                    <option value="residential-vip">Limpieza profunda</option>
-                    <option value="window-cleaning">Cristales WFP</option>
-                    <option value="post-construction">Post-construcción</option>
-                    <option value="florida-control">Inspección y propuesta</option>
+                    {SERVICES.map((service) => (
+                      <option key={service.id} value={service.id}>{service.bookingLabel.es}</option>
+                    ))}
                   </select>
                 </label>
                 <label className={labelClass}>Fecha preferida

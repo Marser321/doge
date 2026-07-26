@@ -2,6 +2,8 @@ import type { Lang } from '@/data/i18n';
 
 export type ServiceVisualId =
   | 'windowCleaning'
+  | 'pressureWashing'
+  | 'carpetCleaning'
   | 'residentialVip'
   | 'postConstruction'
   | 'floridaControl'
@@ -76,6 +78,30 @@ export const serviceImagery = {
     materials: 'crystal-clear glass, subtle water beads, natural stone and anodized metal.',
     composition: 'a wide window wall with the water view held in the central safe frame and the cleaning pole at the far edge.',
     movement: 'A nearly imperceptible dolly-in; water reflections and a few droplets drift naturally while every architectural line remains stable.',
+  }),
+  pressureWashing: createVisual({
+    file: 'pressure-washing',
+    alt: {
+      es: 'Entrada y pavimento de piedra de una villa costera recién recuperados, con brillo húmedo controlado y sin operador a la vista.',
+      en: 'Freshly recovered stone driveway and paving of a coastal villa, with a controlled wet sheen and no operator in view.',
+    },
+    scene: 'A South Florida coastal villa entry immediately after professional pressure washing; limestone pavers and architectural stone restored to an even tone, a crisp boundary between treated and untreated paving, and a thin controlled film of water with no equipment or operator in the frame.',
+    subject: 'Restored exterior paving, even stone tone and precise surface recovery.',
+    materials: 'clean limestone pavers, architectural stone, controlled water sheen and pale mortar joints.',
+    composition: 'a low wide perspective along the generous clean approach, with the treated paving held in the central safe frame.',
+    movement: 'A low, extremely slow travelling movement; the wet stone glints gently and palm shadows drift with no spray or action.',
+  }),
+  carpetCleaning: createVisual({
+    file: 'carpet-cleaning',
+    alt: {
+      es: 'Sala residencial premium vacía con alfombra de lana recién extraída, fibras levantadas y luz natural suave.',
+      en: 'Empty premium living room with a freshly extracted wool carpet, lifted fibers and soft natural light.',
+    },
+    scene: 'An immaculate empty Miami living room right after professional hot-water carpet extraction; a deep wool rug with visibly lifted, evenly groomed fibers, neutral linen seating pulled clear of the pile and warm oak millwork around it.',
+    subject: 'Restored carpet pile, even fiber texture and quiet residential order.',
+    materials: 'deep wool pile, woven linen, oak grain, honed stone and clean glass.',
+    composition: 'a low angle across the groomed rug toward the seating, keeping the carpet field crop-safe for overlay text.',
+    movement: 'A slow lateral slide close to the pile; daylight shifts almost imperceptibly across the fibers while the room stays empty.',
   }),
   residentialVip: createVisual({
     file: 'residential-vip',
@@ -189,7 +215,6 @@ export const serviceImagery = {
 
 export const primaryServiceVisuals = {
   'window-cleaning': 'windowCleaning',
-  'residential-vip': 'residentialVip',
-  'post-construction': 'postConstruction',
-  'florida-control': 'floridaControl',
+  'pressure-washing': 'pressureWashing',
+  'carpet-cleaning': 'carpetCleaning',
 } as const satisfies Record<string, ServiceVisualId>;

@@ -2,9 +2,11 @@
 
 import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, X, Sparkles, ShoppingCart, ArrowRight, Crown, Home, ShieldCheck, Zap, Droplets } from 'lucide-react'
+import { Search, X, Sparkles, ShoppingCart, ArrowRight, Crown } from 'lucide-react'
 import Link from 'next/link'
 import { useLanguage } from './LanguageProvider'
+import { SERVICES } from '@/content/services'
+import { STORE_DEPARTMENTS } from '@/content/store-taxonomy'
 
 interface SearchResult {
   title: string
@@ -44,63 +46,21 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   const allResults: SearchResult[] = useMemo(() => [
     // Services
-    {
-      title: lang === 'es' ? 'Limpieza de Cristales' : 'Window Cleaning',
-      desc: lang === 'es' ? 'Tecnología WFP de agua pura' : 'WFP pure water technology',
-      href: '/services/window-cleaning',
+    ...SERVICES.map((service): SearchResult => ({
+      title: service.name[lang],
+      desc: service.searchDescription[lang],
+      href: `/services/${service.id}`,
       category: 'services',
-      icon: Droplets,
-    },
-    {
-      title: lang === 'es' ? 'Residencial VIP Elite' : 'VIP Elite Residential',
-      desc: lang === 'es' ? 'Desinfección HEPA de grado médico' : 'Medical-grade HEPA disinfection',
-      href: '/services/residential-vip',
-      category: 'services',
-      icon: Home,
-    },
-    {
-      title: lang === 'es' ? 'Post-Construcción' : 'Post-Construction',
-      desc: lang === 'es' ? 'Retiro intensivo de polvo de obra' : 'Intensive construction dust removal',
-      href: '/services/post-construction',
-      category: 'services',
-      icon: ShieldCheck,
-    },
-    {
-      title: lang === 'es' ? 'Control Florida' : 'Florida Control',
-      desc: lang === 'es' ? 'Control de humedad' : 'Moisture control',
-      href: '/services/florida-control',
-      category: 'services',
-      icon: Zap,
-    },
-    // Products
-    {
-      title: 'Dyson V15 Detect Absolute',
-      desc: lang === 'es' ? 'Sensor piezo de polvo forense' : 'Forensic dust piezo sensor',
-      href: '/store',
+      icon: service.icon,
+    })),
+    // Store departments
+    ...STORE_DEPARTMENTS.map((department): SearchResult => ({
+      title: department.label[lang],
+      desc: department.subcategories.map((subcategory) => subcategory.label[lang]).join(' · '),
+      href: `/store?dept=${department.id}`,
       category: 'products',
-      icon: ShoppingCart,
-    },
-    {
-      title: 'Kärcher SC 3 Carbon Elite',
-      desc: lang === 'es' ? 'Vapor continuo sin químicos' : 'Continuous steam without chemicals',
-      href: '/store',
-      category: 'products',
-      icon: ShoppingCart,
-    },
-    {
-      title: 'Bissell Big Green Professional',
-      desc: lang === 'es' ? 'Extracción profunda táctica' : 'Tactical deep extraction',
-      href: '/store',
-      category: 'products',
-      icon: ShoppingCart,
-    },
-    {
-      title: lang === 'es' ? 'Nano-Sellador de Hongos' : 'Nano Mold Sealer',
-      desc: lang === 'es' ? 'Protección química prolongada' : 'Extended chemical protection',
-      href: '/store',
-      category: 'products',
-      icon: ShoppingCart,
-    },
+      icon: department.icon,
+    })),
     // Pages
     {
       title: lang === 'es' ? 'Membresías' : 'Memberships',

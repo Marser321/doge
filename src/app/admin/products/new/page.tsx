@@ -6,6 +6,7 @@ import { ArrowLeft, Save, Sparkles, Image as ImageIcon, Plus, Trash2, Box } from
 import Link from 'next/link'
 import { db } from '@/lib/db'
 import { apiRequest } from '@/lib/api-client'
+import { STORE_DEPARTMENTS } from '@/content/store-taxonomy'
 
 export default function NewProductForm() {
   const router = useRouter()
@@ -28,7 +29,7 @@ export default function NewProductForm() {
     amazon_asin: '',
     stock_quantity: 0,
     low_stock_threshold: 5,
-    category: 'cleaning',
+    category: '',
     benefit_label: '',
     accent_gradient: 'from-zinc-500 to-zinc-800',
     is_active: false,
@@ -41,6 +42,15 @@ export default function NewProductForm() {
   ])
 
   const [imageFile, setImageFile] = useState<File | null>(null)
+
+  // Department is derived from the stored subcategory, so the two cannot drift.
+  const [department, setDepartment] = useState<string>('')
+  const activeDepartment = STORE_DEPARTMENTS.find((item) => item.id === department) || null
+
+  const handleDepartmentChange = (nextDepartment: string) => {
+    setDepartment(nextDepartment)
+    setFormData(prev => ({ ...prev, category: '' }))
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
@@ -118,7 +128,8 @@ export default function NewProductForm() {
         amazon_asin: formData.amazon_asin || null,
         stock_quantity: stockVal,
         low_stock_threshold: Number(formData.low_stock_threshold) >= 0 ? Number(formData.low_stock_threshold) : 0,
-        category: formData.category || null,
+        // Fall back to the department slug when no subcategory fits the product.
+        category: formData.category || department || null,
         benefit_label: formData.benefit_label || null,
         accent_gradient: formData.accent_gradient || null,
         is_active: formData.is_active,
@@ -203,13 +214,38 @@ export default function NewProductForm() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Category</label>
-                  <input name="category" value={formData.category} onChange={handleInputChange} type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors" placeholder="e.g. cleaning" />
+                  <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Brand</label>
+                  <input name="brand" value={formData.brand} onChange={handleInputChange} type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors" placeholder="e.g. Dyson" />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Brand</label>
-                  <input name="brand" value={formData.brand} onChange={handleInputChange} type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors" placeholder="e.g. Dyson" />
+                  <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Departamento</label>
+                  <select
+                    value={department}
+                    onChange={(e) => handleDepartmentChange(e.target.value)}
+                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors appearance-none"
+                  >
+                    <option value="">Sin departamento</option>
+                    {STORE_DEPARTMENTS.map((item) => (
+                      <option key={item.id} value={item.id}>{item.label.es}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Subcategoría</label>
+                  <select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    disabled={!activeDepartment}
+                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors appearance-none disabled:opacity-40"
+                  >
+                    <option value="">{activeDepartment ? 'Todo el departamento' : 'Selecciona un departamento'}</option>
+                    {activeDepartment?.subcategories.map((item) => (
+                      <option key={item.id} value={item.id}>{item.label.es}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="md:col-span-2">

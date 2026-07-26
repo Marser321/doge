@@ -3,6 +3,6 @@
 import { ServiceEstimateForm } from '@/components/services/ServiceEstimateForm'
 import { getService } from '@/content/services'
 
-export default function WindowCleaningPage() {
-  return <ServiceEstimateForm service={getService('window-cleaning')} />
+export default function CarpetCleaningPage() {
+  return <ServiceEstimateForm service={getService('carpet-cleaning')} />
 }

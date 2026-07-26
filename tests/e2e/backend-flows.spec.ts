@@ -107,7 +107,7 @@ test.describe('@backend Supabase operational flows', () => {
         address: '1 Ocean Drive',
         city: 'Miami',
         property_type: 'Residencial',
-        service_code: 'residential-vip',
+        service_code: 'window-cleaning',
         locale: 'es',
         consent: 'accepted',
         photos: {
@@ -130,7 +130,7 @@ test.describe('@backend Supabase operational flows', () => {
         address: '1 Ocean Drive',
         city: 'Miami',
         property_type: 'Residencial',
-        service_code: 'residential-vip',
+        service_code: 'window-cleaning',
         locale: 'es',
         consent: 'accepted',
         photos: {
@@ -277,7 +277,7 @@ test.describe('@backend Supabase operational flows', () => {
 
     test.skip(!process.env.CRON_SECRET, 'Requires CRON_SECRET.');
     const [service, plan] = await Promise.all([
-      admin.from('service_catalog').select('id').eq('code', 'residential-vip').single(),
+      admin.from('service_catalog').select('id').eq('code', 'window-cleaning').single(),
       admin.from('subscription_plans').select('id,cadence_days').eq('name', 'Essential').single(),
     ]);
     if (service.error || !service.data || plan.error || !plan.data) {

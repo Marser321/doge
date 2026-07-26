@@ -4,10 +4,9 @@ insert into public.service_catalog (
   code, name_es, name_en, description_es, description_en,
   default_duration_minutes, base_price_cents, sort_order
 ) values
-  ('residential-vip', 'Residencial VIP', 'VIP Residential', 'Cuidado recurrente para residencias premium.', 'Recurring care for premium residences.', 180, 28000, 10),
-  ('window-cleaning', 'Cristales WFP', 'WFP Window Cleaning', 'Cristales exteriores e interiores con agua pura.', 'Interior and exterior pure-water glass care.', 180, 32000, 20),
-  ('post-construction', 'Post-construcción', 'Post-construction', 'Entrega final de obra, piedra y vidrio.', 'Final construction handoff for stone and glass.', 360, 65000, 30),
-  ('florida-control', 'Control Florida', 'Florida Control', 'Control de humedad y mantenimiento preventivo.', 'Humidity control and preventive maintenance.', 120, 22000, 40)
+  ('window-cleaning', 'Limpieza de Cristales', 'Window Cleaning', 'Cristales exteriores e interiores con tecnología WFP de agua pura.', 'Interior and exterior glass with WFP pure-water technology.', 180, 32000, 10),
+  ('pressure-washing', 'Lavado a Presión', 'Pressure Washing', 'Recuperación de entradas, terrazas y fachadas con presión calibrada.', 'Recovery of driveways, terraces and facades with calibrated pressure.', 240, 45000, 20),
+  ('carpet-cleaning', 'Limpieza de Alfombras', 'Carpet Cleaning', 'Extracción por inyección de agua caliente para alfombras y tapicería.', 'Hot-water extraction for carpets and upholstery.', 180, 28000, 30)
 on conflict (code) do update set
   name_es = excluded.name_es,
   name_en = excluded.name_en,
@@ -41,7 +40,7 @@ insert into public.products (
     'Glass Finish Kit', 'glass-finish-kit', 'DOGE Selection',
     'Acabado impecable para cristales', 'Kit concierge para mantenimiento de vidrio.',
     'Selección de herramientas para retoques entre visitas profesionales.',
-    8900, 10900, 4200, 'own_stock', 5, 'Cuidado de cristales',
+    8900, 10900, 4200, 'own_stock', 5, 'glass-cleaners',
     'Selección profesional', 'from-slate-500 to-zinc-900',
     '[{"label":"Uso","value":"Cristales y espejos"},{"label":"Formato","value":"Kit"}]'::jsonb,
     true, true, 10
@@ -50,7 +49,7 @@ insert into public.products (
     'Coastal Humidity Monitor', 'coastal-humidity-monitor', 'DOGE Selection',
     'Visibilidad para interiores costeros', 'Monitor recomendado para residencias de South Florida.',
     'Producto de afiliado sujeto a disponibilidad y condiciones del proveedor.',
-    4900, null, null, 'amazon_affiliate', 0, 'Control Florida',
+    4900, null, null, 'amazon_affiliate', 0, 'disinfectants',
     'Recomendado', 'from-blue-900 to-slate-950',
     '[{"label":"Canal","value":"Afiliado externo"}]'::jsonb,
     true, true, 20
