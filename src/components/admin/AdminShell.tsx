@@ -3,10 +3,11 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, Users, Tag, CreditCard, LogOut, Bell, ShoppingBag, Package, Menu, X, ClipboardList, CalendarDays, Warehouse, UsersRound, Activity, Settings } from 'lucide-react'
+import { LayoutDashboard, Users, Tag, CreditCard, LogOut, Bell, ShoppingBag, Package, Menu, X, ClipboardList, CalendarDays, Warehouse, UsersRound, Activity, Settings, Sparkles } from 'lucide-react'
 import { apiRequest } from '@/lib/api-client'
 import { getBrowserSupabase } from '@/lib/supabase/client'
 import type { CurrentStaffUser, StaffRole } from '@/lib/types'
+import CeoOnboardingTour from '@/components/admin/CeoOnboardingTour'
 
 export default function AdminShell({ children, initialUser }: { children: React.ReactNode; initialUser: CurrentStaffUser }) {
   const pathname = usePathname()
@@ -14,8 +15,20 @@ export default function AdminShell({ children, initialUser }: { children: React.
   
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
+  const [isTourOpen, setIsTourOpen] = useState(false)
   const [user, setUser] = useState<CurrentStaffUser | null>(initialUser)
   const profileRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    try {
+      const seen = localStorage.getItem('doge_ceo_tour_seen')
+      if (!seen && initialUser.role === 'owner') {
+        setIsTourOpen(true)
+      }
+    } catch {
+      // Ignore localStorage unavailable
+    }
+  }, [initialUser.role])
 
   useEffect(() => {
     let active = true
@@ -196,12 +209,21 @@ export default function AdminShell({ children, initialUser }: { children: React.
               </h2>
            </div>
            
-           <div className="flex items-center gap-4 md:gap-6">
+           <div className="flex items-center gap-3 md:gap-5">
+              <button
+                onClick={() => setIsTourOpen(true)}
+                className="inline-flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-semibold text-amber-200 transition-all hover:border-amber-400/50 hover:bg-amber-500/20 hover:text-white"
+                title="Abrir guía interactiva para el CEO"
+              >
+                <Sparkles className="size-3.5 text-amber-400 animate-pulse" />
+                <span className="hidden sm:inline">Guía CEO</span>
+              </button>
+
               <Link href="/admin/requests" aria-label="Ver solicitudes pendientes" className="relative p-2 rounded-full hover:bg-white/10 transition-colors group">
                  <Bell className="w-5 h-5 text-zinc-400 group-hover:text-white transition-colors" />
               </Link>
               
-              <div className="h-8 w-px bg-white/10 mx-1 md:mx-2"></div>
+              <div className="h-8 w-px bg-white/10 mx-1"></div>
               
               {/* Profile Dropdown */}
               <div className="relative" ref={profileRef}>
@@ -219,11 +241,19 @@ export default function AdminShell({ children, initialUser }: { children: React.
                  </button>
 
                  {isProfileMenuOpen && (
-                   <div className="absolute right-0 mt-3 w-48 rounded-xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] py-2 z-50 animate-in fade-in slide-in-from-top-2">
+                   <div className="absolute right-0 mt-3 w-52 rounded-xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] py-2 z-50 animate-in fade-in slide-in-from-top-2">
                      <div className="px-4 py-2 border-b border-white/5 sm:hidden mb-2">
                        <p className="text-sm font-bold text-white">{user.display_name || user.role}</p>
                        <p className="text-xs text-zinc-400 truncate">{user.email || 'Cuenta protegida'}</p>
                      </div>
+                     <button
+                       onClick={() => { setIsTourOpen(true); setIsProfileMenuOpen(false); }}
+                       className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-amber-300 hover:text-amber-200 hover:bg-amber-500/10 transition-colors"
+                     >
+                       <Sparkles className="w-4 h-4 text-amber-400" />
+                       Abrir guía CEO
+                     </button>
+                     <div className="h-px bg-white/5 my-1" />
                      <button
                        onClick={handleSignOut}
                        className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-zinc-300 hover:text-red-400 hover:bg-red-500/10 transition-colors"
@@ -245,6 +275,18 @@ export default function AdminShell({ children, initialUser }: { children: React.
         </div>
       </main>
 
+      {/* Onboarding Tour for CEO / Owners */}
+      <CeoOnboardingTour 
+        isOpen={isTourOpen} 
+        onClose={() => {
+          setIsTourOpen(false)
+          try {
+            localStorage.setItem('doge_ceo_tour_seen', 'true')
+          } catch {
+            // Ignore
+          }
+        }} 
+      />
     </div>
   )
 }

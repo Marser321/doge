@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Plus, Search, Pencil, ExternalLink, Box, TrendingUp, AlertTriangle, Star } from 'lucide-react'
+import { Plus, Search, Pencil, ExternalLink, Box, TrendingUp, AlertTriangle, Star, Boxes } from 'lucide-react'
 import { db, Product } from '@/lib/db'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -11,6 +11,7 @@ import { CrmPageIntro, CrmStatusPill } from '@/components/admin/CrmPrimitives'
 export default function ProductsDashboard() {
   const [products, setProducts] = useState<Product[]>([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [channelFilter, setChannelFilter] = useState<'all' | 'own_stock' | 'amazon_affiliate' | 'low_stock' | 'pilot'>('all')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -39,17 +40,34 @@ export default function ProductsDashboard() {
     }
   }
 
-  const lowerSearchTerm = searchTerm.toLowerCase()
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(lowerSearchTerm) ||
-    (p.brand || '').toLowerCase().includes(lowerSearchTerm)
-  )
+  const lowerSearchTerm = searchTerm.toLowerCase().trim()
+  const filteredProducts = products.filter(p => {
+    const matchesSearch = 
+      !lowerSearchTerm ||
+      p.name.toLowerCase().includes(lowerSearchTerm) ||
+      (p.brand || '').toLowerCase().includes(lowerSearchTerm) ||
+      p.slug.toLowerCase().includes(lowerSearchTerm)
 
-  const getSaleTypeStyle = (type: string) => {
+    if (!matchesSearch) return false
+
+    if (channelFilter === 'own_stock') return p.sale_type === 'own_stock'
+    if (channelFilter === 'amazon_affiliate') return p.sale_type === 'amazon_affiliate'
+    if (channelFilter === 'low_stock') return p.sale_type === 'own_stock' && p.stock_quantity <= p.low_stock_threshold
+    if (channelFilter === 'pilot') return isCatalogPilot(p)
+
+    return true
+  })
+
+  const getSaleTypeInfo = (type: string) => {
     switch(type) {
-      case 'own_stock': return 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-      case 'amazon_affiliate': return 'bg-amber-500/10 text-amber-400 border-amber-500/20'
-      default: return 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
+      case 'own_stock': 
+        return { label: 'Stock propio', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20' }
+      case 'amazon_affiliate': 
+        return { label: 'Afiliado Amazon', style: 'bg-amber-500/10 text-amber-400 border-amber-500/20' }
+      case 'whatsapp_concierge': 
+        return { label: 'Concierge WhatsApp', style: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' }
+      default: 
+        return { label: type.replace('_', ' '), style: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20' }
     }
   }
 
@@ -61,14 +79,32 @@ export default function ProductsDashboard() {
     )
   }
 
+  const lowStockCount = products.filter(p => p.sale_type === 'own_stock' && p.stock_quantity <= p.low_stock_threshold).length
+
   return (
-    <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out space-y-6">
+    <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out space-y-6 pb-20">
        
-       <CrmPageIntro eyebrow="Comercio · catálogo" title="Productos" description="Gestiona catálogo, inventario y productos piloto visibles en tienda." actions={<>
-          <Link href="/admin/products/new" className="px-5 py-2.5 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target">
-            <Plus className="w-4 h-4" /> Añadir producto
-          </Link>
-       </>} />
+       <CrmPageIntro 
+         eyebrow="Comercio · catálogo" 
+         title="Catálogo de productos" 
+         description="Gestiona catálogo público, canales de venta y fichas técnicas piloto de la tienda DOGE." 
+         actions={
+           <div className="flex items-center gap-3">
+             <Link 
+               href="/admin/inventory" 
+               className="px-4 py-2.5 flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 text-zinc-300 font-semibold hover:bg-white/10 transition-all text-sm"
+             >
+               <Boxes className="w-4 h-4 text-zinc-400" /> Control de inventario
+             </Link>
+             <Link 
+               href="/admin/products/new" 
+               className="px-5 py-2.5 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target"
+             >
+               <Plus className="w-4 h-4" /> Añadir producto
+             </Link>
+           </div>
+         } 
+       />
 
        {/* Stats Grid */}
        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -77,7 +113,7 @@ export default function ProductsDashboard() {
               <Box className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Total de productos</p>
+              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold font-michroma">Total de productos</p>
               <p className="text-xl font-michroma font-bold text-white">{products.length}</p>
             </div>
           </div>
@@ -86,7 +122,7 @@ export default function ProductsDashboard() {
               <Star className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Fichas piloto</p>
+              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold font-michroma">Fichas piloto</p>
               <p className="text-xl font-michroma font-bold text-white">{products.filter(isCatalogPilot).length}</p>
             </div>
           </div>
@@ -95,7 +131,7 @@ export default function ProductsDashboard() {
               <TrendingUp className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Publicados</p>
+              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold font-michroma">Publicados</p>
               <p className="text-xl font-michroma font-bold text-white">{products.filter(p => p.is_active).length}</p>
             </div>
           </div>
@@ -104,25 +140,65 @@ export default function ProductsDashboard() {
               <AlertTriangle className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Stock bajo</p>
+              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold font-michroma">Stock bajo</p>
               <p className="text-xl font-michroma font-bold text-white">
-                {products.filter(p => p.sale_type === 'own_stock' && p.stock_quantity <= p.low_stock_threshold).length}
+                {lowStockCount}
               </p>
             </div>
           </div>
        </div>
 
-       {/* Toolbar */}
-       <div className="flex flex-col sm:flex-row gap-4">
-         <div className="relative flex-1">
-           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+       {/* Toolbar: Search + Channel Filter Pills */}
+       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+         <div className="relative flex-1 max-w-md">
+           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
            <input 
              type="text" 
              placeholder="Buscar por nombre, marca o slug..."
-             className="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-white/30 transition-colors"
+             className="w-full bg-zinc-950/80 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-red-500/50 transition-colors"
              value={searchTerm}
              onChange={(e) => setSearchTerm(e.target.value)}
            />
+         </div>
+
+         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs sm:pb-0">
+           <button
+             type="button"
+             onClick={() => setChannelFilter('all')}
+             className={`rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'all' ? 'bg-white text-zinc-900 font-semibold' : 'border border-white/10 text-zinc-400 hover:bg-white/5'}`}
+           >
+             Todos ({products.length})
+           </button>
+           <button
+             type="button"
+             onClick={() => setChannelFilter('own_stock')}
+             className={`rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'own_stock' ? 'bg-blue-600 text-white font-semibold' : 'border border-blue-500/20 text-blue-400 hover:bg-blue-500/10'}`}
+           >
+             Stock propio
+           </button>
+           <button
+             type="button"
+             onClick={() => setChannelFilter('amazon_affiliate')}
+             className={`rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'amazon_affiliate' ? 'bg-amber-600 text-white font-semibold' : 'border border-amber-500/20 text-amber-400 hover:bg-amber-500/10'}`}
+           >
+             Afiliados
+           </button>
+           <button
+             type="button"
+             onClick={() => setChannelFilter('pilot')}
+             className={`rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'pilot' ? 'bg-sky-600 text-white font-semibold' : 'border border-sky-500/20 text-sky-300 hover:bg-sky-500/10'}`}
+           >
+             Piloto
+           </button>
+           {lowStockCount > 0 && (
+             <button
+               type="button"
+               onClick={() => setChannelFilter('low_stock')}
+               className={`flex items-center gap-1 rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'low_stock' ? 'bg-orange-500 text-white font-semibold' : 'border border-orange-500/20 text-orange-400 hover:bg-orange-500/10'}`}
+             >
+               <AlertTriangle className="size-3" /> Stock bajo ({lowStockCount})
+             </button>
+           )}
          </div>
        </div>
 
@@ -142,79 +218,117 @@ export default function ProductsDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {filteredProducts.map((p) => (
-                  <tr key={p.id} className="hover:bg-white/[0.02] transition-colors group">
-                    <td className="p-4">
-                      <div className="flex items-center gap-3">
-                         <div className={`relative w-12 h-12 rounded-lg bg-gradient-to-br ${p.accent_gradient || 'from-zinc-800 to-zinc-900'} border border-white/10 flex items-center justify-center overflow-hidden shrink-0 shadow-inner`}>
-                            {p.product_images?.[0]?.image_url ? <Image src={p.product_images.find((image) => image.is_primary)?.image_url || p.product_images[0].image_url} alt={p.product_images.find((image) => image.is_primary)?.alt_text || p.name} fill sizes="48px" className="object-contain p-1" /> : <span className="text-[10px] font-bold text-white uppercase opacity-40">{p.brand || 'DOGE'}</span>}
-                         </div>
-                         <div>
-                           <p className="font-bold text-white text-sm">{p.name}</p>
-                           <p className="text-[10px] text-zinc-500 font-mono tracking-tighter">{p.slug}</p>
-                           {isCatalogPilot(p) && <span className="mt-1 inline-flex rounded-full border border-sky-400/20 bg-sky-400/5 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-sky-200">Catálogo piloto</span>}
-                         </div>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getSaleTypeStyle(p.sale_type)}`}>
-                        {p.sale_type.replace('_', ' ')}
-                      </span>
-                    </td>
-                    <td className="p-4">
-                      <p className="font-michroma font-bold text-white text-sm">${p.price.toLocaleString()}</p>
-                      {p.compare_at_price && (
-                        <p className="text-[10px] text-zinc-500 line-through">${p.compare_at_price.toLocaleString()}</p>
-                      )}
-                    </td>
-                    <td className="p-4">
-                      {p.sale_type === 'own_stock' ? (
-                        <div className="flex items-center gap-2">
-                           <span className={`text-sm font-medium ${p.stock_quantity <= p.low_stock_threshold ? 'text-orange-400' : 'text-zinc-300'}`}>
-                             {p.stock_quantity} unidades
-                           </span>
-                           {p.stock_quantity <= p.low_stock_threshold && (
-                             <AlertTriangle className="w-3.5 h-3.5 text-orange-400" />
-                           )}
+                {filteredProducts.map((p) => {
+                  const saleInfo = getSaleTypeInfo(p.sale_type)
+                  return (
+                    <tr key={p.id} className="hover:bg-white/[0.02] transition-colors group">
+                      <td className="p-4">
+                        <div className="flex items-center gap-3">
+                           <div className={`relative w-12 h-12 rounded-lg bg-gradient-to-br ${p.accent_gradient || 'from-zinc-800 to-zinc-900'} border border-white/10 flex items-center justify-center overflow-hidden shrink-0 shadow-inner`}>
+                              {p.product_images?.[0]?.image_url ? (
+                                <Image 
+                                  src={p.product_images.find((image) => image.is_primary)?.image_url || p.product_images[0].image_url} 
+                                  alt={p.product_images.find((image) => image.is_primary)?.alt_text || p.name} 
+                                  fill 
+                                  sizes="48px" 
+                                  className="object-contain p-1" 
+                                />
+                              ) : (
+                                <span className="text-[10px] font-bold text-white uppercase opacity-40">{p.brand || 'DOGE'}</span>
+                              )}
+                           </div>
+                           <div>
+                             <p className="font-bold text-white text-sm">{p.name}</p>
+                             <p className="text-[10px] text-zinc-500 font-mono tracking-tighter">{p.slug}</p>
+                             {isCatalogPilot(p) && (
+                               <span className="mt-1 inline-flex rounded-full border border-sky-400/20 bg-sky-400/5 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-sky-200">
+                                 Catálogo piloto
+                               </span>
+                             )}
+                           </div>
                         </div>
-                      ) : (
-                        <span className="text-zinc-500 text-xs italic">Consulta</span>
-                      )}
-                    </td>
-                    <td className="p-4">
-                      <CrmStatusPill tone={p.is_active ? 'success' : 'neutral'}>{p.is_active ? 'Publicado' : 'Borrador'}</CrmStatusPill>
-                    </td>
-                    <td className="p-4">
-                      <div className="flex items-center justify-center">
-                        <button 
-                          onClick={() => handleToggleFeatured(p)}
-                          className={`p-2 rounded-lg transition-colors ${p.is_featured ? 'text-accent hover:bg-accent/10' : 'text-zinc-600 hover:text-accent hover:bg-white/5'}`}
-                        >
-                          <Star className={`w-5 h-5 ${p.is_featured ? 'fill-accent' : ''}`} />
-                        </button>
-                      </div>
-                    </td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        {p.amazon_affiliate_url && (
-                          <a href={p.amazon_affiliate_url} target="_blank" rel="noopener noreferrer" className="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-white transition-colors">
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
+                      </td>
+                      <td className="p-4">
+                        <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${saleInfo.style}`}>
+                          {saleInfo.label}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <p className="font-michroma font-bold text-white text-sm">
+                          ${p.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </p>
+                        {p.compare_at_price && (
+                          <p className="text-[10px] text-zinc-500 line-through">
+                            ${p.compare_at_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </p>
                         )}
-                        <Link href={`/admin/products/${p.id}`} aria-label={`Editar ${p.name}`} className="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-white transition-colors">
-                          <Pencil className="w-4 h-4" />
-                        </Link>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="p-4">
+                        {p.sale_type === 'own_stock' ? (
+                          <div className="flex items-center gap-2">
+                             <span className={`text-sm font-medium ${p.stock_quantity <= p.low_stock_threshold ? 'text-orange-400' : 'text-zinc-300'}`}>
+                               {p.stock_quantity} unidades
+                             </span>
+                             {p.stock_quantity <= p.low_stock_threshold && (
+                               <AlertTriangle className="w-3.5 h-3.5 text-orange-400" />
+                             )}
+                          </div>
+                        ) : (
+                          <span className="text-zinc-500 text-xs italic">
+                            {p.sale_type === 'amazon_affiliate' ? 'Enlace afiliado' : 'Consulta personalizada'}
+                          </span>
+                        )}
+                      </td>
+                      <td className="p-4">
+                        <CrmStatusPill tone={p.is_active ? 'success' : 'neutral'}>
+                          {p.is_active ? 'Publicado' : 'Borrador'}
+                        </CrmStatusPill>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center justify-center">
+                          <button 
+                            onClick={() => handleToggleFeatured(p)}
+                            className={`p-2 rounded-lg transition-colors ${p.is_featured ? 'text-accent hover:bg-accent/10' : 'text-zinc-600 hover:text-accent hover:bg-white/5'}`}
+                            title={p.is_featured ? 'Quitar de destacados' : 'Marcar como destacado'}
+                          >
+                            <Star className={`w-5 h-5 ${p.is_featured ? 'fill-accent' : ''}`} />
+                          </button>
+                        </div>
+                      </td>
+                      <td className="p-4 text-right">
+                        <div className="flex items-center justify-end gap-2 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                          {p.amazon_affiliate_url && (
+                            <a 
+                              href={p.amazon_affiliate_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-white transition-colors"
+                              title="Ver en Amazon"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </a>
+                          )}
+                          <Link 
+                            href={`/admin/products/${p.id}`} 
+                            aria-label={`Editar ${p.name}`} 
+                            className="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-white transition-colors"
+                            title="Editar ficha de producto"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Link>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
           
           {filteredProducts.length === 0 && (
-             <div className="p-12 text-center text-zinc-500">
-               <p>No products found matching your criteria.</p>
+             <div className="p-12 text-center text-zinc-500 space-y-2">
+               <p className="font-semibold text-white">No se encontraron productos</p>
+               <p className="text-sm">Prueba ajustando los filtros de canal o el término de búsqueda.</p>
              </div>
           )}
        </div>

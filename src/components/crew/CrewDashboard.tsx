@@ -72,7 +72,20 @@ export default function CrewDashboard({ initialAppointments, displayName }: { in
           <article key={appointment.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
             <div className="flex items-start justify-between gap-4">
               <div><p className="font-mono text-xs text-red-300">{appointment.service_request?.reference_code}</p><h2 className="mt-2 text-lg font-semibold">{appointment.service_request?.service_name_snapshot || 'Servicio DOGE'}</h2></div>
-              <span className="rounded-full border border-white/10 px-2.5 py-1 text-xs text-zinc-300">{appointment.status}</span>
+              {(() => {
+                const statusStyles: Record<string, { label: string; style: string }> = {
+                  scheduled: { label: 'Programado', style: 'border-sky-500/30 bg-sky-500/10 text-sky-300' },
+                  in_progress: { label: 'En progreso', style: 'border-amber-500/30 bg-amber-500/10 text-amber-300' },
+                  completed: { label: 'Completado', style: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' },
+                  cancelled: { label: 'Cancelado', style: 'border-red-500/30 bg-red-500/10 text-red-300' },
+                };
+                const config = statusStyles[appointment.status] || { label: appointment.status, style: 'border-white/10 text-zinc-300' };
+                return (
+                  <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${config.style}`}>
+                    {config.label}
+                  </span>
+                );
+              })()}
             </div>
             <div className="mt-5 space-y-2 text-sm text-zinc-300">
               <p className="flex items-center gap-2"><Clock3 className="size-4 text-zinc-600" />{new Intl.DateTimeFormat('es-US', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/New_York' }).format(new Date(appointment.starts_at))}</p>

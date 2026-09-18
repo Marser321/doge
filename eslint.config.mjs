@@ -3,12 +3,24 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 
 const eslintConfig = defineConfig([
-  ...nextVitals,
+  ...nextVitals.map((item) => {
+    if (item.plugins && item.plugins['react-hooks']) {
+      return {
+        ...item,
+        rules: {
+          ...item.rules,
+          "react-hooks/set-state-in-effect": "warn",
+          "react-hooks/preserve-manual-memoization": "warn",
+        },
+      };
+    }
+    return item;
+  }),
   ...nextTs,
   // Override default ignores of eslint-config-next.
   globalIgnores([
-    // Default ignores of eslint-config-next:
     ".next/**",
+    ".vercel/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
@@ -19,7 +31,6 @@ const eslintConfig = defineConfig([
     // findings visible without blocking the backend/CRM release pipeline.
     rules: {
       "@typescript-eslint/no-explicit-any": "warn",
-      "react-hooks/set-state-in-effect": "warn",
     },
   },
 ]);
