@@ -50,6 +50,7 @@ async function run() {
   // 2. Asegurar perfil con rol owner y activo
   const { error: profileError } = await supabase.from('profiles').upsert({
     id: userId,
+    email: email.toLowerCase(),
     display_name: displayName,
     role: 'owner',
     locale: 'es',
