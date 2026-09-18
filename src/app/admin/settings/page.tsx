@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Database, KeyRound, MailCheck, ScrollText, ShieldCheck } from 'lucide-react';
 
 import { getStaffIdentity } from '@/lib/server/auth';
+import { CrmPageIntro } from '@/components/admin/CrmPrimitives';
 
 export default async function AdminSettingsPage() {
   const identity = await getStaffIdentity();
@@ -13,7 +14,7 @@ export default async function AdminSettingsPage() {
   ];
   return (
     <div className="mx-auto max-w-5xl space-y-7 pb-20">
-      <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Sistema</p><h1 className="mt-2 text-3xl font-semibold text-white">Configuración y seguridad</h1><p className="mt-2 text-sm text-zinc-400">Estado de las protecciones operativas del proyecto.</p></div>
+      <CrmPageIntro eyebrow="Administración · sistema" title="Configuración y seguridad" description="Estado de las protecciones operativas del proyecto." />
       <section className="grid gap-4 sm:grid-cols-2">
         {checks.map(({ label, detail, icon: Icon }) => <article key={label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5"><Icon className="size-5 text-red-300" /><h2 className="mt-4 font-semibold text-white">{label}</h2><p className="mt-2 text-sm leading-6 text-zinc-400">{detail}</p></article>)}
       </section>

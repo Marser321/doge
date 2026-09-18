@@ -5,6 +5,7 @@ import { AlertTriangle, Boxes, LoaderCircle, PackagePlus } from 'lucide-react';
 
 import { db } from '@/lib/db';
 import type { InventoryRow } from '@/lib/types';
+import { CrmEmptyState, CrmPageIntro, CrmStatusPill } from '@/components/admin/CrmPrimitives';
 
 export default function InventoryPage() {
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
@@ -47,7 +48,7 @@ export default function InventoryPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-7 pb-20">
-      <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Almacén central</p><h1 className="mt-2 text-3xl font-semibold text-white">Inventario</h1><p className="mt-2 text-sm text-zinc-400">Cada cambio crea un movimiento inmutable; el saldo no se edita directamente.</p></div>
+      <CrmPageIntro eyebrow="Almacén central" title="Inventario" description="Cada cambio crea un movimiento inmutable; el saldo nunca se edita directamente." />
       {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025]">
@@ -58,10 +59,10 @@ export default function InventoryPage() {
               <button key={row.product_id} onClick={() => setSelected(row)} className={`grid w-full grid-cols-[1fr_auto_auto] items-center gap-4 border-b border-white/10 px-5 py-4 text-left last:border-0 ${selected?.product_id === row.product_id ? 'bg-white/[0.06]' : 'hover:bg-white/[0.03]'}`}>
                 <div><p className="font-medium text-white">{row.product?.name || 'Producto'}</p><p className="mt-1 font-mono text-xs text-zinc-600">{row.product?.slug}</p></div>
                 <span className="font-mono text-lg text-white">{row.on_hand}</span>
-                <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs ${low ? 'bg-amber-500/10 text-amber-300' : 'bg-emerald-500/10 text-emerald-300'}`}>{low && <AlertTriangle className="size-3" />}{low ? 'Bajo' : 'Disponible'}</span>
+                <CrmStatusPill tone={low ? 'warning' : 'success'}>{low && <AlertTriangle className="mr-1 size-3" />}{low ? 'Bajo' : 'Disponible'}</CrmStatusPill>
               </button>
             );
-          }) : <div className="py-20 text-center text-sm text-zinc-500"><Boxes className="mx-auto mb-3 size-8" />Añade productos propios para comenzar.</div>}
+          }) : <CrmEmptyState icon={Boxes} title="Añade productos propios para comenzar" detail="Los productos de stock propio aparecerán aquí con su saldo y alertas." />}
         </section>
         <form onSubmit={adjust} className="h-fit space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5 lg:sticky lg:top-24">
           <div className="flex items-center gap-2"><PackagePlus className="size-5 text-red-300" /><h2 className="font-semibold">Registrar movimiento</h2></div>

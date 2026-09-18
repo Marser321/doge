@@ -6,6 +6,14 @@ import { CalendarDays, Clock3, LoaderCircle, Pencil, Plus, X } from 'lucide-reac
 import { db } from '@/lib/db';
 import { newYorkDate, newYorkLocalToIso } from '@/lib/domain';
 import type { Appointment, ServiceRequest, Team } from '@/lib/types';
+import { CrmEmptyState, CrmPageIntro, CrmStatusPill } from '@/components/admin/CrmPrimitives';
+
+function appointmentTone(status: Appointment['status']) {
+  if (status === 'completed') return 'success' as const;
+  if (status === 'cancelled') return 'danger' as const;
+  if (status === 'scheduled') return 'info' as const;
+  return 'warning' as const;
+}
 
 function newYorkInput(value: string) {
   const parts = new Intl.DateTimeFormat('en-CA', {
@@ -94,11 +102,7 @@ export default function CalendarPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-7 pb-20">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Despacho</p>
-        <h1 className="mt-2 text-3xl font-semibold text-white">Agenda operativa</h1>
-        <p className="mt-2 text-sm text-zinc-400">Supabase impide cruces de equipo incluso ante dos confirmaciones simultáneas.</p>
-      </div>
+      <CrmPageIntro eyebrow="Operación · despacho" title="Agenda operativa" description="Supabase impide cruces de equipo incluso ante dos confirmaciones simultáneas." />
       {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
         <section className="space-y-4">
@@ -115,13 +119,13 @@ export default function CalendarPage() {
                       <p className="font-medium text-white">{appointment.service_request?.service_name_snapshot || 'Servicio DOGE'}</p>
                       <p className="mt-1 text-xs text-zinc-500">{appointment.property?.address} · {appointment.team?.name}</p>
                     </div>
-                    <span className="w-fit rounded-full border border-white/10 px-2.5 py-1 text-xs text-zinc-300">{appointment.status}</span>
+                    <CrmStatusPill tone={appointmentTone(appointment.status)}>{appointment.status}</CrmStatusPill>
                     {appointment.status === 'scheduled' && <button type="button" onClick={() => setRescheduling(appointment)} className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2.5 py-2 text-xs text-zinc-300 hover:bg-white/5"><Pencil className="size-3" /> Reprogramar</button>}
                   </article>
                 ))}
               </div>
             </div>
-          )) : <div className="rounded-2xl border border-dashed border-white/10 py-20 text-center text-sm text-zinc-500"><CalendarDays className="mx-auto mb-3 size-8" />No hay citas programadas.</div>}
+          )) : <div className="rounded-2xl border border-dashed border-white/10"><CrmEmptyState icon={CalendarDays} title="No hay citas programadas" detail="Al aprobar una solicitud, podrás asignarla a un equipo desde este panel." /></div>}
         </section>
         <form onSubmit={schedule} className="h-fit space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5 lg:sticky lg:top-24">
           <div className="flex items-center gap-2"><Plus className="size-5 text-red-300" /><h2 className="font-semibold text-white">Programar visita</h2></div>

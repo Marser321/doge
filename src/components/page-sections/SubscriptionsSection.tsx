@@ -3,7 +3,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { CheckCircle, Zap } from 'lucide-react'
+import { CheckCircle } from 'lucide-react'
 import { TiltCard } from '@/components/TiltCard'
 import { MagneticButton } from '@/components/shared/MagneticButton'
 import type { TranslationKey } from '@/data/i18n'

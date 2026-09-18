@@ -4,15 +4,16 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, ChevronRight, ExternalLink, MessageCircle, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, ChevronRight, ExternalLink, FlaskConical, MessageCircle, ShoppingBag } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageProvider';
 import { resolveDepartment, resolveSubcategory } from '@/content/store-taxonomy';
 import { db, Product } from '@/lib/db';
+import { catalogIntentSource, isCatalogPilot } from '@/lib/catalog-pilot';
 
 const productImage = (product: Product) => product.product_images?.find((image) => image.is_primary)?.image_url || product.product_images?.[0]?.image_url || '/products/product-placeholder.svg';
 
 export default function StoreProductPage() {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const params = useParams<{ slug: string }>();
   const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug;
   const [product, setProduct] = useState<Product | null>(null);
@@ -37,20 +38,26 @@ export default function StoreProductPage() {
   }, [slug]);
 
   function recordIntent(channel: 'whatsapp' | 'affiliate') {
-    if (!product) return;
-    void fetch('/api/commerce/intents', {
+    if (!product) return Promise.resolve(undefined);
+    return fetch('/api/commerce/intents', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
-      body: JSON.stringify({ product_id: product.id, channel, source: 'product-detail' }),
+      body: JSON.stringify({ product_id: product.id, channel, source: catalogIntentSource(product, 'product-detail') }),
       keepalive: true,
     });
+  }
+
+  async function openWhatsApp() {
+    await recordIntent('whatsapp').catch(() => undefined);
+    window.open(contactUrl, '_blank', 'noopener,noreferrer');
   }
 
   if (loading) return <main className="grid min-h-screen place-items-center bg-background text-foreground"><span className="text-sm text-zinc-400">Cargando catálogo…</span></main>;
   if (!product) return <main className="grid min-h-screen place-items-center bg-background p-6 text-center text-foreground"><div><h1 className="text-2xl font-semibold">Producto no encontrado</h1><Link href="/store" className="mt-5 inline-block text-sm text-accent underline">Volver al catálogo</Link></div></main>;
 
   const isAffiliate = product.sale_type === 'amazon_affiliate' && Boolean(product.amazon_affiliate_url);
-  const contactUrl = `https://wa.me/17869283948?text=${encodeURIComponent(`Hola DOGE.S.M LLC, quisiera consultar por ${product.name}.`)}`;
+  const pilot = isCatalogPilot(product);
+  const contactUrl = `https://wa.me/17869283948?text=${encodeURIComponent(pilot ? `Hola DOGE.S.M LLC, quisiera consultar la disponibilidad del producto piloto: ${product.name}.` : `Hola DOGE.S.M LLC, quisiera consultar por ${product.name}.`)}`;
   const department = resolveDepartment(product.category);
   const subcategory = resolveSubcategory(product.category);
 
@@ -60,6 +67,7 @@ export default function StoreProductPage() {
         <Link href="/store" className="inline-flex items-center gap-2 text-sm text-accent transition hover:text-foreground"><ArrowLeft className="size-4" /> Catálogo</Link>
         <Link href="/booking" className="text-sm font-medium text-accent transition hover:text-foreground">Solicitar servicio</Link>
       </nav>
+      {pilot && <div className="sticky top-3 z-30 mx-auto max-w-7xl px-6 md:px-10"><p className="inline-flex max-w-2xl items-start gap-2 rounded-xl border border-sky-400/20 bg-background/95 px-3 py-2 text-xs leading-5 text-sky-100 shadow-lg shadow-black/10 backdrop-blur"><FlaskConical className="mt-0.5 size-3.5 shrink-0 text-sky-300" />{t('store.pilotNotice')}</p></div>}
 
       <section className="mx-auto grid max-w-7xl gap-10 px-6 py-10 md:grid-cols-2 md:px-10 md:py-20">
         <div className="relative min-h-80 overflow-hidden rounded-3xl border border-white/10 bg-foreground/[0.04] sm:min-h-[34rem]">
@@ -78,17 +86,19 @@ export default function StoreProductPage() {
             </nav>
           )}
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">{product.brand || 'DOGE'}</p>
+          {pilot && <p className="mt-3 inline-flex w-fit items-center gap-2 rounded-full border border-sky-400/20 bg-sky-400/5 px-3 py-1.5 text-xs font-semibold text-sky-200"><FlaskConical className="size-3.5" /> {t('store.pilotBadge')}</p>}
           <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-6xl">{product.name}</h1>
           {product.tagline && <p className="mt-5 text-lg text-accent">{product.tagline}</p>}
           <p className="mt-6 max-w-xl leading-7 text-zinc-400">{product.description}</p>
-          <p className="mt-8 text-3xl font-semibold">${Number(product.price).toLocaleString()} <span className="text-sm font-normal text-zinc-500">USD estimado</span></p>
+          <p className="mt-8 text-3xl font-semibold">${Number(product.price).toLocaleString()} <span className="text-sm font-normal text-zinc-500">{pilot ? t('store.pilotPrice') : 'USD estimado'}</span></p>
+          {pilot && <p className="mt-4 max-w-xl rounded-xl border border-sky-400/15 bg-sky-400/[0.04] px-4 py-3 text-sm leading-6 text-sky-100/80">{t('store.pilotNotice')}</p>}
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             {product.sale_type === 'own_stock' && !product.available ? (
-              <span className="inline-flex min-h-12 items-center justify-center rounded-xl bg-zinc-800 px-5 py-3 text-sm font-semibold text-zinc-400">Temporalmente no disponible</span>
+              <span className="inline-flex min-h-12 items-center justify-center rounded-xl bg-zinc-800 px-5 py-3 text-sm font-semibold text-zinc-400">{pilot ? t('store.pilotUnavailable') : 'Temporalmente no disponible'}</span>
             ) : isAffiliate ? (
               <a href={product.amazon_affiliate_url!} target="_blank" rel="noopener noreferrer" onClick={() => recordIntent('affiliate')} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#ff9900] px-5 py-3 text-sm font-semibold text-black transition hover:opacity-90">Ver proveedor <ExternalLink className="size-4" /></a>
             ) : (
-              <a href={contactUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordIntent('whatsapp')} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-foreground px-5 py-3 text-sm font-semibold text-background transition hover:opacity-90">Contactar concierge <MessageCircle className="size-4" /></a>
+              <button type="button" onClick={openWhatsApp} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-foreground px-5 py-3 text-sm font-semibold text-background transition hover:opacity-90">{pilot ? t('store.pilotInquiry') : 'Contactar concierge'} <MessageCircle className="size-4" /></button>
             )}
             <Link href="/booking" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-foreground/20 px-5 py-3 text-sm font-medium transition hover:bg-foreground/5">Servicio para propiedad <ShoppingBag className="size-4" /></Link>
           </div>

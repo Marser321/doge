@@ -6,6 +6,7 @@ import { db, Client } from '@/lib/db'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale/es'
 import Link from 'next/link'
+import { CrmPageIntro } from '@/components/admin/CrmPrimitives'
 
 export default function ClientsDashboard() {
   const [clients, setClients] = useState<Client[]>([])
@@ -81,12 +82,7 @@ export default function ClientsDashboard() {
   return (
     <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out space-y-6">
        
-       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-michroma font-bold text-white tracking-wide">Clientes</h1>
-            <p className="text-zinc-400 text-sm mt-1">Cuentas residenciales y corporativas, propiedades e historial.</p>
-          </div>
-          <div className="flex gap-3">
+       <CrmPageIntro eyebrow="Operación · relaciones" title="Clientes" description="Cuentas residenciales y corporativas, propiedades e historial." actions={<>
              <Link 
                href="/admin/clients/new"
                className="px-5 py-2.5 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target"
@@ -101,8 +97,7 @@ export default function ClientsDashboard() {
                <Download className="w-4 h-4" />
                Exportar CSV
              </button>
-          </div>
-       </div>
+          </>} />
 
        {/* Toolbar */}
        <div className="flex flex-col sm:flex-row gap-4">

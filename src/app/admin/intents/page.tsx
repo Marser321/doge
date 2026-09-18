@@ -6,6 +6,7 @@ import { ExternalLink, LoaderCircle, MessageCircleMore } from 'lucide-react';
 import { db } from '@/lib/db';
 import { apiRequest } from '@/lib/api-client';
 import type { CommerceIntent, CurrentStaffUser, IntentStatus } from '@/lib/types';
+import { CrmEmptyState, CrmPageIntro, CrmStatusPill } from '@/components/admin/CrmPrimitives';
 
 const statuses: IntentStatus[] = ['new', 'contacted', 'converted', 'lost'];
 
@@ -50,7 +51,7 @@ export default function IntentsPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-7 pb-20">
-      <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Comercio asistido</p><h1 className="mt-2 text-3xl font-semibold text-white">Oportunidades</h1><p className="mt-2 text-sm text-zinc-400">Intenciones registradas desde WhatsApp y enlaces afiliados.</p></div>
+      <CrmPageIntro eyebrow="Comercio asistido" title="Oportunidades" description="Intenciones registradas desde WhatsApp y enlaces afiliados, listas para seguimiento." />
       {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
       <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025]">
         {items.length ? <div className="divide-y divide-white/10">{items.map((intent) => (
@@ -59,7 +60,7 @@ export default function IntentsPage() {
               <p className="font-medium text-white">{intent.product?.name || 'Producto'}</p>
               <p className="mt-1 text-xs text-zinc-500">{intent.contact_name || intent.contact_email || 'Visita anónima'} · {new Intl.DateTimeFormat('es-US', { dateStyle: 'medium' }).format(new Date(intent.created_at))}</p>
             </div>
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 px-3 py-1.5 text-xs text-zinc-300">{intent.channel === 'whatsapp' ? <MessageCircleMore className="size-3" /> : <ExternalLink className="size-3" />}{intent.channel}</span>
+            <CrmStatusPill tone={intent.channel === 'whatsapp' ? 'info' : 'neutral'}>{intent.channel === 'whatsapp' ? <MessageCircleMore className="mr-1.5 size-3" /> : <ExternalLink className="mr-1.5 size-3" />}{intent.channel}</CrmStatusPill>
             <select aria-label={`Estado de ${intent.product?.name}`} value={intent.status} onChange={(event) => change(intent.id, event.target.value as IntentStatus)} className="rounded-xl border border-white/10 bg-zinc-950 px-3 py-2 text-sm text-white">
               {statuses.map((status) => <option key={status} value={status}>{status}</option>)}
             </select>
@@ -71,7 +72,7 @@ export default function IntentsPage() {
               </form>
             )}
           </article>
-        ))}</div> : <div className="py-20 text-center text-sm text-zinc-500"><MessageCircleMore className="mx-auto mb-3 size-8" />Todavía no hay oportunidades registradas.</div>}
+        ))}</div> : <CrmEmptyState icon={MessageCircleMore} title="Todavía no hay oportunidades" detail="Las consultas públicas y enlaces afiliados aparecerán aquí para su seguimiento." />}
       </section>
     </div>
   );

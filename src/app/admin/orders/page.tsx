@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { LoaderCircle, PackageCheck, Plus, ShoppingCart, X } from 'lucide-react';
 
 import { db, type Client, type Offer, type Product } from '@/lib/db';
+import { CrmEmptyState, CrmPageIntro, CrmStatusPill } from '@/components/admin/CrmPrimitives';
 
 type OrderRow = {
   id: string;
@@ -84,17 +85,14 @@ export default function OrdersPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-7 pb-20">
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-        <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Venta concierge</p><h1 className="mt-2 text-3xl font-semibold text-white">Órdenes</h1><p className="mt-2 text-sm text-zinc-400">Los precios se leen del catálogo y el inventario se descuenta al confirmar.</p></div>
-        <button onClick={() => setShowForm(true)} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-black"><Plus className="size-4" /> Nueva orden</button>
-      </div>
+      <CrmPageIntro eyebrow="Venta concierge" title="Órdenes" description="Los precios se leen del catálogo y el inventario se descuenta al confirmar." actions={<button onClick={() => setShowForm(true)} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-black"><Plus className="size-4" /> Nueva orden</button>} />
       {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
       <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025]">
         {orders.length ? <div className="divide-y divide-white/10">{orders.map((order) => (
           <article key={order.id} className="grid gap-4 px-5 py-4 lg:grid-cols-[1fr_160px_140px_180px] lg:items-center">
             <div><p className="font-medium text-white">{order.order_number} · {order.customer_name}</p><p className="mt-1 text-xs text-zinc-500">{order.order_items?.map((item) => `${item.quantity}× ${item.product_name}`).join(', ') || 'Sin líneas'}</p></div>
             <p className="font-mono text-white">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(order.total_cents) / 100)}</p>
-            <span className="w-fit rounded-full border border-white/10 px-2.5 py-1 text-xs text-zinc-300">{order.payment_status}</span>
+            <CrmStatusPill tone={order.payment_status === 'paid' ? 'success' : order.payment_status === 'failed' ? 'danger' : 'warning'}>{order.payment_status}</CrmStatusPill>
             <select disabled={busy === order.id || ['cancelled', 'refunded'].includes(order.status)} value={order.status} onChange={(event) => transition(order, event.target.value)} className="rounded-xl border border-white/10 bg-zinc-950 px-3 py-2 text-sm text-white disabled:opacity-50">
               <option value={order.status}>{order.status}</option>
               {order.status === 'draft' && <><option value="confirmed">confirmed</option><option value="cancelled">cancelled</option></>}
@@ -102,7 +100,7 @@ export default function OrdersPage() {
               {order.status === 'fulfilled' && <option value="refunded">refunded</option>}
             </select>
           </article>
-        ))}</div> : <div className="py-20 text-center text-sm text-zinc-500"><ShoppingCart className="mx-auto mb-3 size-8" />Todavía no hay órdenes.</div>}
+        ))}</div> : <CrmEmptyState icon={ShoppingCart} title="Todavía no hay órdenes" detail="Crea una venta concierge para comprobar precios, inventario y los cambios de estado." />}
       </section>
 
       {showForm && (

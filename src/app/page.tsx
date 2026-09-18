@@ -10,15 +10,9 @@ import { NavigationSection } from '@/components/page-sections/NavigationSection'
 import { HeroSection } from '@/components/page-sections/HeroSection'
 import { HowItWorksSection } from '@/components/page-sections/HowItWorksSection'
 import { EcosystemSection } from '@/components/page-sections/EcosystemSection'
-import { ValuePropositionSection } from '@/components/page-sections/ValuePropositionSection'
-import { ServicesSection } from '@/components/page-sections/ServicesSection'
-import { StorytellingSection } from '@/components/page-sections/StorytellingSection'
-import { SubscriptionsSection } from '@/components/page-sections/SubscriptionsSection'
-import { TestimonialsSection } from '@/components/page-sections/TestimonialsSection'
-import { CTASection } from '@/components/page-sections/CTASection'
 import { MapSection } from '@/components/page-sections/MapSection'
+import { CTASection } from '@/components/page-sections/CTASection'
 import { FooterSection } from '@/components/page-sections/FooterSection'
-import { FeaturedProducts } from '@/components/FeaturedProducts'
 
 function getInitialTheme(): 'dark' | 'light' {
   if (typeof window === 'undefined') return 'dark'
@@ -112,21 +106,9 @@ export default function LandingPage() {
 
       <EcosystemSection t={t} />
 
-      <FeaturedProducts />
-      
-      <ValuePropositionSection isMobile={isMobile} t={t} />
-
-      <ServicesSection t={t} />
-
-      <StorytellingSection t={t} />
-
-      <SubscriptionsSection isMobile={isMobile} t={t} />
-
-      <TestimonialsSection t={t} />
+      <MapSection t={t} />
 
       <CTASection t={t} />
-
-      <MapSection t={t} />
 
       <FooterSection theme={theme} t={t} />
 

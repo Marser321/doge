@@ -6,6 +6,7 @@ import { CalendarDays, ClipboardList, CreditCard, LoaderCircle, MessageSquareMor
 
 import { db } from '@/lib/db';
 import type { DashboardSummary } from '@/lib/types';
+import { CrmEmptyState, CrmMetricCard, CrmPageIntro, CrmStatusPill } from '@/components/admin/CrmPrimitives';
 
 const emptySummary: DashboardSummary = {
   open_requests: 0,
@@ -44,11 +45,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-8 pb-20">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Control del negocio</p>
-        <h1 className="mt-2 text-3xl font-semibold text-white">Resumen operativo</h1>
-        <p className="mt-2 text-sm text-zinc-400">Datos reales del CRM, agenda, comercio e inventario.</p>
-      </div>
+      <CrmPageIntro eyebrow="Control del negocio" title="Resumen operativo" description="Señales accionables de CRM, agenda, comercio e inventario en una sola vista." />
       {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
       {loading ? (
         <div className="grid min-h-64 place-items-center"><LoaderCircle className="size-6 animate-spin text-zinc-500" /></div>
@@ -56,13 +53,7 @@ export default function AdminDashboard() {
         <>
           <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {cards.map(({ label, value, icon: Icon, href }) => (
-              <Link href={href} key={label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition hover:border-white/20 hover:bg-white/[0.05]">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-zinc-400">{label}</p>
-                  <Icon className="size-5 text-zinc-500" />
-                </div>
-                <p className="mt-6 font-mono text-3xl font-semibold text-white">{value}</p>
-              </Link>
+              <CrmMetricCard key={label} label={label} value={value} icon={Icon} href={href} />
             ))}
           </section>
           <section className="rounded-2xl border border-white/10 bg-white/[0.025]">
@@ -78,11 +69,11 @@ export default function AdminDashboard() {
                       <p className="font-medium text-white">{request.contact_name} · {request.service_name_snapshot}</p>
                       <p className="mt-1 font-mono text-xs text-zinc-500">{request.reference_code}</p>
                     </div>
-                    <span className="w-fit rounded-full border border-white/10 px-2.5 py-1 text-xs text-zinc-300">{request.status}</span>
+                    <CrmStatusPill tone={request.status === 'cancelled' ? 'danger' : request.status === 'completed' ? 'success' : request.status === 'quoted' ? 'info' : 'warning'}>{request.status}</CrmStatusPill>
                   </Link>
                 ))}
               </div>
-            ) : <p className="px-5 py-12 text-center text-sm text-zinc-500">Todavía no hay solicitudes.</p>}
+            ) : <CrmEmptyState icon={ClipboardList} title="Todavía no hay solicitudes" detail="Las nuevas solicitudes y sus próximos pasos aparecerán aquí." />}
           </section>
         </>
       )}

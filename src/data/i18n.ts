@@ -288,11 +288,13 @@ export const TRANSLATIONS = {
   'membership.submit': { es: 'Solicitar Membresía', en: 'Apply for Membership' },
 
   // ── Bottom Nav ───────────────────────────────
+  'bnav.home': { es: 'Principal', en: 'Home' },
   'bnav.services': { es: 'Servicios', en: 'Services' },
   'bnav.miami': { es: 'Miami', en: 'Miami' },
   'bnav.guarantee': { es: 'Garantía', en: 'Guarantee' },
   'bnav.search': { es: 'Búsqueda', en: 'Search' },
   'bnav.store': { es: 'Tienda', en: 'Store' },
+  'bnav.booking': { es: 'Solicitud', en: 'Request' },
 
   // ── Account Page ──────────────────────────────
   'account.title': { es: 'Mi', en: 'My' },
@@ -370,6 +372,14 @@ export const TRANSLATIONS = {
   'store.direct': { es: 'Directo', en: 'Direct' },
   'store.amazonPartner': { es: 'Socio Amazon', en: 'Amazon Partner' },
   'store.footerBadge': { es: 'Estándar Forense Autorizado', en: 'Authorized Forensic Standard' },
+  'store.pilotBadge': { es: 'Catálogo piloto', en: 'Pilot catalogue' },
+  'store.pilotNotice': {
+    es: 'Productos de prueba para validar catálogo, disponibilidad y atención concierge. Consulta antes de comprar.',
+    en: 'Test listings used to validate catalogue, availability and concierge support. Please enquire before purchasing.',
+  },
+  'store.pilotPrice': { es: 'Precio piloto', en: 'Pilot price' },
+  'store.pilotInquiry': { es: 'Consultar disponibilidad', en: 'Check availability' },
+  'store.pilotUnavailable': { es: 'No disponible durante piloto', en: 'Unavailable during pilot' },
 
   // ── Legal Pages ───────────────────────────────
   'legal.licenses.title': { es: 'Licencias.', en: 'Licenses.' },

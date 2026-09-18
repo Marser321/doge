@@ -24,6 +24,29 @@ export async function POST(request: Request) {
     if (limited) return limited;
     const form = await request.formData();
     const serviceCode = text(form, 'service_code', 120);
+    const preferredTime = text(form, 'preferred_time', 60);
+    const windowsCount = Number(text(form, 'windows_count', 10)) || null;
+    const doorsCount = Number(text(form, 'doors_count', 10)) || null;
+    const rawNotes = text(form, 'notes', 2_000);
+
+    const extraNotes: string[] = [];
+    if (preferredTime) {
+      const timeLabels: Record<string, string> = {
+        morning: 'Mañana (8:00 AM - 12:00 PM)',
+        afternoon: 'Tarde (12:00 PM - 5:00 PM)',
+        flexible: 'Horario flexible / A coordinar',
+      };
+      extraNotes.push(`Horario preferido: ${timeLabels[preferredTime] || preferredTime}`);
+    }
+    if (windowsCount !== null) {
+      extraNotes.push(`Ventanas: ${windowsCount}`);
+    }
+    if (doorsCount !== null) {
+      extraNotes.push(`Puertas: ${doorsCount}`);
+    }
+
+    const consolidatedNotes = [extraNotes.join(' | '), rawNotes].filter(Boolean).join('\n\n') || null;
+
     const input = {
       name: text(form, 'name', 120),
       email: text(form, 'email', 254).toLowerCase(),
@@ -34,11 +57,14 @@ export async function POST(request: Request) {
       square_feet: Number(text(form, 'square_feet', 10)) || null,
       bedrooms: Number(text(form, 'bedrooms', 3)) || null,
       bathrooms: Number(text(form, 'bathrooms', 3)) || null,
+      windows_count: windowsCount,
+      doors_count: doorsCount,
+      preferred_time: preferredTime || null,
       service_type: serviceCode,
       service_name: '',
       service_code: serviceCode,
       preferred_date: text(form, 'preferred_date', 40) || null,
-      notes: text(form, 'notes', 2_000) || null,
+      notes: consolidatedNotes,
       locale: text(form, 'locale', 2) === 'en' ? 'en' : 'es',
       consent: form.get('consent') === 'accepted',
     };
@@ -51,8 +77,10 @@ export async function POST(request: Request) {
       (input.square_feet !== null && input.square_feet < 1)
       || (input.bedrooms !== null && input.bedrooms < 0)
       || (input.bathrooms !== null && input.bathrooms < 0)
+      || (windowsCount !== null && windowsCount < 1)
+      || (doorsCount !== null && doorsCount < 0)
     ) {
-      return badRequest('Las dimensiones de la propiedad no son válidas.');
+      return badRequest('Las dimensiones o cantidades de la propiedad no son válidas.');
     }
 
     const files = form.getAll('photos').filter((value): value is File => value instanceof File && value.size > 0);

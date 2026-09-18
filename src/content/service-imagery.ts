@@ -68,7 +68,7 @@ const createVisual = (input: VisualInput): ServiceVisual => ({
  */
 export const serviceImagery = {
   windowCleaning: createVisual({
-    file: 'window-cleaning',
+    file: 'window-cleaning-result',
     alt: {
       es: 'Ventanales de una residencia frente al mar en Miami, con cristal limpio y una herramienta de agua pura sin operador visible.',
       en: 'Oceanfront Miami residence windows with clean glass and a pure-water tool without an operator in view.',
@@ -80,7 +80,7 @@ export const serviceImagery = {
     movement: 'A nearly imperceptible dolly-in; water reflections and a few droplets drift naturally while every architectural line remains stable.',
   }),
   pressureWashing: createVisual({
-    file: 'pressure-washing',
+    file: 'pressure-washing-result',
     alt: {
       es: 'Entrada y pavimento de piedra de una villa costera recién recuperados, con brillo húmedo controlado y sin operador a la vista.',
       en: 'Freshly recovered stone driveway and paving of a coastal villa, with a controlled wet sheen and no operator in view.',
@@ -92,7 +92,7 @@ export const serviceImagery = {
     movement: 'A low, extremely slow travelling movement; the wet stone glints gently and palm shadows drift with no spray or action.',
   }),
   carpetCleaning: createVisual({
-    file: 'carpet-cleaning',
+    file: 'carpet-cleaning-result',
     alt: {
       es: 'Sala residencial premium vacía con alfombra de lana recién extraída, fibras levantadas y luz natural suave.',
       en: 'Empty premium living room with a freshly extracted wool carpet, lifted fibers and soft natural light.',

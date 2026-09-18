@@ -5,7 +5,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { MagneticButton } from "@/components/shared/MagneticButton"
-import { ArrowRight, Sparkles, Map, Store, Zap, CheckCircle } from 'lucide-react'
+import { ArrowRight, Sparkles, Map, Store, CheckCircle } from 'lucide-react'
 import { TiltCard } from '@/components/TiltCard'
 
 export const EcosystemSection = ({ t }: { t: any }) => {

@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Moon, Globe, ShoppingCart, MoreVertical, User, LogOut, X, ArrowRight, BriefcaseBusiness, Sparkles } from 'lucide-react'
+import { Sun, Moon, Globe, ShoppingCart, MoreVertical, User, X, ArrowRight, BriefcaseBusiness, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { useLanguage } from './LanguageProvider'
 

@@ -10,6 +10,7 @@ export const runtime = 'nodejs';
 export async function POST(request: Request) {
   let objectKey = '';
   let imageId = '';
+  let previousPrimaryIds: string[] = [];
   try {
     requireSameOrigin(request);
     const limited = await rateLimit(request, 'product-media', 30, 15 * 60_000);
@@ -18,6 +19,7 @@ export async function POST(request: Request) {
     const form = await request.formData();
     const productId = String(form.get('product_id') || '');
     const photo = form.get('photo');
+    const submittedAlt = String(form.get('alt_text') || '').trim();
     if (!(photo instanceof File) || !productId) return badRequest('Imagen de producto inválida.');
     if (photo.size > 10 * 1024 * 1024 || !photo.type.startsWith('image/')) return badRequest('La imagen debe pesar hasta 10 MB.');
     const normalized = await sharp(Buffer.from(await photo.arrayBuffer()), { failOn: 'warning' })
@@ -40,12 +42,19 @@ export async function POST(request: Request) {
           product_id: productId,
           object_key: objectKey,
           image_url: publicUrl.publicUrl,
-          alt_text: photo.name.replace(/\.[^.]+$/, ''),
-          is_primary: true,
+          alt_text: submittedAlt.slice(0, 300) || photo.name.replace(/\.[^.]+$/, ''),
+          is_primary: false,
           sort_order: 0,
         }).select().single();
         if (image.error || !image.data) throw new Error(image.error?.message || 'No fue posible registrar la imagen.');
         imageId = String(image.data.id);
+        const existing = await db.from('product_images').select('id').eq('product_id', productId).eq('is_primary', true);
+        if (existing.error) throw new Error(existing.error.message);
+        previousPrimaryIds = (existing.data || []).map((item) => String(item.id));
+        const demote = await db.from('product_images').update({ is_primary: false }).eq('product_id', productId).eq('is_primary', true);
+        if (demote.error) throw new Error(demote.error.message);
+        const promote = await db.from('product_images').update({ is_primary: true }).eq('id', imageId);
+        if (promote.error) throw new Error(promote.error.message);
         const audit = await db.from('audit_events').insert({
           actor_id: staff.id,
           actor_email: staff.email,
@@ -61,6 +70,7 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     if (imageId) await getServiceSupabase().from('product_images').delete().eq('id', imageId);
+    if (previousPrimaryIds.length) await getServiceSupabase().from('product_images').update({ is_primary: true }).in('id', previousPrimaryIds);
     if (objectKey) await getServiceSupabase().storage.from('product-media').remove([objectKey]);
     return errorResponse(error, 'No fue posible guardar la imagen.');
   }

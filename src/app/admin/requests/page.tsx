@@ -5,6 +5,7 @@ import { CalendarPlus, CheckCircle2, ClipboardList, LoaderCircle, Plus, Send, X 
 
 import { db } from '@/lib/db';
 import type { QuoteItem, RequestStatus, ServiceRequest } from '@/lib/types';
+import { CrmPageIntro, CrmStatusPill } from '@/components/admin/CrmPrimitives';
 
 const columns: Array<{ status: RequestStatus; label: string }> = [
   { status: 'new', label: 'Nuevas' },
@@ -15,6 +16,13 @@ const columns: Array<{ status: RequestStatus; label: string }> = [
   { status: 'in_progress', label: 'En curso' },
   { status: 'completed', label: 'Completadas' },
 ];
+
+function requestTone(status: RequestStatus) {
+  if (status === 'completed') return 'success' as const;
+  if (status === 'cancelled') return 'danger' as const;
+  if (status === 'new' || status === 'reviewing') return 'warning' as const;
+  return 'info' as const;
+}
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat('es-US', { dateStyle: 'medium', timeZone: 'America/New_York' }).format(new Date(value));
@@ -101,11 +109,7 @@ export default function RequestsPage() {
 
   return (
     <div className="mx-auto max-w-[1500px] space-y-6 pb-20">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Servicios</p>
-        <h1 className="mt-2 text-3xl font-semibold text-white">Pipeline de solicitudes</h1>
-        <p className="mt-2 text-sm text-zinc-400">Evaluación, cotización, aprobación y ejecución en un solo historial.</p>
-      </div>
+      <CrmPageIntro eyebrow="Operación · solicitudes" title="Pipeline de solicitudes" description="Evaluación, cotización, aprobación y ejecución en un solo historial." />
       {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
 
       <div className="grid gap-6 xl:grid-cols-[1fr_390px]">
@@ -139,7 +143,7 @@ export default function RequestsPage() {
                   <p className="font-mono text-xs text-red-300">{selected.reference_code}</p>
                   <h2 className="mt-2 text-xl font-semibold text-white">{selected.contact_name}</h2>
                 </div>
-                <span className="rounded-full border border-white/10 px-2.5 py-1 text-xs text-zinc-300">{selected.status}</span>
+                <CrmStatusPill tone={requestTone(selected.status)}>{columns.find((column) => column.status === selected.status)?.label || selected.status}</CrmStatusPill>
               </div>
               <dl className="mt-6 space-y-4 text-sm">
                 <div><dt className="text-xs uppercase tracking-wide text-zinc-600">Servicio</dt><dd className="mt-1 text-zinc-200">{selected.service_name_snapshot}</dd></div>

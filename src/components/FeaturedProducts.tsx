@@ -17,7 +17,7 @@ export function FeaturedProducts() {
   useEffect(() => {
     async function loadFeatured() {
       try {
-        const { data, error } = await db.products.getFeatured()
+        const { data } = await db.products.getFeatured()
         if (data && data.length > 0) {
           setProducts(data)
         }

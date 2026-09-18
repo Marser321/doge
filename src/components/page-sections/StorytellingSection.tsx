@@ -5,7 +5,6 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { PrecisionReveal } from '@/components/shared/PrecisionReveal'
-import { CheckCircle } from 'lucide-react'
 import { PrecisionProtocolScroll } from '@/components/PrecisionProtocolScroll'
 import type { TranslationKey } from '@/data/i18n'
 

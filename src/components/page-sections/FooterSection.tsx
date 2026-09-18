@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { TranslationKey } from '@/data/i18n'
 
-export const FooterSection = ({ theme, t }: { theme: string, t: (key: TranslationKey) => string }) => {
+export const FooterSection = ({ t }: { theme?: string, t: (key: TranslationKey) => string }) => {
   return (
     <>
             {/* 5. FOOTER (Noir Minimalist) */}

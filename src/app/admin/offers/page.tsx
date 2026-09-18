@@ -6,6 +6,7 @@ import { db, Offer } from '@/lib/db'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale/es'
 import Link from 'next/link'
+import { CrmPageIntro } from '@/components/admin/CrmPrimitives'
 
 export default function OffersDashboard() {
   const [offers, setOffers] = useState<Offer[]>([])
@@ -13,7 +14,7 @@ export default function OffersDashboard() {
 
   const fetchOffers = async () => {
     try {
-      const { data, error } = await db.offers.getAll()
+      const { data } = await db.offers.getAll()
       if (data) setOffers(data)
     } catch (error) {
       console.error('Error fetching offers:', error)
@@ -66,18 +67,14 @@ export default function OffersDashboard() {
   return (
     <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out space-y-8">
        
-       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-michroma font-bold text-white tracking-wide">Promotions & Offers</h1>
-            <p className="text-zinc-400 text-sm mt-1">Manage cross-sells, upsells, and discount codes.</p>
-          </div>
+       <CrmPageIntro eyebrow="Comercio · promociones" title="Ofertas y promociones" description="Gestiona ventas cruzadas, incentivos y códigos de descuento." actions={<>
           <Link 
             href="/admin/offers/new"
             className="px-5 py-2.5 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target"
           >
-            <Plus className="w-4 h-4" /> New Offer
+            <Plus className="w-4 h-4" /> Nueva oferta
           </Link>
-       </div>
+       </>} />
 
        {/* Offers List */}
        <div className="space-y-4">

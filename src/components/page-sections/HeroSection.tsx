@@ -4,7 +4,6 @@
 import React from 'react'
 import { motion, MotionValue } from 'framer-motion'
 import Image from 'next/image'
-import Link from 'next/link'
 import { MagneticButton } from '@/components/shared/MagneticButton'
 import { TextScrubber } from '@/components/shared/TextScrubber'
 import { staggerContainer, fadeInUp } from '@/components/shared/animations'

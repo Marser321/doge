@@ -42,6 +42,7 @@ export default function NewProductForm() {
   ])
 
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imageAlt, setImageAlt] = useState('')
 
   // Department is derived from the stored subcategory, so the two cannot drift.
   const [department, setDepartment] = useState<string>('')
@@ -147,8 +148,9 @@ export default function NewProductForm() {
       if (imageFile && newProduct?.id) {
          try {
            const media = new FormData()
-           media.set('product_id', newProduct.id)
-           media.set('photo', imageFile)
+          media.set('product_id', newProduct.id)
+          media.set('photo', imageFile)
+          media.set('alt_text', imageAlt.trim() || formData.name.trim())
            await apiRequest('/api/products/media', { method: 'POST', body: media, auth: 'required' })
          } catch (imgLinkError: any) {
            // Compensating archive: do not leave a half-published catalogue item.
@@ -339,6 +341,10 @@ export default function NewProductForm() {
                          <input onChange={(e) => setImageFile(e.target.files?.[0] || null)} type="file" accept="image/jpeg,image/png,image/webp" className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm file:mr-3 file:border-0 file:bg-white/10 file:text-white" />
                       </div>
                       <p className="text-[10px] text-zinc-500 mt-2">Se normaliza a WebP y se publica desde Supabase Storage.</p>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Texto alternativo</label>
+                      <input value={imageAlt} onChange={(event) => setImageAlt(event.target.value)} type="text" maxLength={300} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-accent/50" placeholder="Describe la imagen para lectores de pantalla" />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">

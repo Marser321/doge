@@ -6,6 +6,7 @@ import { db, Subscription } from '@/lib/db'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale/es'
 import Link from 'next/link'
+import { CrmPageIntro, CrmStatusPill } from '@/components/admin/CrmPrimitives'
 
 export default function SubscriptionsDashboard() {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
@@ -60,27 +61,27 @@ export default function SubscriptionsDashboard() {
     switch(status) {
       case 'Active':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-green-500/10 text-green-400 border border-green-500/20">
+          <CrmStatusPill tone="success">
             <CheckCircle className="w-3.5 h-3.5" /> Activa
-          </span>
+          </CrmStatusPill>
         )
       case 'Pending':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
+          <CrmStatusPill tone="warning">
             Pendiente
-          </span>
+          </CrmStatusPill>
         )
       case 'Paused':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-zinc-500/10 text-zinc-400 border border-zinc-500/20">
+          <CrmStatusPill tone="neutral">
             <PauseCircle className="w-3.5 h-3.5" /> Pausada
-          </span>
+          </CrmStatusPill>
         )
       case 'Cancelled':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/20">
+          <CrmStatusPill tone="danger">
             <XCircle className="w-3.5 h-3.5" /> Cancelada
-          </span>
+          </CrmStatusPill>
         )
       default:
         return null
@@ -104,18 +105,14 @@ export default function SubscriptionsDashboard() {
   return (
     <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out space-y-6">
        
-       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-michroma font-bold text-white tracking-wide">Suscripciones</h1>
-            <p className="text-zinc-400 text-sm mt-1">Contratos recurrentes sin cobro automático.</p>
-          </div>
+       <CrmPageIntro eyebrow="Operación · recurrencia" title="Suscripciones" description="Contratos recurrentes sin cobro automático." actions={<>
           <Link 
             href="/admin/subscriptions/new"
             className="px-5 py-2.5 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target"
           >
             + Nueva suscripción
           </Link>
-       </div>
+       </>} />
 
        {/* Toolbar */}
        <div className="flex flex-col sm:flex-row gap-4">

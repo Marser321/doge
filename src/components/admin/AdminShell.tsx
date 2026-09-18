@@ -52,21 +52,49 @@ export default function AdminShell({ children, initialUser }: { children: React.
     }
   }
 
-  const navItems: Array<{ name: string; href: string; icon: typeof LayoutDashboard; roles: StaffRole[] }> = [
-    { name: 'Resumen', href: '/admin', icon: LayoutDashboard, roles: ['owner', 'manager', 'dispatcher'] },
-    { name: 'Solicitudes', href: '/admin/requests', icon: ClipboardList, roles: ['owner', 'manager', 'dispatcher'] },
-    { name: 'Agenda', href: '/admin/calendar', icon: CalendarDays, roles: ['owner', 'manager', 'dispatcher'] },
-    { name: 'Clientes', href: '/admin/clients', icon: Users, roles: ['owner', 'manager', 'dispatcher'] },
-    { name: 'Suscripciones', href: '/admin/subscriptions', icon: CreditCard, roles: ['owner', 'manager'] },
-    { name: 'Productos', href: '/admin/products', icon: ShoppingBag, roles: ['owner', 'manager'] },
-    { name: 'Inventario', href: '/admin/inventory', icon: Warehouse, roles: ['owner', 'manager', 'dispatcher'] },
-    { name: 'Órdenes', href: '/admin/orders', icon: Package, roles: ['owner', 'manager', 'dispatcher'] },
-    { name: 'Oportunidades', href: '/admin/intents', icon: Activity, roles: ['owner', 'manager', 'dispatcher'] },
-    { name: 'Ofertas', href: '/admin/offers', icon: Tag, roles: ['owner', 'manager'] },
-    { name: 'Equipo', href: '/admin/staff', icon: UsersRound, roles: ['owner', 'manager'] },
-    { name: 'Configuración', href: '/admin/settings', icon: Settings, roles: ['owner', 'manager'] },
+  const navItems: Array<{ name: string; href: string; icon: typeof LayoutDashboard; roles: StaffRole[]; group: 'Operación' | 'Comercio' | 'Administración' }> = [
+    { name: 'Resumen', href: '/admin', icon: LayoutDashboard, roles: ['owner', 'manager', 'dispatcher'], group: 'Operación' },
+    { name: 'Solicitudes', href: '/admin/requests', icon: ClipboardList, roles: ['owner', 'manager', 'dispatcher'], group: 'Operación' },
+    { name: 'Agenda', href: '/admin/calendar', icon: CalendarDays, roles: ['owner', 'manager', 'dispatcher'], group: 'Operación' },
+    { name: 'Clientes', href: '/admin/clients', icon: Users, roles: ['owner', 'manager', 'dispatcher'], group: 'Operación' },
+    { name: 'Suscripciones', href: '/admin/subscriptions', icon: CreditCard, roles: ['owner', 'manager'], group: 'Operación' },
+    { name: 'Productos', href: '/admin/products', icon: ShoppingBag, roles: ['owner', 'manager'], group: 'Comercio' },
+    { name: 'Inventario', href: '/admin/inventory', icon: Warehouse, roles: ['owner', 'manager', 'dispatcher'], group: 'Comercio' },
+    { name: 'Órdenes', href: '/admin/orders', icon: Package, roles: ['owner', 'manager', 'dispatcher'], group: 'Comercio' },
+    { name: 'Oportunidades', href: '/admin/intents', icon: Activity, roles: ['owner', 'manager', 'dispatcher'], group: 'Comercio' },
+    { name: 'Ofertas', href: '/admin/offers', icon: Tag, roles: ['owner', 'manager'], group: 'Comercio' },
+    { name: 'Equipo', href: '/admin/staff', icon: UsersRound, roles: ['owner', 'manager'], group: 'Administración' },
+    { name: 'Configuración', href: '/admin/settings', icon: Settings, roles: ['owner', 'manager'], group: 'Administración' },
   ]
   const visibleNavItems = navItems.filter((item) => item.roles.includes(user?.role ?? initialUser.role))
+  const navigationGroups = ['Operación', 'Comercio', 'Administración'] as const
+  const renderNavigation = (mobile = false) => navigationGroups.map((group) => {
+    const items = visibleNavItems.filter((item) => item.group === group)
+    if (!items.length) return null
+    return (
+      <section key={group} className="space-y-1.5">
+        <p className="px-4 pb-1 text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-600">{group}</p>
+        {items.map((item) => {
+          const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href))
+          const Icon = item.icon
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={mobile ? () => setIsMobileMenuOpen(false) : undefined}
+              className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition-all duration-300 ${isActive
+                ? 'border-white/10 bg-white/10 text-white shadow-[0_0_20px_rgba(255,255,255,0.05)]'
+                : 'border-transparent text-zinc-400 hover:border-white/5 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <Icon className={`size-4.5 ${isActive ? 'text-sky-200' : 'text-zinc-500'}`} />
+              {item.name}
+            </Link>
+          )
+        })}
+      </section>
+    )
+  })
 
   if (!user) {
     return <div className="grid min-h-screen place-items-center bg-background text-sm text-zinc-400">Verificando acceso seguro…</div>
@@ -90,29 +118,8 @@ export default function AdminShell({ children, initialUser }: { children: React.
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto">
-          <p className="text-xs font-bold font-michroma text-zinc-500 uppercase tracking-widest px-4 mb-4">Operación</p>
-          
-          {visibleNavItems.map((item) => {
-            const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href))
-            const Icon = item.icon
-
-            return (
-              <Link 
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 cursor-hover-target font-medium text-sm
-                  ${isActive 
-                    ? 'bg-white/10 text-white shadow-[0_0_20px_rgba(255,255,255,0.05)] border border-white/10' 
-                    : 'text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent'
-                  }
-                `}
-              >
-                <Icon className={`w-5 h-5 ${isActive ? 'text-zinc-100' : 'text-zinc-500'}`} />
-                {item.name}
-              </Link>
-            )
-          })}
+        <nav className="flex-1 space-y-7 overflow-y-auto px-4 py-8">
+          {renderNavigation()}
         </nav>
 
          {/* Footer actions */}
@@ -155,29 +162,8 @@ export default function AdminShell({ children, initialUser }: { children: React.
                </button>
             </div>
 
-            <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto">
-              <p className="text-xs font-bold font-michroma text-zinc-500 uppercase tracking-widest px-4 mb-4">Operación</p>
-              
-              {visibleNavItems.map((item) => {
-                const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href))
-                const Icon = item.icon
-
-                return (
-                  <Link 
-                    key={item.href}
-                    href={item.href}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium text-sm
-                      ${isActive 
-                        ? 'bg-white/10 text-white shadow-[0_0_20px_rgba(255,255,255,0.05)] border border-white/10' 
-                        : 'text-zinc-400 border border-transparent'
-                      }
-                    `}
-                  >
-                    <Icon className={`w-5 h-5 ${isActive ? 'text-zinc-100' : 'text-zinc-500'}`} />
-                    {item.name}
-                  </Link>
-                )
-              })}
+            <nav className="flex-1 space-y-7 overflow-y-auto px-4 py-8">
+              {renderNavigation(true)}
             </nav>
 
             <div className="p-4 border-t border-white/5 shrink-0">

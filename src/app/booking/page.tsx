@@ -15,6 +15,7 @@ export default function BookingPage() {
   const formRef = useRef<HTMLFormElement>(null);
   const idempotencyKey = useRef<string | null>(null);
   const [state, setState] = useState<SubmissionState>('idle');
+  const [selectedService, setSelectedService] = useState<string>('');
   const [error, setError] = useState('');
   const minimumDate = useMemo(() => newYorkDate(new Date()), []);
 
@@ -107,7 +108,13 @@ export default function BookingPage() {
                   </select>
                 </label>
                 <label className={labelClass}>Servicio
-                  <select required name="service_code" className={inputClass} defaultValue="">
+                  <select
+                    required
+                    name="service_code"
+                    className={inputClass}
+                    value={selectedService}
+                    onChange={(e) => setSelectedService(e.target.value)}
+                  >
                     <option value="" disabled>Selecciona una opción</option>
                     {SERVICES.map((service) => (
                       <option key={service.id} value={service.id}>{service.bookingLabel.es}</option>
@@ -117,15 +124,27 @@ export default function BookingPage() {
                 <label className={labelClass}>Fecha preferida
                   <input name="preferred_date" type="date" min={minimumDate} className={inputClass} />
                 </label>
-                <label className={labelClass}>Superficie aproximada (ft²)
-                  <input name="square_feet" type="number" min="1" inputMode="numeric" className={inputClass} />
+                <label className={labelClass}>Horario preferido
+                  <select name="preferred_time" className={inputClass} defaultValue="morning">
+                    <option value="morning">Mañana (8:00 AM - 12:00 PM)</option>
+                    <option value="afternoon">Tarde (12:00 PM - 5:00 PM)</option>
+                    <option value="flexible">Flexible / A convenir</option>
+                  </select>
                 </label>
-                <label className={labelClass}>Habitaciones
-                  <input name="bedrooms" type="number" min="0" inputMode="numeric" className={inputClass} />
-                </label>
-                <label className={labelClass}>Baños
-                  <input name="bathrooms" type="number" min="0" inputMode="numeric" className={inputClass} />
-                </label>
+                {selectedService === 'window-cleaning' ? (
+                  <>
+                    <label className={labelClass}>Número de ventanas
+                      <input name="windows_count" type="number" min="1" inputMode="numeric" placeholder="Ej. 10" className={inputClass} />
+                    </label>
+                    <label className={labelClass}>Número de puertas
+                      <input name="doors_count" type="number" min="0" inputMode="numeric" placeholder="Ej. 2" className={inputClass} />
+                    </label>
+                  </>
+                ) : (
+                  <label className={`${labelClass} sm:col-span-2`}>Superficie aproximada (ft²)
+                    <input name="square_feet" type="number" min="1" inputMode="numeric" placeholder="Ej. 1500" className={inputClass} />
+                  </label>
+                )}
                 <label className={`${labelClass} sm:col-span-2`}>Detalles relevantes
                   <textarea name="notes" rows={4} maxLength={2000} className={inputClass} placeholder="Accesos, superficies, prioridad, horarios u otra información útil." />
                 </label>

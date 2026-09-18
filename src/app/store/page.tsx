@@ -4,12 +4,13 @@ import React, { useMemo, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Sparkles, ArrowLeft, ShieldCheck, ShoppingCart, LayoutGrid } from 'lucide-react'
+import { Sparkles, ArrowLeft, ShieldCheck, ShoppingCart, LayoutGrid, FlaskConical } from 'lucide-react'
 
 import { BrandMarquee } from '@/components/BrandMarquee'
 import { useLanguage } from '@/components/LanguageProvider'
 import { STORE_DEPARTMENTS, resolveDepartment, type DepartmentId } from '@/content/store-taxonomy'
 import { db, Product } from '@/lib/db'
+import { catalogIntentSource, isCatalogPilot } from '@/lib/catalog-pilot'
 
 function getInitialIsMobile() {
   if (typeof window === 'undefined') return false
@@ -93,21 +94,27 @@ export default function StorePage() {
   }
 
   const recordIntent = (product: Product, channel: 'whatsapp' | 'affiliate') => {
-    void fetch('/api/commerce/intents', {
+    return fetch('/api/commerce/intents', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
-      body: JSON.stringify({ product_id: product.id, channel, source: 'store' }),
+      body: JSON.stringify({ product_id: product.id, channel, source: catalogIntentSource(product, 'store') }),
       keepalive: true,
     });
   }
 
-  const handleWhatsAppBuy = (product: Product) => {
-    recordIntent(product, 'whatsapp')
-    const message = encodeURIComponent(`Hola DOGE.S.M LLC, quisiera adquirir unidades del equipamiento: ${product.name}. ¿Cuál es el proceso?`)
+  const handleWhatsAppBuy = async (product: Product) => {
+    const pilot = isCatalogPilot(product)
+    const message = encodeURIComponent(
+      pilot
+        ? `Hola DOGE.S.M LLC, quisiera consultar la disponibilidad del producto piloto: ${product.name}. ¿Cuál es el proceso?`
+        : `Hola DOGE.S.M LLC, quisiera adquirir unidades del producto: ${product.name}. ¿Cuál es el proceso?`,
+    )
+    await recordIntent(product, 'whatsapp').catch(() => undefined)
     window.open(`https://wa.me/17869283948?text=${message}`, '_blank', 'noopener,noreferrer')
   }
 
   const renderPurchaseCta = (product: Product) => {
+    const pilot = isCatalogPilot(product)
     if (product.sale_type === 'amazon_affiliate' && product.amazon_affiliate_url) {
       return (
         <a
@@ -125,7 +132,7 @@ export default function StorePage() {
     if (product.sale_type === 'own_stock' && !product.available) {
       return (
         <span className="bg-zinc-300 text-zinc-600 px-6 py-3 rounded-xl font-black uppercase text-xs tracking-widest shadow-lg font-michroma flex items-center justify-center gap-2 cursor-not-allowed magnetic">
-          {t('store.soldOut')} <ShoppingCart className="w-4 h-4" />
+          {pilot ? t('store.pilotUnavailable') : t('store.soldOut')} <ShoppingCart className="w-4 h-4" />
         </span>
       )
     }
@@ -135,7 +142,7 @@ export default function StorePage() {
         onClick={() => handleWhatsAppBuy(product)}
         className="bg-foreground text-background hover:opacity-90 px-6 py-3 rounded-xl font-black uppercase text-xs tracking-widest transition-colors shadow-lg font-michroma flex items-center justify-center gap-2 btn-whimsy magnetic cta-glow hover:scale-[1.03] hover:-translate-y-0.5 hover:shadow-[0_0_30px_6px_rgba(255,255,255,0.1)]"
       >
-        {t('store.concierge')} <ShoppingCart className="w-4 h-4" />
+        {pilot ? t('store.pilotInquiry') : t('store.concierge')} <ShoppingCart className="w-4 h-4" />
       </button>
     )
   }
@@ -169,6 +176,13 @@ export default function StorePage() {
           <span className="font-black text-xl tracking-tighter uppercase text-foreground font-michroma">DOGE<span className="text-accent underline underline-offset-4 decoration-2">Store</span></span>
         </div>
       </nav>
+
+      <div className="sticky top-3 z-40 mx-auto -mt-2 max-w-7xl px-6 md:px-12">
+        <div className="inline-flex max-w-2xl items-start gap-3 rounded-2xl border border-sky-400/20 bg-background/95 px-4 py-3 text-left text-sm text-accent shadow-xl shadow-black/10 backdrop-blur">
+          <FlaskConical className="mt-0.5 size-4 shrink-0 text-sky-300" />
+          <span>{t('store.pilotNotice')}</span>
+        </div>
+      </div>
 
       {/* 2. HEADER */}
       <header className="px-6 md:px-12 pt-12 pb-16 md:pt-20 md:pb-24 max-w-7xl mx-auto relative z-10 text-center md:text-left">
@@ -320,7 +334,7 @@ export default function StorePage() {
 
                   <div className="flex items-end justify-between mt-auto gap-4">
                     <div>
-                      <span className="block text-xs font-bold text-accent/50 uppercase tracking-widest mb-1">{t('store.estimatedPrice')}</span>
+                      <span className="block text-xs font-bold text-accent/50 uppercase tracking-widest mb-1">{isCatalogPilot(product) ? t('store.pilotPrice') : t('store.estimatedPrice')}</span>
                       <span className="text-3xl font-black text-foreground font-michroma">${product.price.toLocaleString()}</span>
                     </div>
                     <div className="flex flex-col gap-2">

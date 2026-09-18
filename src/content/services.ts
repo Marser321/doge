@@ -27,6 +27,8 @@ type LocalizedText = Record<Lang, string>;
 export type EquipmentImage = {
   src: string;
   alt: LocalizedText;
+  /** Versioned prompt used to create the technical equipment portrait. */
+  prompt: string;
 };
 
 export type ServiceDefinition = {
@@ -63,7 +65,14 @@ export const SERVICES: ServiceDefinition[] = [
     bookingLabel: { es: 'Limpieza de cristales', en: 'Window cleaning' },
     accent: 'from-blue-500/20 to-cyan-500/20',
     visual: 'windowCleaning',
-    equipment: null,
+    equipment: {
+      src: '/services/window-cleaning-equipment.webp',
+      alt: {
+        es: 'Pértiga telescópica de agua pura con escobilla profesional frente a cristales de una residencia costera.',
+        en: 'Pure-water telescopic pole with a professional squeegee in front of coastal-residence glazing.',
+      },
+      prompt: 'Photorealistic editorial portrait of a carbon-fiber pure-water pole and aluminum squeegee channel, physically accurate and fully visible against empty South Florida glazing; no people, logos, labels or readable text.',
+    },
   },
   {
     id: 'pressure-washing',
@@ -79,11 +88,12 @@ export const SERVICES: ServiceDefinition[] = [
     accent: 'from-sky-500/20 to-indigo-500/20',
     visual: 'pressureWashing',
     equipment: {
-      src: '/services/surface_cleaner_luxury_1776053413810.png',
+      src: '/services/pressure-washing-equipment.webp',
       alt: {
-        es: 'Limpiador de superficies rotativo trabajando sobre el pavimento de una entrada residencial.',
-        en: 'Rotary surface cleaner working across the paving of a residential driveway.',
+        es: 'Limpiador de superficies rotativo profesional con campana, faldón, ruedas y mango sobre una entrada de piedra.',
+        en: 'Professional rotary surface cleaner with deck, skirt, wheels and handle on a stone entry.',
       },
+      prompt: 'Photorealistic editorial portrait of a real stainless rotary surface cleaner: circular deck, bristle skirt, caster wheels, hose coupling and U-handle, on a clean limestone drive; no people, logos, labels or readable text.',
     },
   },
   {
@@ -100,11 +110,12 @@ export const SERVICES: ServiceDefinition[] = [
     accent: 'from-amber-500/20 to-orange-500/20',
     visual: 'carpetCleaning',
     equipment: {
-      src: '/services/carpet_extractor_luxury_1776053430536.png',
+      src: '/services/carpet-cleaning-equipment.webp',
       alt: {
-        es: 'Extractor de alfombras profesional en operación sobre una alfombra de sala residencial.',
-        en: 'Professional carpet extractor in operation on a residential living-room carpet.',
+        es: 'Extractor profesional de alfombras con lanza de inyección y extracción sobre una alfombra residencial.',
+        en: 'Professional carpet extractor with injection-and-extraction wand on a residential rug.',
       },
+      prompt: 'Photorealistic editorial portrait of a commercial hot-water extractor with wheeled tanks, realistic hoses and stainless extraction wand in an empty premium living room; no people, logos, labels or readable text.',
     },
   },
 ];

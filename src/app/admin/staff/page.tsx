@@ -7,6 +7,7 @@ import { apiRequest } from '@/lib/api-client';
 import { db } from '@/lib/db';
 import { newYorkLocalToIso } from '@/lib/domain';
 import type { CurrentStaffUser, StaffProfile, StaffRole, Team } from '@/lib/types';
+import { CrmPageIntro } from '@/components/admin/CrmPrimitives';
 
 const roles: StaffRole[] = ['owner', 'manager', 'dispatcher', 'crew'];
 
@@ -110,7 +111,7 @@ export default function StaffPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-7 pb-20">
-      <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Acceso interno</p><h1 className="mt-2 text-3xl font-semibold text-white">Equipo y roles</h1><p className="mt-2 text-sm text-zinc-400">Las cuentas se crean exclusivamente por invitación y los privilegios se verifican en servidor.</p></div>
+      <CrmPageIntro eyebrow="Administración · acceso interno" title="Equipo y roles" description="Las cuentas se crean exclusivamente por invitación y los privilegios se verifican en servidor." />
       {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
       {message && <p className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">{message}</p>}
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
