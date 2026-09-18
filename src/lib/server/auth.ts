@@ -34,7 +34,8 @@ export async function getStaffIdentity(): Promise<StaffIdentity> {
   if (error || !profile?.is_active) throw new Error('No autorizado: el perfil no está habilitado.');
   const { data: assurance } = await client.auth.mfa.getAuthenticatorAssuranceLevel();
   const aal = assurance?.currentLevel === 'aal2' ? 'aal2' : 'aal1';
-  const needsMfa = ['owner', 'manager'].includes(profile.role) && aal !== 'aal2';
+  const enforceMfa = process.env.ENFORCE_MFA === 'true';
+  const needsMfa = enforceMfa && ['owner', 'manager'].includes(profile.role) && aal !== 'aal2';
 
   return {
     id: current.user.id,

@@ -2,6 +2,7 @@
 
 import { FormEvent, Suspense, useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { KeyRound, LoaderCircle, ShieldCheck } from 'lucide-react';
 
@@ -28,6 +29,9 @@ function MfaForm() {
       if (verified) {
         if (active) setFactorId(verified.id);
         return;
+      }
+      for (const unverified of factors.totp.filter((f: { status: string; id: string }) => f.status === 'unverified')) {
+        await supabase.auth.mfa.unenroll({ factorId: unverified.id }).catch(() => undefined);
       }
       const { data, error: enrollError } = await supabase.auth.mfa.enroll({
         factorType: 'totp',
@@ -94,6 +98,11 @@ function MfaForm() {
                 <KeyRound className="size-4" /> Verificar
               </button>
             </form>
+            <div className="mt-5 border-t border-white/10 pt-4 text-center">
+              <Link href="/admin" className="text-sm text-zinc-400 hover:text-white transition">
+                Continuar al panel directamente →
+              </Link>
+            </div>
           </>
         )}
       </section>
