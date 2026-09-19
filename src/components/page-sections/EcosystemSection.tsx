@@ -27,7 +27,7 @@ export const EcosystemSection = ({ t }: { t: any }) => {
                       {t('eco.title')} <br /> <span className="silver-text">{t('eco.title2')}</span>
                     </h2>
                   </div>
-                  <p className="text-accent max-w-sm font-medium border-l border-accent/10 pl-6 h-fit">
+                  <p className="text-zinc-300 dark:text-zinc-300 max-w-sm font-medium border-l border-white/20 pl-6 h-fit">
                     {t('eco.subtitle')}
                   </p>
                 </motion.div>
@@ -54,9 +54,9 @@ export const EcosystemSection = ({ t }: { t: any }) => {
                                 <item.icon className="w-7 h-7 text-foreground" />
                               </div>
                               <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight font-michroma mb-3">{t(item.titleKey)}</h3>
-                              <p className="text-accent font-medium leading-relaxed text-sm">{t(item.descKey)}</p>
+                              <p className="text-zinc-300 dark:text-zinc-300 font-medium leading-relaxed text-sm">{t(item.descKey)}</p>
                             </div>
-                            <div className="relative z-10 pt-6 flex items-center gap-2 text-accent group-hover:text-foreground transition-colors">
+                            <div className="relative z-10 pt-6 flex items-center gap-2 text-zinc-300 group-hover:text-white transition-colors">
                               <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
                             </div>
                           </div>
@@ -81,8 +81,8 @@ export const EcosystemSection = ({ t }: { t: any }) => {
                   <div className="flex-grow">
                     <h3 className="text-lg font-black uppercase font-michroma mb-3 text-foreground">{t('eco.advantage')}</h3>
                     <div className="space-y-2">
-                      <p className="text-accent font-medium text-sm leading-relaxed">• {t('eco.adv1')}</p>
-                      <p className="text-accent font-medium text-sm leading-relaxed">• {t('eco.adv2')}</p>
+                      <p className="text-zinc-300 dark:text-zinc-300 font-medium text-sm leading-relaxed">• {t('eco.adv1')}</p>
+                      <p className="text-zinc-300 dark:text-zinc-300 font-medium text-sm leading-relaxed">• {t('eco.adv2')}</p>
                     </div>
                   </div>
                   <MagneticButton href="/membership" className="cursor-hover-target whitespace-nowrap">

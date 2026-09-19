@@ -27,7 +27,7 @@ export const HeroSection = ({
   return (
     <>
             {/* 2. HERO SECTION */}
-            <section ref={heroRef} className="relative pt-32 pb-16 md:pt-48 md:pb-32 overflow-hidden min-h-[95vh] md:min-h-[900px] flex items-center bg-background transition-colors duration-500">
+            <section ref={heroRef} className="relative pt-28 pb-14 md:pt-40 md:pb-24 overflow-hidden min-h-[85vh] md:min-h-[780px] flex items-center bg-background transition-colors duration-500">
               {/* Deep Titanium Aurora Effect */}
               <motion.div
                 animate={{ x: [0, 40, 0], y: [0, 20, 0] }}
@@ -45,18 +45,18 @@ export const HeroSection = ({
                   className="max-w-2xl relative z-10"
                 >
                   <motion.div variants={fadeInUp} className="mb-6">
-                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 text-zinc-400 text-[10px] font-black uppercase tracking-[0.3em]">
-                      <ShieldCheck className="w-3 h-3" /> {t('hero.badge')}
+                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/15 bg-white/10 text-zinc-200 text-[11px] font-bold uppercase tracking-[0.25em] shadow-sm backdrop-blur-md">
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> {t('hero.badge')}
                     </span>
                   </motion.div>
 
                   <TextScrubber
                     text={t('hero.title')}
-                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-foreground leading-[1.1] tracking-[-0.02em] uppercase mb-12"
+                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-foreground leading-[1.12] tracking-tight uppercase mb-8"
                   />
 
-                  <motion.p variants={fadeInUp} className="text-lg md:text-xl text-accent mb-10 md:mb-12 leading-relaxed font-medium max-w-lg">
-                    {t('hero.desc')} <span className="text-foreground font-bold">{t('hero.desc_bold')}</span>
+                  <motion.p variants={fadeInUp} className="text-lg md:text-xl text-zinc-300 dark:text-zinc-300 mb-10 md:mb-12 leading-relaxed font-medium max-w-lg">
+                    {t('hero.desc')} <span className="text-white font-bold">{t('hero.desc_bold')}</span>
                   </motion.p>
 
                   <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-8 items-center">
@@ -65,18 +65,26 @@ export const HeroSection = ({
                       <span className="relative z-10 flex items-center">{t('hero.cta')} <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-2 transition-transform" /></span>
                     </MagneticButton>
                     <div className="flex gap-4 items-center justify-center sm:justify-start">
-                      <div className="flex -space-x-3 cursor-hover-target opacity-60 grayscale hover:grayscale-0 transition-all">
-                        {[1, 2, 3].map((i) => (
-                          <div key={i} className="w-10 h-10 rounded-full bg-zinc-800 border-2 border-slate-950 flex justify-center items-center text-xs font-bold shadow-xl">
-                            <Image src={`https://ui-avatars.com/api/?background=27272a&color=fff&name=V+${i}`} alt={`Verified Miami VIP Client ${i}`} width={40} height={40} className="rounded-full" />
+                      <div className="flex -space-x-2.5">
+                        {[
+                          { initials: 'MR', bg: 'from-amber-600 to-amber-900', label: 'Star Island' },
+                          { initials: 'SC', bg: 'from-sky-600 to-sky-900', label: 'Brickell Penthouse' },
+                          { initials: 'DL', bg: 'from-emerald-600 to-emerald-900', label: 'Fisher Island' },
+                        ].map((client, i) => (
+                          <div
+                            key={i}
+                            title={client.label}
+                            className={`w-10 h-10 rounded-full bg-gradient-to-br ${client.bg} border-2 border-slate-950 flex justify-center items-center text-xs font-black text-white shadow-xl transition-transform hover:scale-110`}
+                          >
+                            {client.initials}
                           </div>
                         ))}
                       </div>
-                      <div className="border-l border-white/10 pl-4">
+                      <div className="border-l border-white/15 pl-4">
                         <div className="flex mb-0.5 scale-75 origin-left gap-0.5">
                           {[1, 2, 3, 4, 5].map((i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400"/>)}
                         </div>
-                        <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest">{t('hero.social')}</span>
+                        <span className="text-[10px] font-black text-zinc-200 uppercase tracking-widest">{t('hero.social')}</span>
                       </div>
                     </div>
                   </motion.div>

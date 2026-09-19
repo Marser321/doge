@@ -51,7 +51,7 @@ export default function AdminDashboard() {
         <div className="grid min-h-64 place-items-center"><LoaderCircle className="size-6 animate-spin text-zinc-500" /></div>
       ) : (
         <>
-          <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <section className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3">
             {cards.map(({ label, value, icon: Icon, href }) => (
               <CrmMetricCard key={label} label={label} value={value} icon={Icon} href={href} />
             ))}

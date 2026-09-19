@@ -9,6 +9,29 @@ import { getBrowserSupabase } from '@/lib/supabase/client'
 import type { CurrentStaffUser, StaffRole } from '@/lib/types'
 import CeoOnboardingTour from '@/components/admin/CeoOnboardingTour'
 
+const ROUTE_TITLES: Record<string, string> = {
+  '/admin': 'Resumen Operativo',
+  '/admin/requests': 'Solicitudes de Servicio',
+  '/admin/calendar': 'Agenda & Cuadrillas',
+  '/admin/clients': 'Cartera de Clientes',
+  '/admin/subscriptions': 'Suscripciones VIP',
+  '/admin/products': 'Catálogo de Productos',
+  '/admin/inventory': 'Control de Inventario',
+  '/admin/orders': 'Gestión de Órdenes',
+  '/admin/intents': 'Oportunidades Comerciales',
+  '/admin/offers': 'Ofertas & Promociones',
+  '/admin/staff': 'Equipo & Operadores',
+  '/admin/settings': 'Configuración del Sistema',
+}
+
+function getRouteTitle(pathname: string): string {
+  if (ROUTE_TITLES[pathname]) return ROUTE_TITLES[pathname]
+  for (const [route, title] of Object.entries(ROUTE_TITLES)) {
+    if (route !== '/admin' && pathname.startsWith(route)) return title
+  }
+  return 'Panel de Control'
+}
+
 export default function AdminShell({ children, initialUser }: { children: React.ReactNode; initialUser: CurrentStaffUser }) {
   const pathname = usePathname()
   const router = useRouter()
@@ -86,7 +109,7 @@ export default function AdminShell({ children, initialUser }: { children: React.
     if (!items.length) return null
     return (
       <section key={group} className="space-y-1.5">
-        <p className="px-4 pb-1 text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-600">{group}</p>
+        <p className="px-4 pb-1 text-[10px] font-bold uppercase tracking-[0.25em] text-zinc-400 font-michroma">{group}</p>
         {items.map((item) => {
           const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href))
           const Icon = item.icon
@@ -204,9 +227,12 @@ export default function AdminShell({ children, initialUser }: { children: React.
               >
                  <Menu className="w-6 h-6" />
               </button>
-              <h2 className="font-michroma font-bold text-lg md:text-xl tracking-wider capitalize truncate">
-                {pathname === '/admin' ? 'Resumen operativo' : pathname.replace('/admin/', '').replaceAll('-', ' ')}
-              </h2>
+              <div className="flex items-center gap-2.5">
+                <span className="size-2 rounded-full bg-emerald-400 animate-pulse hidden sm:inline-block" title="Sistema activo" />
+                <h2 className="font-michroma font-bold text-base md:text-xl tracking-wider text-white truncate">
+                  {getRouteTitle(pathname)}
+                </h2>
+              </div>
            </div>
            
            <div className="flex items-center gap-3 md:gap-5">

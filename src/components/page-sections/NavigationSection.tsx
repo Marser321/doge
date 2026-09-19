@@ -52,7 +52,7 @@ export const NavigationSection = ({
           </Link>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex gap-10 items-center text-[10px] font-black text-zinc-400 tracking-[0.2em] z-50 uppercase">
+          <div className="hidden md:flex gap-10 items-center text-[10px] font-black text-zinc-300 dark:text-zinc-300 tracking-[0.2em] z-50 uppercase">
             <Link
               href="/services"
               className="hover:text-foreground transition-colors relative group cursor-hover-target"

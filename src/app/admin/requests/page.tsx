@@ -13,22 +13,21 @@ import {
   MessageSquare, 
   Copy, 
   Check, 
-  Clock, 
-  Layers
+  Clock
 } from 'lucide-react';
 
 import { db } from '@/lib/db';
 import type { QuoteItem, RequestStatus, ServiceRequest } from '@/lib/types';
 import { CrmPageIntro, CrmStatusPill } from '@/components/admin/CrmPrimitives';
 
-const columns: Array<{ status: RequestStatus; label: string }> = [
-  { status: 'new', label: 'Nuevas' },
-  { status: 'reviewing', label: 'En revisión' },
-  { status: 'quoted', label: 'Cotizadas' },
-  { status: 'approved', label: 'Aprobadas' },
-  { status: 'scheduled', label: 'Programadas' },
-  { status: 'in_progress', label: 'En curso' },
-  { status: 'completed', label: 'Completadas' },
+const columns: Array<{ status: RequestStatus; label: string; dotBg: string; borderAccent: string }> = [
+  { status: 'new', label: 'Nuevas', dotBg: 'bg-amber-400', borderAccent: 'hover:border-amber-400/40' },
+  { status: 'reviewing', label: 'En revisión', dotBg: 'bg-sky-400', borderAccent: 'hover:border-sky-400/40' },
+  { status: 'quoted', label: 'Cotizadas', dotBg: 'bg-indigo-400', borderAccent: 'hover:border-indigo-400/40' },
+  { status: 'approved', label: 'Aprobadas', dotBg: 'bg-emerald-400', borderAccent: 'hover:border-emerald-400/40' },
+  { status: 'scheduled', label: 'Programadas', dotBg: 'bg-cyan-400', borderAccent: 'hover:border-cyan-400/40' },
+  { status: 'in_progress', label: 'En curso', dotBg: 'bg-purple-400', borderAccent: 'hover:border-purple-400/40' },
+  { status: 'completed', label: 'Completadas', dotBg: 'bg-teal-400', borderAccent: 'hover:border-teal-400/40' },
 ];
 
 function requestTone(status: RequestStatus) {
@@ -267,25 +266,28 @@ export default function RequestsPage() {
 
       <div className="grid gap-6 xl:grid-cols-[1fr_390px]">
         {/* Kanban Board Columns */}
-        <section className="overflow-x-auto pb-3">
-          <div className="grid min-w-[1120px] grid-cols-7 gap-3">
+        <section className="overflow-x-auto pb-4 scrollbar-thin">
+          <div className="flex gap-3.5 min-w-max">
             {columns.map((column) => {
               const columnRequests = grouped[column.status] || [];
               return (
-                <div key={column.status} className="rounded-2xl border border-white/10 bg-white/[0.02] p-3 flex flex-col min-h-[500px]">
-                  <div className="flex items-center justify-between px-1 pb-3 border-b border-white/5">
-                    <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
-                      {column.label}
-                    </h2>
-                    <span className="font-mono text-xs px-2 py-0.5 rounded-full bg-white/5 text-zinc-400">
+                <div key={column.status} className={`w-[260px] shrink-0 rounded-2xl border border-white/10 bg-white/[0.02] p-3 flex flex-col min-h-[520px] shadow-sm transition-colors ${column.borderAccent}`}>
+                  <div className="flex items-center justify-between px-1 pb-3 border-b border-white/10">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className={`size-2 rounded-full ${column.dotBg} shrink-0`} />
+                      <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-200 truncate">
+                        {column.label}
+                      </h2>
+                    </div>
+                    <span className="font-mono text-xs px-2 py-0.5 rounded-full bg-white/10 text-white font-semibold shrink-0">
                       {columnRequests.length}
                     </span>
                   </div>
 
                   <div className="mt-3 space-y-2 flex-1">
                     {columnRequests.length === 0 ? (
-                      <div className="h-32 grid place-items-center text-[11px] text-zinc-600 italic">
-                        Sin solicitudes
+                      <div className="h-32 grid place-items-center rounded-xl border border-dashed border-white/10 bg-white/[0.01] p-3 text-center">
+                        <span className="text-[11px] font-medium text-zinc-400">Sin solicitudes</span>
                       </div>
                     ) : (
                       columnRequests.map((request) => (
@@ -294,25 +296,25 @@ export default function RequestsPage() {
                           onClick={() => setSelected(request)} 
                           className={`w-full rounded-xl border p-3 text-left transition-all duration-200 ${
                             selected?.id === request.id 
-                              ? 'border-red-400/50 bg-red-500/10 shadow-lg shadow-red-950/20 scale-[1.02]' 
-                              : 'border-white/10 bg-black/20 hover:border-white/20 hover:bg-white/[0.04]'
+                              ? 'border-red-400/60 bg-red-500/10 shadow-lg shadow-red-950/20 ring-1 ring-red-400/40' 
+                              : 'border-white/10 bg-black/30 hover:border-white/20 hover:bg-white/[0.04]'
                           }`}
                         >
                           <div className="flex items-start justify-between gap-2">
                             <p className="line-clamp-1 text-sm font-semibold text-white">
                               {request.contact_name}
                             </p>
-                            <span className="font-mono text-[10px] text-zinc-500 shrink-0">
+                            <span className="font-mono text-[10px] text-zinc-400 shrink-0">
                               {request.reference_code.slice(-4)}
                             </span>
                           </div>
 
-                          <p className="mt-1 line-clamp-1 text-xs text-zinc-400">
+                          <p className="mt-1 line-clamp-1 text-xs text-zinc-300">
                             {request.service_name_snapshot}
                           </p>
 
                           {request.preferred_date && (
-                            <div className="mt-2.5 flex items-center gap-1.5 text-[10px] text-zinc-500">
+                            <div className="mt-2.5 flex items-center gap-1.5 text-[10px] text-zinc-400">
                               <Clock className="size-3 text-zinc-400" />
                               <span>{request.preferred_date}</span>
                             </div>

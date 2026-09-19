@@ -25,8 +25,18 @@ export function CrmPageIntro({ eyebrow, title, description, actions }: { eyebrow
 }
 
 export function CrmMetricCard({ label, value, icon: Icon, href }: { label: string; value: ReactNode; icon: ComponentType<LucideProps>; href?: string }) {
-  const content = <><div className="flex items-center justify-between"><p className="text-xs font-medium text-zinc-400">{label}</p><span className="rounded-lg border border-white/10 bg-white/[0.03] p-2"><Icon className="size-4 text-sky-200" /></span></div><p className="mt-5 font-mono text-3xl font-semibold text-white">{value}</p></>;
-  const className = 'rounded-2xl border border-white/10 bg-white/[0.025] p-5 transition hover:border-sky-400/25 hover:bg-white/[0.05]';
+  const content = (
+    <>
+      <div className="flex items-start justify-between gap-2">
+        <p className="text-xs font-semibold text-zinc-300 line-clamp-2 leading-snug">{label}</p>
+        <span className="rounded-xl border border-white/10 bg-white/[0.04] p-1.5 sm:p-2 text-sky-300 shrink-0">
+          <Icon className="size-3.5 sm:size-4" />
+        </span>
+      </div>
+      <p className="mt-3 sm:mt-5 font-mono text-xl sm:text-3xl font-bold tracking-tight text-white">{value}</p>
+    </>
+  );
+  const className = 'group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025] p-3.5 sm:p-5 transition-all duration-300 hover:border-sky-400/30 hover:bg-white/[0.06] hover:shadow-[0_0_25px_rgba(56,189,248,0.08)]';
   return href ? <a href={href} className={className}>{content}</a> : <div className={className}>{content}</div>;
 }
 

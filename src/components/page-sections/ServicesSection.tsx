@@ -32,7 +32,7 @@ export const ServicesSection = ({ t }: { t: (key: TranslationKey) => string }) =
                     <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">{t('svc.badge')}</span>
                     <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tighter uppercase font-michroma leading-tight">{t('svc.title')} <br/> <span className="silver-text">{t('svc.title2')}</span></h2>
                   </div>
-                  <p className="text-accent max-w-sm font-medium border-l border-accent/10 pl-6 h-fit">
+                  <p className="text-zinc-300 dark:text-zinc-300 max-w-sm font-medium border-l border-white/20 pl-6 h-fit">
                     {t('svc.subtitle')}
                   </p>
                 </motion.div>
@@ -51,7 +51,7 @@ export const ServicesSection = ({ t }: { t: (key: TranslationKey) => string }) =
                           <WindowIcon className="w-8 h-8 text-foreground" />
                         </div>
                         <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tight font-michroma mb-6">{t('svc.window.title')}</h3>
-                        <p className="text-accent font-medium text-lg leading-relaxed max-w-sm">
+                        <p className="text-zinc-300 dark:text-zinc-300 font-medium text-lg leading-relaxed max-w-sm">
                           {t('svc.window.desc')}
                         </p>
                       </div>
@@ -73,7 +73,7 @@ export const ServicesSection = ({ t }: { t: (key: TranslationKey) => string }) =
                           <PressureIcon className="w-6 h-6 text-foreground" />
                         </div>
                         <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight font-michroma">{t('svc.pressure.title')}</h3>
-                        <p className="text-accent text-sm font-medium max-w-xs">{t('svc.pressure.desc')}</p>
+                        <p className="text-zinc-300 dark:text-zinc-300 text-sm font-medium max-w-xs">{t('svc.pressure.desc')}</p>
                       </div>
                       <Image src={serviceImagery.pressureWashing.src} alt="" width={150} height={150} sizes="150px" className="rounded-2xl object-cover grayscale opacity-30 group-hover:opacity-55 transition-opacity" />
                     </Link>
@@ -91,7 +91,7 @@ export const ServicesSection = ({ t }: { t: (key: TranslationKey) => string }) =
                         <CarpetIcon className="w-8 h-8 text-foreground mb-4" />
                         <h3 className="text-lg font-black uppercase font-michroma tracking-tighter">{t('svc.carpet.title')}</h3>
                       </div>
-                      <p className="relative z-10 text-accent text-xs font-bold uppercase tracking-widest">{t('svc.carpet.desc')}</p>
+                      <p className="relative z-10 text-zinc-300 dark:text-zinc-300 text-xs font-bold uppercase tracking-widest">{t('svc.carpet.desc')}</p>
                     </Link>
                   </motion.div>
                 </div>

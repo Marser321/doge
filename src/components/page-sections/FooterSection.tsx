@@ -46,13 +46,13 @@ export const FooterSection = ({ t }: { theme?: string, t: (key: TranslationKey) 
                 </div>
               </div>
 
-              <div className="max-w-7xl mx-auto px-6 mt-32 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
-                <div className="flex flex-wrap items-center gap-8 text-[9px] font-black text-accent uppercase tracking-[0.3em]">
-                  <Link href="/legal/licenses" className="hover:text-foreground transition-colors">{t('footer.licenses')}</Link>
-                  <Link href="/legal/registry" className="hover:text-foreground transition-colors">{t('footer.floridaRegistry')}</Link>
-                  <Link href="/legal/privacy" className="hover:text-foreground transition-colors">{t('footer.privacy')}</Link>
+              <div className="max-w-7xl mx-auto px-6 mt-16 md:mt-24 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="flex flex-wrap items-center gap-6 text-[10px] font-bold text-zinc-400 uppercase tracking-[0.25em]">
+                  <Link href="/legal/licenses" className="hover:text-white transition-colors">{t('footer.licenses')}</Link>
+                  <Link href="/legal/registry" className="hover:text-white transition-colors">{t('footer.floridaRegistry')}</Link>
+                  <Link href="/legal/privacy" className="hover:text-white transition-colors">{t('footer.privacy')}</Link>
                 </div>
-                <p className="text-accent font-bold text-[9px] uppercase tracking-[0.2em]">© {new Date().getFullYear()} DOGE.S.M LLC. {t('footer.copyright')}</p>
+                <p className="text-zinc-400 font-medium text-[10px] uppercase tracking-[0.2em]">© {new Date().getFullYear()} DOGE.S.M LLC. {t('footer.copyright')}</p>
               </div>
             </footer>
     </>

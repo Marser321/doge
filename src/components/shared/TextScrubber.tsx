@@ -42,9 +42,9 @@ export const TextScrubber = ({ text, className = "" }: { text: string, className
   return (
     <h1 ref={containerRef} className={`font-michroma ${className}`}>
       {text.split(" ").map((word, wIdx) => (
-        <span key={wIdx} className="inline-block whitespace-nowrap mr-[0.25em]">
+        <span key={wIdx} className="inline-block whitespace-nowrap mr-[0.28em]">
           {word.split("").map((char, cIdx) => (
-            <span key={cIdx} className="char inline-block">{char}</span>
+            <span key={cIdx} className="char inline-block tracking-normal">{char}</span>
           ))}
         </span>
       ))}

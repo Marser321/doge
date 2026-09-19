@@ -86,7 +86,7 @@ export default function InventoryPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-7 pb-20">
+    <div className="mx-auto max-w-7xl space-y-7 pb-20">
       <CrmPageIntro
         eyebrow="Almacén central · DOGE"
         title="Control de inventario"
@@ -148,7 +148,7 @@ export default function InventoryPage() {
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
         {/* Inventory List */}
         <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025] shadow-xl">
-          <div className="grid grid-cols-[1fr_auto_auto] gap-4 border-b border-white/10 px-5 py-3 text-xs uppercase tracking-wide text-zinc-500 font-michroma">
+          <div className="grid grid-cols-[1fr_auto_auto] gap-4 border-b border-white/10 px-5 py-3 text-xs uppercase tracking-wide text-zinc-300 font-michroma">
             <span>Producto</span>
             <span className="text-right">Saldo</span>
             <span>Estado</span>
@@ -173,9 +173,9 @@ export default function InventoryPage() {
                 >
                   <div className="min-w-0 pr-2">
                     <p className="font-semibold text-white truncate">{row.product?.name || 'Producto'}</p>
-                    <div className="mt-1 flex items-center gap-2 font-mono text-xs text-zinc-500">
+                    <div className="mt-1 flex items-center gap-2 font-mono text-xs text-zinc-400">
                       <span className="truncate">{row.product?.slug}</span>
-                      <span className="text-zinc-600">·</span>
+                      <span className="text-zinc-500">·</span>
                       <span>Mín: {threshold}</span>
                     </div>
                   </div>
