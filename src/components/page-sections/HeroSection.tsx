@@ -27,7 +27,7 @@ export const HeroSection = ({
   return (
     <>
             {/* 2. HERO SECTION */}
-            <section ref={heroRef} className="relative pt-28 pb-14 md:pt-40 md:pb-24 overflow-hidden min-h-[85vh] md:min-h-[780px] flex items-center bg-background transition-colors duration-500">
+            <section ref={heroRef} className="relative pt-24 pb-12 md:pt-32 md:pb-16 overflow-hidden min-h-[75vh] md:min-h-[680px] flex items-center bg-background transition-colors duration-500">
               {/* Deep Titanium Aurora Effect */}
               <motion.div
                 animate={{ x: [0, 40, 0], y: [0, 20, 0] }}
@@ -52,7 +52,7 @@ export const HeroSection = ({
 
                   <TextScrubber
                     text={t('hero.title')}
-                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-foreground leading-[1.12] tracking-tight uppercase mb-8"
+                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-foreground leading-[1.26] tracking-normal uppercase mb-8"
                   />
 
                   <motion.p variants={fadeInUp} className="text-lg md:text-xl text-zinc-300 dark:text-zinc-300 mb-10 md:mb-12 leading-relaxed font-medium max-w-lg">

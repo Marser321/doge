@@ -44,14 +44,14 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 pb-20">
+    <div className="w-full space-y-8 pb-20">
       <CrmPageIntro eyebrow="Control del negocio" title="Resumen operativo" description="Señales accionables de CRM, agenda, comercio e inventario en una sola vista." />
       {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
       {loading ? (
         <div className="grid min-h-64 place-items-center"><LoaderCircle className="size-6 animate-spin text-zinc-500" /></div>
       ) : (
         <>
-          <section className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3">
+          <section className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 2xl:grid-cols-6">
             {cards.map(({ label, value, icon: Icon, href }) => (
               <CrmMetricCard key={label} label={label} value={value} icon={Icon} href={href} />
             ))}

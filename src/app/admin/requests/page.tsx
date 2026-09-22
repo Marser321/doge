@@ -4,7 +4,6 @@ import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { 
   CalendarPlus, 
   CheckCircle2, 
-  ClipboardList, 
   LoaderCircle, 
   Plus, 
   Send, 
@@ -171,7 +170,7 @@ export default function RequestsPage() {
       badges: items,
       freeText: parts.slice(1).join('\n\n')
     };
-  }, [selected?.notes]);
+  }, [selected]);
 
   // WhatsApp link generator
   const whatsappUrl = useMemo(() => {
@@ -189,7 +188,7 @@ export default function RequestsPage() {
   );
 
   return (
-    <div className="mx-auto max-w-[1500px] space-y-6 pb-20">
+    <div className="w-full space-y-6 pb-20">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <CrmPageIntro 
           eyebrow="Operación · Solicitudes" 
@@ -264,7 +263,7 @@ export default function RequestsPage() {
         </div>
       )}
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_390px]">
+      <div className={`grid gap-6 ${selected ? 'xl:grid-cols-[1fr_400px] 2xl:grid-cols-[1fr_440px]' : 'grid-cols-1'}`}>
         {/* Kanban Board Columns */}
         <section className="overflow-x-auto pb-4 scrollbar-thin">
           <div className="flex gap-3.5 min-w-max">
@@ -330,8 +329,8 @@ export default function RequestsPage() {
         </section>
 
         {/* Selected Request Detail Sidebar */}
-        <aside className="h-fit rounded-3xl border border-white/10 bg-white/[0.03] p-6 xl:sticky xl:top-24 backdrop-blur-xl shadow-2xl">
-          {selected ? (
+        {selected && (
+          <aside className="h-fit rounded-3xl border border-white/10 bg-white/[0.03] p-6 xl:sticky xl:top-24 backdrop-blur-xl shadow-2xl animate-in fade-in slide-in-from-right-4 duration-300">
             <div className="space-y-6">
               {/* Header */}
               <div className="flex items-start justify-between gap-4 pb-4 border-b border-white/10">
@@ -343,9 +342,18 @@ export default function RequestsPage() {
                     {selected.contact_name}
                   </h2>
                 </div>
-                <CrmStatusPill tone={requestTone(selected.status)}>
-                  {columns.find((column) => column.status === selected.status)?.label || selected.status}
-                </CrmStatusPill>
+                <div className="flex items-center gap-2 shrink-0">
+                  <CrmStatusPill tone={requestTone(selected.status)}>
+                    {columns.find((column) => column.status === selected.status)?.label || selected.status}
+                  </CrmStatusPill>
+                  <button
+                    onClick={() => setSelected(null)}
+                    className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+                    title="Cerrar panel de detalle"
+                  >
+                    <X className="size-4" />
+                  </button>
+                </div>
               </div>
 
               {/* Action Buttons for Contact & WhatsApp */}
@@ -494,13 +502,8 @@ export default function RequestsPage() {
                 )}
               </div>
             </div>
-          ) : (
-            <div className="py-20 text-center text-sm text-zinc-500">
-              <ClipboardList className="mx-auto mb-3 size-8 text-zinc-600" />
-              Selecciona una solicitud para gestionar sus detalles y cotizaciones.
-            </div>
-          )}
-        </aside>
+          </aside>
+        )}
       </div>
 
       {/* Quotation Modal */}

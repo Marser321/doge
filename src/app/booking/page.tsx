@@ -1,23 +1,31 @@
 'use client';
 
-import { FormEvent, useMemo, useRef, useState } from 'react';
+import { FormEvent, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, CalendarDays, CheckCircle2, ImagePlus, LoaderCircle, ShieldCheck } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { SERVICES } from '@/content/services';
 import { newYorkDate } from '@/lib/domain';
 
 type SubmissionState = 'idle' | 'submitting' | 'error';
 
-export default function BookingPage() {
+function BookingForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const serviceQuery = searchParams.get('service') || '';
   const formRef = useRef<HTMLFormElement>(null);
   const idempotencyKey = useRef<string | null>(null);
   const [state, setState] = useState<SubmissionState>('idle');
-  const [selectedService, setSelectedService] = useState<string>('');
+  const [selectedService, setSelectedService] = useState<string>(serviceQuery);
   const [error, setError] = useState('');
   const minimumDate = useMemo(() => newYorkDate(new Date()), []);
+
+  useEffect(() => {
+    if (serviceQuery) {
+      setSelectedService(serviceQuery);
+    }
+  }, [serviceQuery]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -140,10 +148,17 @@ export default function BookingPage() {
                       <input name="doors_count" type="number" min="0" inputMode="numeric" placeholder="Ej. 2" className={inputClass} />
                     </label>
                   </>
-                ) : (
+                ) : selectedService ? (
                   <label className={`${labelClass} sm:col-span-2`}>Superficie aproximada (ft²)
+                    <span className="block text-[11px] font-normal lowercase tracking-normal text-zinc-400 mt-0.5">
+                      (Para alfombras, tapetes o lavado a presión de pisos y exteriores)
+                    </span>
                     <input name="square_feet" type="number" min="1" inputMode="numeric" placeholder="Ej. 1500" className={inputClass} />
                   </label>
+                ) : (
+                  <div className="sm:col-span-2 rounded-xl border border-dashed border-white/15 bg-white/[0.02] p-4 text-center text-xs text-zinc-400">
+                    Selecciona un servicio arriba para especificar ventanas/puertas o superficie aproximada en pies cuadrados (ft²).
+                  </div>
                 )}
                 <label className={`${labelClass} sm:col-span-2`}>Detalles relevantes
                   <textarea name="notes" rows={4} maxLength={2000} className={inputClass} placeholder="Accesos, superficies, prioridad, horarios u otra información útil." />
@@ -169,5 +184,17 @@ export default function BookingPage() {
         </form>
       </section>
     </main>
+  );
+}
+
+export default function BookingPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-[#0b0b0c] text-white grid place-items-center">
+        <LoaderCircle className="size-8 animate-spin text-red-500" />
+      </main>
+    }>
+      <BookingForm />
+    </Suspense>
   );
 }
