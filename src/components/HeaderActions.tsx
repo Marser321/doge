@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Moon, Globe, ShoppingCart, MoreVertical, User, X, ArrowRight, BriefcaseBusiness, Sparkles } from 'lucide-react'
+import { Sun, Moon, Globe, ShoppingCart, MoreVertical, User, X, ArrowRight, BriefcaseBusiness, Sparkles, LogIn, UserPlus } from 'lucide-react'
 import Link from 'next/link'
 import { useLanguage } from './LanguageProvider'
 
@@ -39,9 +39,10 @@ export default function HeaderActions({ theme, onToggleTheme }: HeaderActionsPro
   }, [])
 
   const MENU_ITEMS = [
+    { icon: LogIn, label: lang === 'es' ? 'Iniciar sesión' : 'Sign In', href: '/login', disabled: false },
+    { icon: UserPlus, label: lang === 'es' ? 'Crear cuenta' : 'Create Account', href: '/signup', disabled: false },
     { icon: BriefcaseBusiness, label: t('nav.services'), href: '/services', disabled: false },
     { icon: Sparkles, label: t('nav.memberships'), href: '/#suscripciones', disabled: false },
-    { icon: User, label: 'Acceso operativo', href: '/login', disabled: false },
   ]
 
   return (

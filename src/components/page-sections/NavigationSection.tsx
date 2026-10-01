@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, X, ArrowRight, Sparkles, Store, Shield, Layers, CalendarPlus } from 'lucide-react'
+import { Menu, X, ArrowRight, Sparkles, Store, Shield, Layers, CalendarPlus, UserPlus, LogIn } from 'lucide-react'
 import HeaderActions from '@/components/HeaderActions'
 
 export const NavigationSection = ({
@@ -159,12 +159,32 @@ export const NavigationSection = ({
                   <ArrowRight className="w-4 h-4 text-zinc-500" />
                 </Link>
 
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/10">
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileNavOpen(false)}
+                    className="flex items-center justify-center gap-2 p-3.5 rounded-xl border border-white/15 bg-white/5 text-white font-bold uppercase text-xs tracking-wider hover:bg-white/10 transition-all text-center"
+                  >
+                    <LogIn className="w-3.5 h-3.5 text-zinc-300" />
+                    <span>Iniciar sesión</span>
+                  </Link>
+
+                  <Link
+                    href="/signup"
+                    onClick={() => setMobileNavOpen(false)}
+                    className="flex items-center justify-center gap-2 p-3.5 rounded-xl bg-white text-black font-bold uppercase text-xs tracking-wider hover:bg-zinc-200 transition-all text-center"
+                  >
+                    <UserPlus className="w-3.5 h-3.5 text-black" />
+                    <span>Crear cuenta</span>
+                  </Link>
+                </div>
+
                 <Link
                   href="/booking"
                   onClick={() => setMobileNavOpen(false)}
-                  className="flex items-center justify-center gap-2 p-4 rounded-xl bg-white text-black font-black uppercase text-xs tracking-widest hover:bg-zinc-200 transition-all mt-2"
+                  className="flex items-center justify-center gap-2 p-4 rounded-xl border border-white/10 bg-white/5 text-zinc-300 font-bold uppercase text-xs tracking-widest hover:bg-white/10 hover:text-white transition-all"
                 >
-                  <CalendarPlus className="w-4 h-4" />
+                  <CalendarPlus className="w-4 h-4 text-accent" />
                   <span>Agendar Cuadrilla</span>
                 </Link>
               </div>

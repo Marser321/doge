@@ -32,6 +32,15 @@ export const TRANSLATIONS = {
   },
   'hero.cta': { es: 'Agendar Cuadrilla', en: 'Schedule a Crew' },
   'hero.social': { es: 'Inversores VIP Miami', en: 'VIP Miami Investors' },
+  'hero.createSession': { es: 'Crear cuenta', en: 'Create Account' },
+  'hero.signIn': { es: 'Iniciar sesión', en: 'Sign In' },
+  'hero.guestExplore': { es: 'Explorar servicios disponibles', en: 'Explore available services' },
+  'hero.feature1Title': { es: 'Cuadrillas Certificadas', en: 'Certified Crews' },
+  'hero.feature1Desc': { es: 'Personal verificado con estándares de hospitalidad 5 estrellas.', en: 'Verified staff with 5-star hospitality standards.' },
+  'hero.feature2Title': { es: 'Estimados Inmediatos', en: 'Instant Estimates' },
+  'hero.feature2Desc': { es: 'Respuesta ágil y cotizaciones claras para tu propiedad.', en: 'Fast response and clear quotes for your property.' },
+  'hero.feature3Title': { es: 'Conservación de Activos', en: 'Asset Preservation' },
+  'hero.feature3Desc': { es: 'Protección especializada de acabados, cristales y superficies.', en: 'Specialized care for high-end finishes, glass, and surfaces.' },
 
   // ── How It Works ─────────────────────────────
   'how.badge': { es: 'Cómo Funciona', en: 'How It Works' },

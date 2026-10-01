@@ -1,43 +1,27 @@
 'use client'
 
-import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
-import Image from 'next/image'
-import { ArrowLeft, Camera, FileText, Upload, X, ImageIcon, Film, Send, CheckCircle, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, Send, CheckCircle, ShieldCheck, FileText } from 'lucide-react'
 import { useLanguage } from '@/components/LanguageProvider'
-import { ServiceVisualBanner } from '@/components/services/ServiceVisualBanner'
 import type { ServiceDefinition } from '@/content/services'
 import type { TranslationKey } from '@/data/i18n'
-
-type DescriptionMethod = 'photos' | 'text'
-
-interface FilePreview {
-  id: string
-  file: File
-  preview: string
-  type: 'image' | 'video'
-}
 
 const WHATSAPP_NUMBER = '17869283948'
 
 /**
  * Single intake form shared by every service page. The per-service copy is
- * resolved from the definition's `keyPrefix`, so adding a service means adding
- * an entry in `@/content/services` and its translation block — never a clone.
+ * resolved from the definition's `keyPrefix`, operating purely in text mode without images.
  */
 export function ServiceEstimateForm({ service }: { service: ServiceDefinition }) {
   const { lang, t } = useLanguage()
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [method, setMethod] = useState<DescriptionMethod>('photos')
-  const [files, setFiles] = useState<FilePreview[]>([])
   const [textDescription, setTextDescription] = useState('')
   const [name, setName] = useState('')
   const [contact, setContact] = useState('')
   const [address, setAddress] = useState('')
   const [notes, setNotes] = useState('')
   const [submitted, setSubmitted] = useState(false)
-  const [dragOver, setDragOver] = useState(false)
 
   const ServiceIcon = service.icon
   const own = (suffix: string) => t(`${service.keyPrefix}.${suffix}` as TranslationKey)
@@ -49,54 +33,26 @@ export function ServiceEstimateForm({ service }: { service: ServiceDefinition })
     }
   }, [])
 
-  const handleFiles = useCallback((newFiles: FileList | null) => {
-    if (!newFiles) return
-    const additions: FilePreview[] = Array.from(newFiles)
-      .filter(f => f.type.startsWith('image/') || f.type.startsWith('video/'))
-      .slice(0, 10 - files.length) // Max 10 files
-      .map(file => ({
-        id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-        file,
-        preview: URL.createObjectURL(file),
-        type: file.type.startsWith('video/') ? 'video' as const : 'image' as const,
-      }))
-    setFiles(prev => [...prev, ...additions])
-  }, [files.length])
-
-  const removeFile = (id: string) => {
-    setFiles(prev => {
-      const file = prev.find(f => f.id === id)
-      if (file) URL.revokeObjectURL(file.preview)
-      return prev.filter(f => f.id !== id)
-    })
-  }
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setDragOver(false)
-    handleFiles(e.dataTransfer.files)
-  }, [handleFiles])
-
   const handleSubmit = () => {
-    const desc = method === 'photos'
-      ? `${files.length} ${t('estimate.waFiles')}`
-      : textDescription
-
     const message = encodeURIComponent(
       `${t('estimate.waIntro')} ${service.name[lang]}.\n\n` +
-      `📸 ${t('estimate.waDescription')}: ${desc}\n` +
-      `👤 ${t('estimate.waName')}: ${name}\n` +
-      `📞 ${t('estimate.waContact')}: ${contact}\n` +
-      `📍 ${t('estimate.waAddress')}: ${address}\n` +
-      (notes ? `📝 ${t('estimate.waNotes')}: ${notes}` : '')
+      `📝 ${t('estimate.waDescription')}: ${textDescription.trim()}\n` +
+      `👤 ${t('estimate.waName')}: ${name.trim()}\n` +
+      `📞 ${t('estimate.waContact')}: ${contact.trim()}\n` +
+      `📍 ${t('estimate.waAddress')}: ${address.trim()}\n` +
+      (notes.trim() ? `💬 ${t('estimate.waNotes')}: ${notes.trim()}` : '')
     )
 
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank', 'noopener,noreferrer')
     setSubmitted(true)
   }
 
-  const isValid = name.trim() && contact.trim() && address.trim() &&
-    (method === 'photos' ? files.length > 0 : textDescription.trim())
+  const isValid = Boolean(
+    name.trim() &&
+    contact.trim() &&
+    address.trim() &&
+    textDescription.trim()
+  )
 
   if (submitted) {
     return (
@@ -139,9 +95,9 @@ export function ServiceEstimateForm({ service }: { service: ServiceDefinition })
     <div className="min-h-screen bg-background transition-colors duration-500 font-sans text-foreground selection:bg-accent/30 overflow-hidden relative">
       <div className="bg-noise"></div>
 
-      {/* Background */}
-      <div className="absolute top-[-10%] right-[-10%] w-[min(800px,80vw)] h-[min(800px,80vw)] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] left-[-10%] w-[min(600px,60vw)] h-[min(600px,60vw)] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+      {/* Background Decorative */}
+      <div className="absolute top-[-10%] right-[-10%] w-[min(800px,80vw)] h-[min(800px,80vw)] bg-accent/5 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] left-[-10%] w-[min(600px,60vw)] h-[min(600px,60vw)] bg-foreground/5 rounded-full blur-[120px] pointer-events-none"></div>
 
       {/* Navigation */}
       <nav className="relative z-50 px-6 md:px-12 py-8 flex items-center justify-between">
@@ -176,170 +132,42 @@ export function ServiceEstimateForm({ service }: { service: ServiceDefinition })
           </p>
         </motion.div>
 
-        <ServiceVisualBanner visualId={service.visual} lang={lang} />
-
-        {service.equipment && (
-          <figure className="mb-10">
-            <div className="relative h-56 overflow-hidden rounded-[28px] border border-foreground/10 bg-foreground/5 sm:h-72">
-              <Image
-                src={service.equipment.src}
-                alt={service.equipment.alt[lang]}
-                fill
-                sizes="(min-width: 1024px) 56rem, 100vw"
-                className="object-cover"
-              />
-            </div>
-            <figcaption className="mt-3 text-[10px] font-black uppercase tracking-[0.3em] text-accent/60">
-              {t('estimate.equipmentLabel')}
-            </figcaption>
-          </figure>
-        )}
-
-        {/* Method Toggle */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.6 }}
-          className="mb-10"
-        >
-          <div className="inline-flex rounded-2xl border border-accent/10 bg-foreground/5 p-1.5">
-            <button
-              onClick={() => setMethod('photos')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${
-                method === 'photos'
-                  ? 'bg-foreground text-background shadow-xl'
-                  : 'text-accent hover:text-foreground'
-              }`}
-            >
-              <Camera className="w-4 h-4" /> {t('estimate.methodPhotos')}
-            </button>
-            <button
-              onClick={() => setMethod('text')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${
-                method === 'text'
-                  ? 'bg-foreground text-background shadow-xl'
-                  : 'text-accent hover:text-foreground'
-              }`}
-            >
-              <FileText className="w-4 h-4" /> {t('estimate.methodText')}
-            </button>
-          </div>
-        </motion.div>
-
+        {/* Form Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left: Description Area */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
+            transition={{ delay: 0.15, duration: 0.6 }}
+            className="space-y-6"
           >
-            <AnimatePresence mode="wait">
-              {method === 'photos' ? (
-                <motion.div
-                  key="photos"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  className="space-y-6"
-                >
-                  <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent block">
-                    {t('estimate.uploadLabel')}
-                  </label>
-
-                  {/* Drop Zone */}
-                  <div
-                    onDragOver={(e) => { e.preventDefault(); setDragOver(true) }}
-                    onDragLeave={() => setDragOver(false)}
-                    onDrop={handleDrop}
-                    onClick={() => fileInputRef.current?.click()}
-                    className={`border-2 border-dashed rounded-[32px] p-8 md:p-12 text-center cursor-pointer transition-all min-h-[200px] flex flex-col items-center justify-center gap-4 ${
-                      dragOver
-                        ? 'border-foreground bg-foreground/10 scale-[1.02]'
-                        : 'border-accent/20 hover:border-accent/40 bg-foreground/5'
-                    }`}
-                  >
-                    <div className="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center border border-accent/20">
-                      <Upload className="w-8 h-8 text-accent" />
-                    </div>
-                    <p className="text-accent font-medium text-sm">
-                      {t('estimate.uploadHint')}
-                    </p>
-                    <p className="text-accent/40 text-[10px] font-bold uppercase tracking-widest">
-                      {t('estimate.uploadFormats')}
-                    </p>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*,video/*"
-                      multiple
-                      onChange={(e) => handleFiles(e.target.files)}
-                      className="hidden"
-                    />
-                  </div>
-
-                  {/* File Previews */}
-                  {files.length > 0 && (
-                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                      {files.map((file) => (
-                        <motion.div
-                          key={file.id}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          className="relative aspect-square rounded-2xl overflow-hidden border border-accent/10 group"
-                        >
-                          {file.type === 'image' ? (
-                            <Image src={file.preview} alt="Preview" fill className="object-cover" unoptimized />
-                          ) : (
-                            <div className="w-full h-full bg-accent/10 flex items-center justify-center">
-                              <Film className="w-8 h-8 text-accent" />
-                            </div>
-                          )}
-                          <button
-                            onClick={(e) => { e.stopPropagation(); removeFile(file.id) }}
-                            className="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <X className="w-3 h-3 text-white" />
-                          </button>
-                          <div className="absolute bottom-2 left-2">
-                            {file.type === 'image' ? (
-                              <ImageIcon className="w-3 h-3 text-white drop-shadow-lg" />
-                            ) : (
-                              <Film className="w-3 h-3 text-white drop-shadow-lg" />
-                            )}
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="text"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-6"
-                >
-                  <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent block">
-                    {t('estimate.textLabel')}
-                  </label>
-                  <textarea
-                    value={textDescription}
-                    onChange={(e) => setTextDescription(e.target.value)}
-                    placeholder={own('textPlaceholder')}
-                    rows={8}
-                    className="w-full bg-foreground/5 border border-accent/10 rounded-2xl p-6 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors resize-none placeholder:text-accent/30"
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <div className="rounded-[28px] border border-accent/15 bg-foreground/5 p-6 md:p-8 backdrop-blur-md">
+              <div className="flex items-center gap-2 mb-4">
+                <FileText className="w-4 h-4 text-accent" />
+                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent block">
+                  {t('estimate.textLabel')}
+                </label>
+              </div>
+              <textarea
+                value={textDescription}
+                onChange={(e) => setTextDescription(e.target.value)}
+                placeholder={own('textPlaceholder')}
+                rows={10}
+                className="w-full bg-background/50 border border-accent/15 rounded-2xl p-5 text-foreground font-medium text-base outline-none focus:border-accent/50 transition-colors resize-none placeholder:text-accent/30 leading-relaxed"
+              />
+              <p className="mt-3 text-[11px] text-accent/60 font-medium">
+                {lang === 'es'
+                  ? 'Especifica metraje, condición actual, áreas clave y cualquier requerimiento especial.'
+                  : 'Specify square footage, current condition, key areas and any special requirements.'}
+              </p>
+            </div>
           </motion.div>
 
           {/* Right: Contact Info */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
+            transition={{ delay: 0.25, duration: 0.6 }}
             className="space-y-6"
           >
             <div>
