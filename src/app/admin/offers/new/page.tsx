@@ -111,7 +111,7 @@ export default function NewOfferForm() {
             disabled={loading}
             className="px-6 py-3 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] disabled:opacity-50"
           >
-            {loading ? <div className="w-4 h-4 rounded-full border-2 border-zinc-900 border-t-transparent animate-spin"></div> : <Save className="w-4 h-4" />} 
+            {loading ? <div className="w-4 h-4 rounded-full border-2 border-zinc-900 border-t-transparent animate-spin" data-motion="progress"></div> : <Save className="w-4 h-4" />} 
             {loading ? 'Saving...' : 'Save Offer'}
           </button>
        </div>

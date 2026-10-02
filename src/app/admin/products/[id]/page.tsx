@@ -78,7 +78,7 @@ export default function ProductEditorPage() {
     }
   }
 
-  if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle className="size-6 animate-spin text-zinc-500" /></div>;
+  if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-zinc-500" /></div>;
   if (!product) return <div className="space-y-5"><CrmPageIntro eyebrow="Catálogo" title="Producto no encontrado" description="El producto pudo haber sido archivado o no estar disponible para tu rol." /><Link href="/admin/products" className="inline-flex text-sm text-sky-200 hover:text-white">Volver al catálogo</Link></div>;
 
   return (
@@ -107,7 +107,7 @@ export default function ProductEditorPage() {
             <label className="inline-flex items-center gap-2 text-sm text-zinc-300"><input checked={product.is_active} onChange={(event) => updateField('is_active', event.target.checked)} type="checkbox" className="size-4 rounded border-white/20 bg-zinc-950" /> Visible en tienda</label>
             <label className="inline-flex items-center gap-2 text-sm text-zinc-300"><input checked={product.is_featured} onChange={(event) => updateField('is_featured', event.target.checked)} type="checkbox" className="size-4 rounded border-white/20 bg-zinc-950" /> Destacado</label>
           </div>
-          <button disabled={saving} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-white px-5 text-sm font-semibold text-black disabled:opacity-50">{saving ? <LoaderCircle className="size-4 animate-spin" /> : <Save className="size-4" />}{saving ? 'Guardando…' : 'Guardar cambios'}</button>
+          <button disabled={saving} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-white px-5 text-sm font-semibold text-black disabled:opacity-50">{saving ? <LoaderCircle data-motion="progress" className="size-4 animate-spin" /> : <Save className="size-4" />}{saving ? 'Guardando…' : 'Guardar cambios'}</button>
         </section>
       </form>
     </div>

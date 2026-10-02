@@ -107,7 +107,7 @@ export default function StaffPage() {
     setBusy(false);
   }
 
-  if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle className="size-6 animate-spin text-zinc-500" /></div>;
+  if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-zinc-500" /></div>;
 
   return (
     <div className="mx-auto max-w-6xl space-y-7 pb-20">
@@ -135,7 +135,7 @@ export default function StaffPage() {
           <label className="block text-sm text-zinc-400">Nombre<input required name="display_name" maxLength={120} className="mt-2 w-full rounded-xl border border-white/10 bg-zinc-950 px-3 py-3 text-white" /></label>
           <label className="block text-sm text-zinc-400">Email<input required name="email" type="email" maxLength={254} className="mt-2 w-full rounded-xl border border-white/10 bg-zinc-950 px-3 py-3 text-white" /></label>
           <label className="block text-sm text-zinc-400">Rol<select required name="role" defaultValue="crew" className="mt-2 w-full rounded-xl border border-white/10 bg-zinc-950 px-3 py-3 text-white">{roles.filter((role) => role !== 'owner').map((role) => <option key={role} value={role}>{role}</option>)}</select></label>
-          <button disabled={busy || current?.role !== 'owner'} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold transition hover:bg-red-600 disabled:opacity-40">{busy ? <LoaderCircle className="size-4 animate-spin" /> : <ShieldCheck className="size-4" />} Enviar invitación</button>
+          <button disabled={busy || current?.role !== 'owner'} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold transition hover:bg-red-600 disabled:opacity-40">{busy ? <LoaderCircle data-motion="progress" className="size-4 animate-spin" /> : <ShieldCheck className="size-4" />} Enviar invitación</button>
         </form>
       </div>
       <section className="grid gap-6 rounded-2xl border border-white/10 bg-white/[0.025] p-5 lg:grid-cols-2">

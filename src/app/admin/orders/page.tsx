@@ -81,7 +81,7 @@ export default function OrdersPage() {
     setBusy(false);
   }
 
-  if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle className="size-6 animate-spin text-zinc-500" /></div>;
+  if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-zinc-500" /></div>;
 
   return (
     <div className="mx-auto max-w-7xl space-y-7 pb-20">
@@ -123,7 +123,7 @@ export default function OrdersPage() {
               <button type="button" onClick={() => setLines((current) => [...current, { key: crypto.randomUUID(), product_id: '', quantity: 1 }])} className="inline-flex items-center gap-2 text-sm text-zinc-300"><Plus className="size-4" /> Añadir producto</button>
             </div>
             <label className="mt-5 block text-sm text-zinc-400">Notas<textarea name="notes" rows={3} className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-white" /></label>
-            <button disabled={busy === true || lines.some((line) => !line.product_id)} className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold disabled:opacity-40">{busy === true ? <LoaderCircle className="size-4 animate-spin" /> : <PackageCheck className="size-4" />} Crear orden</button>
+            <button disabled={busy === true || lines.some((line) => !line.product_id)} className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold disabled:opacity-40">{busy === true ? <LoaderCircle data-motion="progress" className="size-4 animate-spin" /> : <PackageCheck className="size-4" />} Crear orden</button>
           </form>
         </div>
       )}

@@ -225,7 +225,7 @@ function SignupForm() {
           >
             {loading ? (
               <>
-                <LoaderCircle className="size-4 animate-spin text-black" /> Creando cuenta…
+                <LoaderCircle data-motion="progress" className="size-4 animate-spin text-black" /> Creando cuenta…
               </>
             ) : (
               <>

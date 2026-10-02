@@ -40,11 +40,15 @@ export default function AdminShell({ children, initialUser }: { children: React.
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const [isTourOpen, setIsTourOpen] = useState(false)
   const [user, setUser] = useState<CurrentStaffUser | null>(initialUser)
+  // Drives whether the guide button still pulses. It used to pulse forever,
+  // including long after the tour had been dismissed.
+  const [hasSeenTour, setHasSeenTour] = useState(true)
   const profileRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     try {
       const seen = localStorage.getItem('doge_ceo_tour_seen')
+      setHasSeenTour(Boolean(seen))
       if (!seen && initialUser.role === 'owner') {
         setIsTourOpen(true)
       }
@@ -228,7 +232,7 @@ export default function AdminShell({ children, initialUser }: { children: React.
                  <Menu className="w-6 h-6" />
               </button>
               <div className="flex items-center gap-2.5">
-                <span className="size-2 rounded-full bg-emerald-400 animate-pulse hidden sm:inline-block" title="Sistema activo" />
+                <span className="size-2 rounded-full bg-emerald-400 hidden sm:inline-block" title="Sistema activo" />
                 <h2 className="font-michroma font-bold text-base md:text-xl tracking-wider text-white truncate">
                   {getRouteTitle(pathname)}
                 </h2>
@@ -241,7 +245,7 @@ export default function AdminShell({ children, initialUser }: { children: React.
                 className="inline-flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-semibold text-amber-200 transition-all hover:border-amber-400/50 hover:bg-amber-500/20 hover:text-white"
                 title="Abrir guía interactiva para el CEO"
               >
-                <Sparkles className="size-3.5 text-amber-400 animate-pulse" />
+                <Sparkles className={`size-3.5 text-amber-400 ${hasSeenTour ? "" : "animate-pulse"}`} />
                 <span className="hidden sm:inline">Guía CEO</span>
               </button>
 
@@ -306,6 +310,7 @@ export default function AdminShell({ children, initialUser }: { children: React.
         isOpen={isTourOpen} 
         onClose={() => {
           setIsTourOpen(false)
+          setHasSeenTour(true)
           try {
             localStorage.setItem('doge_ceo_tour_seen', 'true')
           } catch {

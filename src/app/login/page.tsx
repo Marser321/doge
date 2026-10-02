@@ -94,7 +94,7 @@ function LoginForm() {
           >
             {loading ? (
               <>
-                <LoaderCircle className="size-4 animate-spin text-black" /> Ingresando…
+                <LoaderCircle data-motion="progress" className="size-4 animate-spin text-black" /> Ingresando…
               </>
             ) : (
               <>

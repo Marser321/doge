@@ -45,7 +45,7 @@ export default function PasswordRecoveryPage() {
             </label>
             {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-100">{error}</p>}
             <button disabled={loading} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold transition hover:bg-red-600 disabled:opacity-50">
-              {loading && <LoaderCircle className="size-4 animate-spin" />} Enviar enlace
+              {loading && <LoaderCircle data-motion="progress" className="size-4 animate-spin" />} Enviar enlace
             </button>
           </form>
         )}

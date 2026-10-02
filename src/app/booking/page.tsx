@@ -177,7 +177,7 @@ function BookingForm() {
 
             {state === 'error' && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
             <button type="submit" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60">
-              {state === 'submitting' && <LoaderCircle className="size-4 animate-spin" aria-hidden />}
+              {state === 'submitting' && <LoaderCircle data-motion="progress" className="size-4 animate-spin" aria-hidden />}
               {state === 'submitting' ? 'Enviando solicitud…' : 'Enviar solicitud'}
             </button>
           </fieldset>
@@ -191,7 +191,7 @@ export default function BookingPage() {
   return (
     <Suspense fallback={
       <main className="min-h-screen bg-[#0b0b0c] text-white grid place-items-center">
-        <LoaderCircle className="size-8 animate-spin text-red-500" />
+        <LoaderCircle data-motion="progress" className="size-8 animate-spin text-red-500" />
       </main>
     }>
       <BookingForm />

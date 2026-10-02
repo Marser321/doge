@@ -265,7 +265,7 @@ export default function StorePage() {
 
         {loading ? (
           <div className="flex justify-center items-center py-32">
-             <div className="w-8 h-8 rounded-full border-4 border-foreground/20 border-t-foreground animate-spin"></div>
+             <div className="w-8 h-8 rounded-full border-4 border-foreground/20 border-t-foreground animate-spin" data-motion="progress"></div>
           </div>
         ) : visibleProducts.length === 0 ? (
           <p className="py-24 text-center text-accent font-medium">

@@ -80,7 +80,7 @@ export default function InventoryPage() {
   if (loading) {
     return (
       <div className="grid min-h-96 place-items-center">
-        <LoaderCircle className="size-6 animate-spin text-zinc-500" />
+        <LoaderCircle data-motion="progress" className="size-6 animate-spin text-zinc-500" />
       </div>
     );
   }
@@ -289,7 +289,7 @@ export default function InventoryPage() {
               disabled={busy || !selected}
               className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold text-white transition hover:bg-red-600 active:scale-[0.99] disabled:opacity-40"
             >
-              {busy ? <LoaderCircle className="size-4 animate-spin" /> : <ShieldCheck className="size-4" />}
+              {busy ? <LoaderCircle data-motion="progress" className="size-4 animate-spin" /> : <ShieldCheck className="size-4" />}
               {busy ? 'Registrando movimiento...' : 'Guardar movimiento'}
             </button>
           </form>

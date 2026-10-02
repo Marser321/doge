@@ -65,7 +65,7 @@ export default function NewSubscriptionPage() {
       <Link href="/admin/subscriptions" className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white"><ArrowLeft className="size-4" /> Volver a suscripciones</Link>
       <div className="mt-5"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Recurrencia operativa</p><h1 className="mt-2 text-3xl font-semibold text-white">Nueva suscripción</h1><p className="mt-2 text-sm text-zinc-400">Generará solicitudes aprobadas automáticamente hasta 30 días por adelantado.</p></div>
       {error && <p role="alert" className="mt-6 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
-      {loading ? <div className="grid min-h-72 place-items-center"><LoaderCircle className="size-6 animate-spin text-zinc-500" /></div> : (
+      {loading ? <div className="grid min-h-72 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-zinc-500" /></div> : (
         <form onSubmit={submit} className="mt-7 space-y-6 rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
           <div className="flex items-center gap-3 border-b border-white/10 pb-4"><Repeat className="size-5 text-red-300" /><h2 className="font-semibold">Contrato y servicio</h2></div>
           <div className="grid gap-5 sm:grid-cols-2">
@@ -79,7 +79,7 @@ export default function NewSubscriptionPage() {
             <label className="text-sm text-zinc-400">Inicio<input required name="started_at" type="date" className={input} /></label>
             <label className="text-sm text-zinc-400">Primera ocurrencia<input required name="next_occurrence" type="date" className={input} /></label>
           </div>
-          <button disabled={saving || !clientId || !availableProperties.length} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold transition hover:bg-red-600 disabled:opacity-40">{saving ? <LoaderCircle className="size-4 animate-spin" /> : <Save className="size-4" />} Crear suscripción</button>
+          <button disabled={saving || !clientId || !availableProperties.length} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold transition hover:bg-red-600 disabled:opacity-40">{saving ? <LoaderCircle data-motion="progress" className="size-4 animate-spin" /> : <Save className="size-4" />} Crear suscripción</button>
         </form>
       )}
     </div>

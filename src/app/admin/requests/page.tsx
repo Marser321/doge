@@ -183,7 +183,7 @@ export default function RequestsPage() {
 
   if (loading) return (
     <div className="grid min-h-96 place-items-center">
-      <LoaderCircle className="size-8 animate-spin text-zinc-500" />
+      <LoaderCircle data-motion="progress" className="size-8 animate-spin text-zinc-500" />
     </div>
   );
 
@@ -447,7 +447,7 @@ export default function RequestsPage() {
                     onClick={() => transition(nextAction.status)} 
                     className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-white px-4 text-xs font-bold text-black transition hover:bg-zinc-200 disabled:opacity-50 shadow-lg"
                   >
-                    {busy ? <LoaderCircle className="size-4 animate-spin" /> : <CheckCircle2 className="size-4 text-emerald-600" />} 
+                    {busy ? <LoaderCircle data-motion="progress" className="size-4 animate-spin" /> : <CheckCircle2 className="size-4 text-emerald-600" />} 
                     {nextAction.label}
                   </button>
                 )}
@@ -591,7 +591,7 @@ export default function RequestsPage() {
               disabled={busy} 
               className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold text-xs text-white shadow-lg shadow-red-950/50 transition hover:bg-red-600 disabled:opacity-50"
             >
-              {busy ? <LoaderCircle className="size-4 animate-spin" /> : <Send className="size-4" />} 
+              {busy ? <LoaderCircle data-motion="progress" className="size-4 animate-spin" /> : <Send className="size-4" />} 
               {busy ? 'Generando propuesta...' : 'Generar propuesta y enlace seguro'}
             </button>
           </form>

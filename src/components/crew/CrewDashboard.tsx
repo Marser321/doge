@@ -104,7 +104,7 @@ export default function CrewDashboard({ initialAppointments, displayName }: { in
                 </label>
                 <textarea name="note" maxLength={1000} rows={2} placeholder="Describe el avance o la incidencia" className="w-full rounded-xl border border-white/10 bg-zinc-950 px-3 py-3 text-sm" />
                 <input name="photo" type="file" accept="image/*" capture="environment" className="block w-full text-sm text-zinc-400 file:mr-3 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-white" />
-                <button disabled={busy === appointment.id} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-white/15 font-semibold">{busy === appointment.id ? <LoaderCircle className="size-4 animate-spin" /> : <Camera className="size-4" />} Guardar registro</button>
+                <button disabled={busy === appointment.id} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-white/15 font-semibold">{busy === appointment.id ? <LoaderCircle data-motion="progress" className="size-4 animate-spin" /> : <Camera className="size-4" />} Guardar registro</button>
               </form>
             )}
           </article>

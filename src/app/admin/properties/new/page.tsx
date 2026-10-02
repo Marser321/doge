@@ -51,7 +51,7 @@ function PropertyForm() {
       <Link href="/admin/subscriptions/new" className="inline-flex items-center gap-2 text-sm text-zinc-400"><ArrowLeft className="size-4" /> Volver</Link>
       <div className="mt-5"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Clientes</p><h1 className="mt-2 text-3xl font-semibold">Registrar propiedad</h1></div>
       {error && <p role="alert" className="mt-5 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
-      {loading ? <div className="grid min-h-72 place-items-center"><LoaderCircle className="size-6 animate-spin" /></div> : (
+      {loading ? <div className="grid min-h-72 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin" /></div> : (
         <form onSubmit={submit} className="mt-7 space-y-5 rounded-2xl border border-white/10 bg-white/[0.03] p-6">
           <div className="flex items-center gap-2 border-b border-white/10 pb-4"><Building2 className="size-5 text-red-300" /><h2 className="font-semibold">Ubicación y acceso</h2></div>
           <label className="block text-sm text-zinc-400">Cliente<select required name="client_id" defaultValue={params.get('clientId') || ''} className={input}><option value="">Selecciona un cliente</option>{clients.map((client) => <option key={client.id} value={client.id}>{client.name}</option>)}</select></label>
@@ -67,7 +67,7 @@ function PropertyForm() {
             <label className="text-sm text-zinc-400">Baños<input name="bathrooms" type="number" min="0" step="0.5" className={input} /></label>
             <label className="text-sm text-zinc-400 sm:col-span-2">Notas de acceso<textarea name="access_notes" rows={3} className={input} /></label>
           </div>
-          <button disabled={saving} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold">{saving ? <LoaderCircle className="size-4 animate-spin" /> : <Save className="size-4" />} Guardar propiedad</button>
+          <button disabled={saving} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold">{saving ? <LoaderCircle data-motion="progress" className="size-4 animate-spin" /> : <Save className="size-4" />} Guardar propiedad</button>
         </form>
       )}
     </div>
@@ -75,5 +75,5 @@ function PropertyForm() {
 }
 
 export default function NewPropertyPage() {
-  return <Suspense fallback={<div className="grid min-h-72 place-items-center"><LoaderCircle className="size-6 animate-spin" /></div>}><PropertyForm /></Suspense>;
+  return <Suspense fallback={<div className="grid min-h-72 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin" /></div>}><PropertyForm /></Suspense>;
 }

@@ -49,7 +49,7 @@ export default function ClientDetailPage() {
     return <div className="glass-panel overflow-hidden rounded-2xl border border-red-500/20 p-8 text-red-200">{error}</div>
   }
   if (!detail) {
-    return <div className="min-h-[360px] flex items-center justify-center"><div className="w-8 h-8 rounded-full border-4 border-white/10 border-t-white animate-spin" /></div>
+    return <div className="min-h-[360px] flex items-center justify-center"><div className="w-8 h-8 rounded-full border-4 border-white/10 border-t-white animate-spin" data-motion="progress" /></div>
   }
 
   const { client } = detail

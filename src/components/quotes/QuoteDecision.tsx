@@ -38,7 +38,7 @@ export default function QuoteDecision({ token, locale }: { token: string; locale
       {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
       <div className="grid gap-3 sm:grid-cols-2">
         <button disabled={state === 'loading'} onClick={() => decide('accepted')} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-red-700 px-5 font-semibold text-white transition hover:bg-red-600 disabled:opacity-50">
-          {state === 'loading' ? <LoaderCircle className="size-4 animate-spin" /> : <CheckCircle2 className="size-4" />} {locale === 'en' ? 'Accept' : 'Aprobar'}
+          {state === 'loading' ? <LoaderCircle data-motion="progress" className="size-4 animate-spin" /> : <CheckCircle2 className="size-4" />} {locale === 'en' ? 'Accept' : 'Aprobar'}
         </button>
         <button disabled={state === 'loading'} onClick={() => decide('declined')} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 px-5 font-semibold text-zinc-200 transition hover:bg-white/5 disabled:opacity-50">
           <XCircle className="size-4" /> {locale === 'en' ? 'Decline' : 'Rechazar'}

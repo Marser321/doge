@@ -47,7 +47,7 @@ export default function IntentsPage() {
     else await load();
   }
 
-  if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle className="size-6 animate-spin text-zinc-500" /></div>;
+  if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-zinc-500" /></div>;
 
   return (
     <div className="mx-auto max-w-6xl space-y-7 pb-20">

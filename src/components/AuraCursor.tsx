@@ -19,6 +19,15 @@ export default function SqueegeeCursor() {
   const [isOnGlass, setIsOnGlass] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'light'>(getInitialTheme);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => setPrefersReducedMotion(query.matches);
+    sync();
+    query.addEventListener('change', sync);
+    return () => query.removeEventListener('change', sync);
+  }, []);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -39,6 +48,11 @@ export default function SqueegeeCursor() {
 
   // Track the active magnetic target for attraction calculations
   const magneticTarget = useRef<HTMLElement | null>(null);
+
+  // Routes with form fields keep the native caret: the custom cursor hides it
+  // via `cursor: none`, which left text inputs with no I-beam at all.
+  const onFormRoute = ['/admin', '/login', '/signup', '/booking', '/account', '/quote']
+    .some((route) => pathname.startsWith(route));
 
   const updatePosition = useCallback((e: MouseEvent) => {
     const rawX = e.clientX - 40;
@@ -67,7 +81,7 @@ export default function SqueegeeCursor() {
   }, [mouseX, mouseY]);
 
   useEffect(() => {
-    if (isTouchDevice || pathname.startsWith('/admin') || pathname.startsWith('/login') || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (isTouchDevice || prefersReducedMotion || onFormRoute) return;
     document.body.classList.add('custom-cursor');
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -121,7 +135,7 @@ export default function SqueegeeCursor() {
       document.body.classList.remove('custom-cursor');
       observer.disconnect();
     };
-  }, [isTouchDevice, pathname, updatePosition]);
+  }, [isTouchDevice, prefersReducedMotion, onFormRoute, updatePosition]);
 
   // Theme-aware colors
   const primaryColor = theme === 'dark' ? '#94a3b8' : '#334155'; // Silver vs Charcoal
@@ -138,7 +152,9 @@ export default function SqueegeeCursor() {
       ? 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))'
       : 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))';
 
-  if (isTouchDevice || pathname.startsWith('/admin') || pathname.startsWith('/login')) return null;
+  // This early return used to omit the reduced-motion check, so the squeegee
+  // was still painted — static — with the native cursor hidden underneath.
+  if (isTouchDevice || prefersReducedMotion || onFormRoute) return null;
 
   return (
     <motion.div

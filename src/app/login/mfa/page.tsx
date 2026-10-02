@@ -79,7 +79,7 @@ function MfaForm() {
         <ShieldCheck className="mx-auto size-9 text-red-300" aria-hidden />
         <h1 className="mt-5 text-center text-2xl font-semibold">Verificación en dos pasos</h1>
         {loading && !factorId ? (
-          <p className="mt-8 flex items-center justify-center gap-2 text-sm text-zinc-400"><LoaderCircle className="size-4 animate-spin" /> Preparando acceso seguro…</p>
+          <p className="mt-8 flex items-center justify-center gap-2 text-sm text-zinc-400"><LoaderCircle data-motion="progress" className="size-4 animate-spin" /> Preparando acceso seguro…</p>
         ) : (
           <>
             {enrollment && (

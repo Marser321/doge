@@ -190,7 +190,7 @@ export default function NewProductForm() {
             disabled={loading}
             className="px-6 py-3 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] disabled:opacity-50 disabled:cursor-not-allowed cursor-hover-target"
           >
-            {loading ? <LoaderCircle className="w-4 h-4 animate-spin text-zinc-900" /> : <Save className="w-4 h-4" />} 
+            {loading ? <LoaderCircle data-motion="progress" className="w-4 h-4 animate-spin text-zinc-900" /> : <Save className="w-4 h-4" />} 
             {loading ? 'Guardando...' : 'Guardar producto'}
           </button>
        </div>

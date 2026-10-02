@@ -1,6 +1,6 @@
 'use client';
 import { useRef, useState, useCallback, useEffect } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
 
 interface TiltCardProps {
   children: React.ReactNode;
@@ -105,6 +105,8 @@ export function TiltCard({
     return <div className={className}>{children}</div>;
   }
 
+  const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.10) 0%, transparent 60%)`;
+
   return (
     <motion.div
       ref={cardRef}
@@ -131,9 +133,7 @@ export function TiltCard({
         <motion.div
           className="pointer-events-none absolute inset-0 z-30 rounded-[inherit] overflow-hidden"
           style={{
-            background: isHovering
-              ? `radial-gradient(circle at ${glareX.get()}% ${glareY.get()}%, rgba(255,255,255,0.08) 0%, transparent 60%)`
-              : 'none',
+            background: glareBackground,
             opacity: isHovering ? 1 : 0,
             transition: 'opacity 0.3s ease',
           }}

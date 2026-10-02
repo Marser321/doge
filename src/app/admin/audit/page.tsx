@@ -24,7 +24,7 @@ export default function AuditPage() {
       .catch((cause) => setError(cause instanceof Error ? cause.message : 'No fue posible cargar la auditoría.'))
       .finally(() => setLoading(false));
   }, []);
-  if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle className="size-6 animate-spin text-zinc-500" /></div>;
+  if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-zinc-500" /></div>;
   return (
     <div className="mx-auto max-w-6xl space-y-7 pb-20">
       <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Seguridad</p><h1 className="mt-2 text-3xl font-semibold text-white">Auditoría</h1><p className="mt-2 text-sm text-zinc-400">Eventos inmutables de las operaciones sensibles.</p></div>
