@@ -46,7 +46,7 @@ export default function ClientDetailPage() {
   }, [id])
 
   if (error) {
-    return <div className="glass-panel rounded-2xl border border-red-500/20 p-8 text-red-200">{error}</div>
+    return <div className="glass-panel overflow-hidden rounded-2xl border border-red-500/20 p-8 text-red-200">{error}</div>
   }
   if (!detail) {
     return <div className="min-h-[360px] flex items-center justify-center"><div className="w-8 h-8 rounded-full border-4 border-white/10 border-t-white animate-spin" /></div>
@@ -64,7 +64,7 @@ export default function ClientDetailPage() {
         <ArrowLeft className="w-4 h-4" /> Volver a clientes
       </Link>
 
-      <header className="glass-panel rounded-2xl border border-white/10 p-6 md:p-8">
+      <header className="glass-panel overflow-hidden rounded-2xl border border-white/10 p-6 md:p-8">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
           <div>
             <div className="flex items-center gap-3 mb-2">
@@ -96,7 +96,7 @@ export default function ClientDetailPage() {
       </section>
 
       <div className="grid lg:grid-cols-3 gap-6">
-        <section className="lg:col-span-2 glass-panel rounded-2xl border border-white/5 p-6">
+        <section className="lg:col-span-2 glass-panel overflow-hidden rounded-2xl border border-white/5 p-6">
           <h2 className="font-michroma text-white mb-4 flex items-center gap-2"><CalendarDays className="w-4 h-4" /> Historial de servicios</h2>
           <div className="space-y-3">
             {detail.requests.map((request: ServiceRequest) => (
@@ -115,7 +115,7 @@ export default function ClientDetailPage() {
           </div>
         </section>
 
-        <section className="glass-panel rounded-2xl border border-white/5 p-6">
+        <section className="glass-panel overflow-hidden rounded-2xl border border-white/5 p-6">
           <h2 className="font-michroma text-white mb-4 flex items-center gap-2"><Building2 className="w-4 h-4" /> Propiedades</h2>
           <div className="space-y-3">
             {detail.properties.map((property) => (
@@ -131,7 +131,7 @@ export default function ClientDetailPage() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        <section className="glass-panel rounded-2xl border border-white/5 p-6">
+        <section className="glass-panel overflow-hidden rounded-2xl border border-white/5 p-6">
           <h2 className="font-michroma text-white mb-4 flex items-center gap-2"><ShoppingBag className="w-4 h-4" /> Órdenes e intenciones</h2>
           <div className="space-y-3">
             {detail.orders.map((order) => (
@@ -150,7 +150,7 @@ export default function ClientDetailPage() {
           </div>
         </section>
 
-        <section className="glass-panel rounded-2xl border border-white/5 p-6">
+        <section className="glass-panel overflow-hidden rounded-2xl border border-white/5 p-6">
           <h2 className="font-michroma text-white mb-4">Suscripciones</h2>
           <div className="space-y-3">
             {detail.subscriptions.map((subscription) => (

@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Sparkles, ArrowLeft, ShieldCheck, ShoppingCart, LayoutGrid } from 'lucide-react'
 
+import { BrandMark } from '@/components/brand/BrandMark'
 import { useLanguage } from '@/components/LanguageProvider'
 import { STORE_DEPARTMENTS, resolveDepartment, type DepartmentId } from '@/content/store-taxonomy'
 import { db, Product } from '@/lib/db'
@@ -163,15 +164,7 @@ export default function StorePage() {
           <span className="font-bold text-sm uppercase tracking-widest">{t('store.back')}</span>
         </Link>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 flex items-center justify-center transition-all">
-            <Image
-              src="/doge-logo-transparent.png"
-              alt="Doge Logo"
-              width={36}
-              height={36}
-              className="object-contain"
-            />
-          </div>
+          <BrandMark size="md" priority />
           <span className="font-black text-xl tracking-tighter uppercase text-foreground font-michroma">DOGE<span className="text-accent underline underline-offset-4 decoration-2">Store</span></span>
         </div>
       </nav>
@@ -303,7 +296,14 @@ export default function StorePage() {
                     transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                     className="relative w-full h-full drop-shadow-2xl z-10"
                   >
-                    <Image src={getImageUrl(product)} alt={product.name} fill className="object-contain" />
+                    <Image
+                      src={getImageUrl(product)}
+                      alt={product.name}
+                      fill
+                      sizes="(min-width: 1024px) 320px, (min-width: 768px) 45vw, 90vw"
+                      priority={idx < 6}
+                      className="object-contain"
+                    />
                   </motion.div>
                 </Link>
 

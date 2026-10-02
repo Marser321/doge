@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Save, Sparkles, Image as ImageIcon, Plus, Trash2, Box, LoaderCircle } from 'lucide-react'
 import Link from 'next/link'
@@ -42,6 +42,15 @@ export default function NewProductForm() {
   ])
 
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+
+  // Revoked on change and on unmount; an object URL leaks until released.
+  useEffect(() => {
+    if (!imageFile) { setImagePreview(null); return }
+    const url = URL.createObjectURL(imageFile)
+    setImagePreview(url)
+    return () => URL.revokeObjectURL(url)
+  }, [imageFile])
   const [imageAlt, setImageAlt] = useState('')
 
   // Department is derived from the stored subcategory, so the two cannot drift.
@@ -333,8 +342,13 @@ export default function NewProductForm() {
                     <div>
                       <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Imagen principal</label>
                       <div className="flex gap-2">
-                         <div className="w-12 h-12 rounded-xl border border-white/10 bg-black/50 flex items-center justify-center shrink-0 overflow-hidden">
-                            <ImageIcon className={`w-5 h-5 ${imageFile ? 'text-emerald-400' : 'text-zinc-600'}`} />
+                         <div className="relative w-12 h-12 rounded-xl border border-white/10 bg-black/50 flex items-center justify-center shrink-0 overflow-hidden">
+                            {imagePreview ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={imagePreview} alt="Vista previa" className="absolute inset-0 h-full w-full rounded-xl object-cover" />
+                            ) : (
+                              <ImageIcon className="w-5 h-5 text-zinc-600" />
+                            )}
                          </div>
                          <input onChange={(e) => setImageFile(e.target.files?.[0] || null)} type="file" accept="image/jpeg,image/png,image/webp" className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm file:mr-3 file:border-0 file:bg-white/10 file:text-white" />
                       </div>

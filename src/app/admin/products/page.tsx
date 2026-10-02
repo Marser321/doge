@@ -8,6 +8,12 @@ import Link from 'next/link'
 import { isCatalogPilot } from '@/lib/catalog-pilot'
 import { CrmPageIntro, CrmStatusPill } from '@/components/admin/CrmPrimitives'
 
+/** Same fallback chain the storefront and the detail page use. */
+const imageFor = (product: Product) =>
+  product.product_images?.find((image) => image.is_primary)?.image_url
+  || product.product_images?.[0]?.image_url
+  || '/products/product-placeholder.svg';
+
 export default function ProductsDashboard() {
   const [products, setProducts] = useState<Product[]>([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -225,17 +231,13 @@ export default function ProductsDashboard() {
                       <td className="p-4">
                         <div className="flex items-center gap-3">
                            <div className={`relative w-12 h-12 rounded-lg bg-gradient-to-br ${p.accent_gradient || 'from-zinc-800 to-zinc-900'} border border-white/10 flex items-center justify-center overflow-hidden shrink-0 shadow-inner`}>
-                              {p.product_images?.[0]?.image_url ? (
-                                <Image 
-                                  src={p.product_images.find((image) => image.is_primary)?.image_url || p.product_images[0].image_url} 
-                                  alt={p.product_images.find((image) => image.is_primary)?.alt_text || p.name} 
-                                  fill 
-                                  sizes="48px" 
-                                  className="object-contain p-1" 
-                                />
-                              ) : (
-                                <span className="text-[10px] font-bold text-white uppercase opacity-40">{p.brand || 'DOGE'}</span>
-                              )}
+                              <Image
+                                src={imageFor(p)}
+                                alt={p.product_images?.find((image) => image.is_primary)?.alt_text || p.name}
+                                fill
+                                sizes="48px"
+                                className="rounded-lg object-contain p-1"
+                              />
                            </div>
                            <div>
                              <p className="font-bold text-white text-sm">{p.name}</p>

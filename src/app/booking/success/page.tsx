@@ -1,10 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import { BrandMark } from '@/components/brand/BrandMark';
 
 function BookingConfirmation() {
   const reference = useSearchParams().get('reference');
@@ -12,7 +12,7 @@ function BookingConfirmation() {
   return (
     <main className="grid min-h-screen place-items-center bg-[#0b0b0c] px-5 text-white">
       <section className="w-full max-w-xl rounded-3xl border border-white/10 bg-white/[0.03] p-8 text-center shadow-2xl shadow-black/30 sm:p-12">
-        <Image src="/doge-logo-transparent.png" alt="DOGE" width={64} height={64} className="mx-auto h-16 w-16 object-contain" priority />
+        <BrandMark size="xl" priority className="mx-auto" />
         <CheckCircle2 className="mx-auto mt-8 size-12 text-red-300" aria-hidden />
         <h1 className="mt-5 text-3xl font-semibold tracking-tight">Solicitud registrada</h1>
         {reference ? (

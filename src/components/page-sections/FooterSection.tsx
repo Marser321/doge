@@ -2,7 +2,7 @@
 'use client'
 
 import React from 'react'
-import Image from 'next/image'
+import { BrandMark } from '@/components/brand/BrandMark'
 import Link from 'next/link'
 import type { TranslationKey } from '@/data/i18n'
 
@@ -15,9 +15,7 @@ export const FooterSection = ({ t }: { theme?: string, t: (key: TranslationKey) 
 
                 <div className="flex flex-col gap-8 max-w-sm">
                   <div className="flex items-center gap-4">
-                    <div className="relative h-12 w-12">
-                      <Image src="/doge-logo-transparent.png" alt="DOGE" fill className="object-contain" />
-                    </div>
+                    <BrandMark size="lg" />
                     <div className="flex flex-col">
                       <span className="font-michroma text-2xl font-black tracking-tighter text-foreground uppercase leading-[0.9]">DOGE.S.M LLC</span>
                       <span className="font-michroma text-[10px] font-bold tracking-[0.4em] text-accent uppercase mt-1">{t('footer.cleaningTactics')}</span>

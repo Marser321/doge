@@ -1,12 +1,12 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import Image from 'next/image';
 import { AlertTriangle, Camera, CheckCircle2, Clock3, LoaderCircle, LogOut, MapPin, PlayCircle } from 'lucide-react';
 
 import { apiRequest } from '@/lib/api-client';
 import { getBrowserSupabase } from '@/lib/supabase/client';
 import type { Appointment, RequestStatus } from '@/lib/types';
+import { BrandMark } from '@/components/brand/BrandMark';
 
 export default function CrewDashboard({ initialAppointments, displayName }: { initialAppointments: Appointment[]; displayName: string }) {
   const [appointments, setAppointments] = useState(initialAppointments);
@@ -61,7 +61,7 @@ export default function CrewDashboard({ initialAppointments, displayName }: { in
     <main className="min-h-screen bg-[#0b0b0c] pb-16 text-white">
       <header className="sticky top-0 z-20 border-b border-white/10 bg-[#0b0b0c]/95 px-4 py-4 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
-          <div className="flex items-center gap-3"><Image src="/doge-logo-transparent.png" alt="DOGE" width={42} height={42} className="size-10 object-contain" /><div><p className="text-xs uppercase tracking-wide text-zinc-500">Cuadrilla</p><p className="font-semibold">{displayName}</p></div></div>
+          <div className="flex items-center gap-3"><BrandMark size="md" /><div><p className="text-xs uppercase tracking-wide text-zinc-500">Cuadrilla</p><p className="font-semibold">{displayName}</p></div></div>
           <button onClick={signOut} aria-label="Cerrar sesión" className="rounded-full border border-white/10 p-2 text-zinc-400"><LogOut className="size-4" /></button>
         </div>
       </header>

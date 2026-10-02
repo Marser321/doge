@@ -1,10 +1,10 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
 import QuoteDecision from '@/components/quotes/QuoteDecision';
 import { getPublicQuote } from '@/lib/server/repository';
+import { BrandMark } from '@/components/brand/BrandMark';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -37,7 +37,7 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
     <main className="min-h-screen bg-[#0b0b0c] px-5 py-8 text-white sm:py-14">
       <section className="mx-auto max-w-3xl">
         <header className="flex items-center justify-between">
-          <Link href="/" aria-label="DOGE inicio"><Image src="/doge-logo-transparent.png" alt="DOGE" width={54} height={54} className="size-14 object-contain" /></Link>
+          <Link href="/" aria-label="DOGE inicio"><BrandMark size="lg" /></Link>
           <span className="font-mono text-xs text-zinc-500">{quote.quote_number}</span>
         </header>
         <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.03] p-6 shadow-2xl shadow-black/30 sm:p-9">

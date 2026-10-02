@@ -1,11 +1,11 @@
 'use client'
 
 import { FormEvent, Suspense, useState } from 'react'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, LoaderCircle, CheckCircle, UserPlus, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { getBrowserSupabase } from '@/lib/supabase/client'
+import { BrandMark } from '@/components/brand/BrandMark';
 
 function SignupForm() {
   const router = useRouter()
@@ -132,14 +132,7 @@ function SignupForm() {
         <Link href="/" className="inline-flex items-center gap-2 text-sm text-zinc-400 transition hover:text-white">
           <ArrowLeft className="size-4" /> Inicio
         </Link>
-        <Image
-          src="/doge-logo-transparent.png"
-          alt="DOGE"
-          width={58}
-          height={58}
-          className="mx-auto mt-4 h-14 w-14 object-contain"
-          priority
-        />
+        <BrandMark size="xl" priority className="mx-auto mt-4" />
         <h1 className="mt-6 text-center text-2xl font-bold font-michroma uppercase tracking-tight">
           Crear cuenta
         </h1>

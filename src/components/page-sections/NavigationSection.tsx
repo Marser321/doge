@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
+import { BrandMark } from '@/components/brand/BrandMark'
 import Link from 'next/link'
 import { Menu, X, ArrowRight, Sparkles, Store, Shield, Layers, CalendarPlus, UserPlus, LogIn } from 'lucide-react'
 import HeaderActions from '@/components/HeaderActions'
@@ -30,16 +30,11 @@ export const NavigationSection = ({
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group cursor-pointer cursor-hover-target">
             <motion.div
-              whileHover={{ scale: 0.95 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-10 h-10 flex items-center justify-center transition-all"
+              whileHover={{ scale: 1.06 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="flex items-center justify-center"
             >
-              <Image
-                src="/doge-logo-transparent.png"
-                alt="DOGE Premium Logo"
-                fill
-                className="object-contain"
-              />
+              <BrandMark size="md" priority />
             </motion.div>
             <div className="flex flex-col">
               <span className="text-xl font-black tracking-tighter text-foreground transition-colors uppercase font-michroma leading-none">

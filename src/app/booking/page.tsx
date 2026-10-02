@@ -1,12 +1,12 @@
 'use client';
 
 import { FormEvent, Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, CalendarDays, CheckCircle2, ImagePlus, LoaderCircle, ShieldCheck } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { SERVICES } from '@/content/services';
 import { newYorkDate } from '@/lib/domain';
+import { BrandMark } from '@/components/brand/BrandMark';
 
 type SubmissionState = 'idle' | 'submitting' | 'error';
 
@@ -61,7 +61,7 @@ function BookingForm() {
         <Link href="/" className="inline-flex items-center gap-2 text-sm text-zinc-300 transition hover:text-white">
           <ArrowLeft className="size-4" aria-hidden /> Volver al inicio
         </Link>
-        <Image src="/doge-logo-transparent.png" alt="DOGE" width={44} height={44} className="h-11 w-11 object-contain" priority />
+        <BrandMark size="md" priority />
       </nav>
 
       <section className="mx-auto grid max-w-6xl gap-10 px-5 pb-16 pt-8 sm:px-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:pt-16">
