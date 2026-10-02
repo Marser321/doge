@@ -58,19 +58,54 @@ insert into public.appointments (
   now() + interval '1 day 2 hours'
 );
 
+-- Counts are filtered to the rows this file creates. Plain totals depended on
+-- whatever else lived in the database, so the suite only passed against a
+-- freshly reset one. The filter is inline on purpose: a view would run with its
+-- owner's privileges and bypass the very RLS this file exists to verify.
 set local role authenticated;
+
+-- MFA is no longer an RLS concern. 202607260003_opt_in_mfa_roles removed the
+-- aal2 requirement from private.current_role() deliberately, moving that
+-- enforcement to the application via ENFORCE_MFA (src/lib/server/auth.ts).
+-- These two assertions pin that decision: the assurance level must not change
+-- what the database hands back.
 set local "request.jwt.claims" = '{"sub":"10000000-0000-0000-0000-000000000001","role":"authenticated","aal":"aal1"}';
-select is((select count(*) from public.clients), 0::bigint, 'owner at aal1 cannot read CRM data');
+select is(
+  (select count(*) from public.clients where id in (
+    '20000000-0000-0000-0000-000000000001','20000000-0000-0000-0000-000000000002')),
+  2::bigint,
+  'owner reads CRM data at aal1: MFA is enforced by the app, not by RLS'
+);
 
 set local "request.jwt.claims" = '{"sub":"10000000-0000-0000-0000-000000000001","role":"authenticated","aal":"aal2"}';
-select is((select count(*) from public.clients), 2::bigint, 'owner at aal2 can read CRM data');
+select is(
+  (select count(*) from public.clients where id in (
+    '20000000-0000-0000-0000-000000000001','20000000-0000-0000-0000-000000000002')),
+  2::bigint,
+  'owner reads the same CRM data at aal2'
+);
 
 set local "request.jwt.claims" = '{"sub":"10000000-0000-0000-0000-000000000002","role":"authenticated","aal":"aal1"}';
-select is((select count(*) from public.clients), 2::bigint, 'dispatcher can read CRM clients');
+select is(
+  (select count(*) from public.clients where id in (
+    '20000000-0000-0000-0000-000000000001','20000000-0000-0000-0000-000000000002')),
+  2::bigint,
+  'dispatcher can read CRM clients'
+);
 
 set local "request.jwt.claims" = '{"sub":"10000000-0000-0000-0000-000000000003","role":"authenticated","aal":"aal1"}';
-select is((select count(*) from public.service_requests), 1::bigint, 'crew sees only assigned requests');
-select is((select count(*) from public.clients), 1::bigint, 'crew sees only the assigned client');
+select is(
+  (select count(*) from public.service_requests where id in (
+    '40000000-0000-0000-0000-000000000001','40000000-0000-0000-0000-000000000002')),
+  1::bigint,
+  'crew sees only assigned requests'
+);
+select is(
+  (select count(*) from public.clients where id in (
+    '20000000-0000-0000-0000-000000000001','20000000-0000-0000-0000-000000000002')),
+  1::bigint,
+  'crew sees only the assigned client'
+);
 select is((select count(*) from public.quotes), 0::bigint, 'crew cannot read quotes');
 
 select * from finish();
