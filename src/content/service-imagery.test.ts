@@ -5,8 +5,8 @@ describe('service imagery', () => {
   it('keeps the complete service library local, distinct and prompt-ready', () => {
     const visuals = Object.values(serviceImagery);
 
-    expect(visuals).toHaveLength(12);
-    expect(new Set(visuals.map(({ src }) => src)).size).toBe(12);
+    expect(visuals).toHaveLength(3);
+    expect(new Set(visuals.map(({ src }) => src)).size).toBe(3);
 
     for (const visual of visuals) {
       expect(visual.src).toMatch(/^\/services\/[a-z-]+\.webp$/);

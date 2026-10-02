@@ -36,7 +36,8 @@ function LoginForm() {
       } else if (staff) {
         router.replace(next.startsWith('/admin') || next.startsWith('/dashboard/crew') ? next : '/admin');
       } else {
-        router.replace(next && !next.startsWith('/admin') && !next.startsWith('/dashboard/crew') ? next : '/');
+        // Not staff: this is a customer, and their home is the account panel.
+        router.replace(next && !next.startsWith('/admin') && !next.startsWith('/dashboard/crew') ? next : '/account');
       }
       router.refresh();
     } catch (cause) {

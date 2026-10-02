@@ -29,6 +29,8 @@ const copy = {
     quoteBody: 'Revisa los detalles y registra tu decisión mediante el enlace seguro.',
     review: 'Ver propuesta',
     decision: 'Registramos tu decisión',
+    areaReminder: 'Es momento de renovar',
+    areaBody: 'Según nuestro registro, este espacio se acerca al punto en que conviene una limpieza.',
     footer: 'DOGE · Servicio operativo en Miami y South Florida',
   },
   en: {
@@ -43,6 +45,8 @@ const copy = {
     quoteBody: 'Review the details and record your decision through the secure link.',
     review: 'Review proposal',
     decision: 'We recorded your decision',
+    areaReminder: 'Time for a refresh',
+    areaBody: 'Based on our records, this space is approaching the point where a cleaning is worthwhile.',
     footer: 'DOGE · Operations in Miami and South Florida',
   },
 };
@@ -55,6 +59,10 @@ export function emailSubject(template: string, locale: 'es' | 'en', payload: Rec
   if (template === 'request-cancelled') return locale === 'es' ? `Servicio cancelado${reference}` : `Service cancelled${reference}`;
   if (template === 'quote-ready') return locale === 'es' ? `Propuesta DOGE${reference}` : `DOGE proposal${reference}`;
   if (template === 'quote-decision') return locale === 'es' ? `Decisión registrada${reference}` : `Decision recorded${reference}`;
+  if (template === 'area-reminder') {
+    const area = typeof payload.area === 'string' ? payload.area : '';
+    return locale === 'es' ? `Es momento de renovar${area ? ` · ${area}` : ''}` : `Time for a refresh${area ? ` · ${area}` : ''}`;
+  }
   return locale === 'es' ? 'Actualización DOGE' : 'DOGE update';
 }
 
@@ -72,13 +80,24 @@ export default function TransactionalEmail({ template, locale, payload }: Props)
     : '';
   const approvalUrl = typeof payload.approvalUrl === 'string' ? payload.approvalUrl : '';
 
-  const heading = template === 'request-received' ? text.requestReceived
+  const area = typeof payload.area === 'string' ? payload.area : '';
+  const percent = typeof payload.percent === 'number' ? payload.percent : null;
+  const daysSince = typeof payload.daysSince === 'number' ? payload.daysSince : null;
+
+  const heading = template === 'area-reminder' ? text.areaReminder
+    : template === 'request-received' ? text.requestReceived
     : template === 'appointment-scheduled' ? text.appointment
       : template === 'appointment-rescheduled' ? text.rescheduled
         : template === 'request-cancelled' ? text.cancelled
       : template === 'quote-ready' ? text.quote
         : text.decision;
-  const body = template === 'request-received' ? text.requestBody
+  const body = template === 'area-reminder'
+    ? [
+      area,
+      percent === null ? '' : `${percent}%`,
+      daysSince === null ? '' : (locale === 'es' ? `hace ${daysSince} días` : `${daysSince} days ago`),
+    ].filter(Boolean).join(' · ') + `. ${text.areaBody}`
+    : template === 'request-received' ? text.requestBody
     : template === 'quote-ready' ? text.quoteBody
       : ['appointment-scheduled', 'appointment-rescheduled'].includes(template) ? `${service} · ${startsAt}`
         : template === 'request-cancelled' ? `${service} · ${String(payload.reason || '')}`

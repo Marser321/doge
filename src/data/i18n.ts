@@ -122,7 +122,7 @@ export const TRANSLATIONS = {
   },
 
   // ── Services Bento ───────────────────────────
-  'svc.badge': { es: 'Especialidades Tácticas', en: 'Tactical Specialties' },
+  'svc.badge': { es: 'Nuestros servicios', en: 'Our services' },
   'svc.title': { es: 'Menú de', en: 'Operations' },
   'svc.title2': { es: 'Operaciones.', en: 'Menu.' },
   'svc.subtitle': {
@@ -158,7 +158,7 @@ export const TRANSLATIONS = {
   'mem.perVisit': { es: '/visita', en: '/visit' },
   'mem.mostRequested': { es: 'Más Solicitado', en: 'Most Requested' },
   'mem.benefit1': { es: 'Garantía de Tarifa Congelada', en: 'Frozen Rate Guarantee' },
-  'mem.benefit2': { es: 'Reporte Preventivo Táctico', en: 'Tactical Preventive Report' },
+  'mem.benefit2': { es: 'Reporte preventivo del estado', en: 'Preventive condition report' },
   'mem.benefit3': { es: 'Lavado de Vidrios WFP', en: 'WFP Window Cleaning' },
   'mem.benefit4': { es: 'Atención Personalizada', en: 'Personalized Attention' },
   'mem.benefit5': { es: 'Prioridad Absoluta (A1)', en: 'Absolute Priority (A1)' },
@@ -214,8 +214,6 @@ export const TRANSLATIONS = {
   'estimate.textLabel': { es: 'O describe por texto', en: 'Or describe by text' },
   'estimate.nameLabel': { es: 'Nombre completo', en: 'Full name' },
   'estimate.namePlaceholder': { es: 'Tu nombre', en: 'Your name' },
-  'estimate.contactLabel': { es: 'Teléfono o correo electrónico', en: 'Phone or email' },
-  'estimate.contactPlaceholder': { es: 'Tu teléfono o email', en: 'Your phone or email' },
   'estimate.addressLabel': { es: 'Dirección', en: 'Address' },
   'estimate.addressPlaceholder': { es: 'Dirección de la propiedad', en: 'Property address' },
   'estimate.notesLabel': { es: 'Notas adicionales (opcional)', en: 'Additional notes (optional)' },
@@ -227,6 +225,23 @@ export const TRANSLATIONS = {
     es: 'Recibirás tu estimado personalizado en las próximas horas. Sin compromiso.',
     en: 'You\'ll receive your personalized estimate within hours. No commitment.',
   },
+  'estimate.emailLabel': { es: 'Correo electrónico', en: 'Email' },
+  'estimate.emailPlaceholder': { es: 'tu@correo.com', en: 'you@email.com' },
+  'estimate.phoneLabel': { es: 'Teléfono', en: 'Phone' },
+  'estimate.phonePlaceholder': { es: '+1 305 000 0000', en: '+1 305 000 0000' },
+  'estimate.cityLabel': { es: 'Ciudad', en: 'City' },
+  'estimate.cityPlaceholder': { es: 'Miami', en: 'Miami' },
+  'estimate.consent': {
+    es: 'Autorizo el uso de estos datos para preparar mi estimado.',
+    en: 'I authorize the use of this information to prepare my estimate.',
+  },
+  'estimate.sending': { es: 'Enviando…', en: 'Sending…' },
+  'estimate.whatsapp': { es: 'Continuar por WhatsApp', en: 'Continue on WhatsApp' },
+  'estimate.whatsappHint': {
+    es: '¿Preferís hablar directo? También podés escribirnos.',
+    en: 'Prefer to talk directly? You can message us too.',
+  },
+  'estimate.referenceIs': { es: 'Tu referencia es', en: 'Your reference is' },
   'estimate.sentTitle': { es: 'Solicitud', en: 'Request' },
   'estimate.sentTitle2': { es: 'Enviada.', en: 'Sent.' },
   'estimate.sentBody': {
@@ -235,7 +250,6 @@ export const TRANSLATIONS = {
   },
   'estimate.moreServices': { es: 'Más Servicios', en: 'More Services' },
   'estimate.home': { es: 'Inicio', en: 'Home' },
-  'estimate.equipmentLabel': { es: 'Equipo de trabajo', en: 'Service equipment' },
   'estimate.waIntro': { es: 'Hola DOGE.S.M LLC, solicito un estimado para', en: 'Hello DOGE.S.M LLC, I would like an estimate for' },
   'estimate.waFiles': { es: 'archivo(s) subido(s)', en: 'file(s) uploaded' },
   'estimate.waDescription': { es: 'Descripción', en: 'Description' },
@@ -346,6 +360,89 @@ export const TRANSLATIONS = {
   'account.logout': { es: 'Cerrar Sesión', en: 'Log Out' },
   'account.saveCta': { es: 'Guardar Cambios', en: 'Save Changes' },
 
+  // ── Account Panel ─────────────────────────────
+  'panel.greeting': { es: 'Hola', en: 'Hi' },
+  'panel.tabHome': { es: 'Inicio', en: 'Home' },
+  'panel.tabSpaces': { es: 'Mis espacios', en: 'My spaces' },
+  'panel.tabRequests': { es: 'Solicitudes', en: 'Requests' },
+  'panel.tabMembership': { es: 'Membresía', en: 'Membership' },
+  'panel.loading': { es: 'Cargando tu cuenta…', en: 'Loading your account…' },
+  'panel.retry': { es: 'Reintentar', en: 'Retry' },
+
+  // Cleanliness
+  'panel.cleanliness': { es: 'Nivel de limpieza', en: 'Cleanliness level' },
+  'panel.cleanlinessHint': {
+    es: 'Cada espacio vuelve al 100% cuando lo limpiamos y baja con los días.',
+    en: 'Each space returns to 100% when we clean it and drops as days pass.',
+  },
+  'panel.neverCleaned': { es: 'Sin limpiezas registradas', en: 'No cleanings on record' },
+  'panel.cleanedDaysAgo': { es: 'Limpiado hace {n} días', en: 'Cleaned {n} days ago' },
+  'panel.cleanedToday': { es: 'Limpiado hoy', en: 'Cleaned today' },
+  'panel.bandFresh': { es: 'Impecable', en: 'Spotless' },
+  'panel.bandFading': { es: 'Se está ensuciando', en: 'Getting dirty' },
+  'panel.bandDue': { es: 'Toca limpieza', en: 'Cleaning due' },
+  'panel.rebook': { es: 'Reagendar limpieza', en: 'Book a cleaning' },
+  'panel.restock': { es: 'Reponer insumos', en: 'Restock supplies' },
+  'panel.restockHint': {
+    es: 'Insumos que suelen hacer falta en este espacio.',
+    en: 'Supplies this space usually needs.',
+  },
+
+  // Spaces
+  'panel.spacesEmpty': {
+    es: 'Todavía no agregaste espacios. Sumá el primero para seguir su limpieza.',
+    en: 'You have not added any spaces yet. Add the first one to track its cleanliness.',
+  },
+  'panel.addSpace': { es: 'Agregar espacio', en: 'Add space' },
+  'panel.spaceType': { es: 'Tipo de espacio', en: 'Space type' },
+  'panel.spaceName': { es: 'Nombre', en: 'Name' },
+  'panel.spaceNameHint': { es: 'Ej: Ventanal del living', en: 'E.g. Living room window wall' },
+  'panel.spaceProperty': { es: 'Propiedad', en: 'Property' },
+  'panel.spaceMeasureSqft': { es: 'Superficie (ft²)', en: 'Area (sq ft)' },
+  'panel.spaceMeasureWindows': { es: 'Cantidad de ventanas', en: 'Number of windows' },
+  'panel.spaceMeasureUnit': { es: 'Cantidad', en: 'Quantity' },
+  'panel.spaceRequirements': { es: 'Requerimientos', en: 'Requirements' },
+  'panel.spaceRequirementsHint': {
+    es: 'Qué necesita este espacio en particular: materiales delicados, accesos, horarios.',
+    en: 'What this space needs in particular: delicate materials, access, timing.',
+  },
+  'panel.save': { es: 'Guardar', en: 'Save' },
+  'panel.cancel': { es: 'Cancelar', en: 'Cancel' },
+  'panel.remove': { es: 'Quitar', en: 'Remove' },
+  'panel.everyNDays': { es: 'Ciclo de {n} días', en: '{n}-day cycle' },
+
+  // Properties
+  'panel.noProperty': {
+    es: 'Necesitás una propiedad registrada antes de agregar espacios.',
+    en: 'You need a registered property before adding spaces.',
+  },
+  'panel.addProperty': { es: 'Agregar propiedad', en: 'Add property' },
+  'panel.propertyAddress': { es: 'Dirección', en: 'Address' },
+  'panel.propertyCity': { es: 'Ciudad', en: 'City' },
+  'panel.propertyType': { es: 'Tipo de propiedad', en: 'Property type' },
+  'panel.propertyLabel': { es: 'Nombre (opcional)', en: 'Name (optional)' },
+
+  // Requests
+  'panel.requestsEmpty': {
+    es: 'Todavía no tenés solicitudes. Cuando pidas un servicio aparecerá acá.',
+    en: 'No requests yet. When you book a service it will show up here.',
+  },
+  'panel.requestReference': { es: 'Referencia', en: 'Reference' },
+  'panel.newRequest': { es: 'Solicitar servicio', en: 'Request a service' },
+
+  // Membership
+  'panel.membershipNone': {
+    es: 'No tenés una membresía activa. Con una membresía coordinamos visitas recurrentes y congelamos la tarifa.',
+    en: 'You have no active membership. With one we schedule recurring visits and freeze your rate.',
+  },
+  'panel.membershipCta': { es: 'Ver membresías', en: 'See memberships' },
+  'panel.membershipNext': { es: 'Próxima visita', en: 'Next visit' },
+  'panel.membershipStatus': { es: 'Estado', en: 'Status' },
+  'panel.membershipPending': { es: 'Pendiente de confirmación', en: 'Pending confirmation' },
+  'panel.membershipActive': { es: 'Activa', en: 'Active' },
+  'panel.membershipPaused': { es: 'En pausa', en: 'Paused' },
+  'panel.membershipCancelled': { es: 'Cancelada', en: 'Cancelled' },
+
   // ── Search Modal ──────────────────────────────
   'search.title': { es: 'Buscar', en: 'Search' },
   'search.placeholder': { es: 'Buscar servicios, productos, páginas...', en: 'Search services, products, pages...' },
@@ -356,12 +453,12 @@ export const TRANSLATIONS = {
 
   // ── Store ─────────────────────────────────────
   'store.back': { es: 'Volver', en: 'Back' },
-  'store.badge': { es: 'Equipamiento Táctico Florida', en: 'Florida Tactical Supply' },
-  'store.title': { es: 'Arsenal de', en: 'Maintenance' },
-  'store.title2': { es: 'Mantenimiento.', en: 'Arsenal.' },
+  'store.badge': { es: 'Insumos para el hogar', en: 'Home supplies' },
+  'store.title': { es: 'Lo que usamos,', en: 'What we use,' },
+  'store.title2': { es: 'en tu casa.', en: 'in your home.' },
   'store.subtitle': {
-    es: 'Los mismos insumos químicos y electrónicos de despliegue que utilizan nuestras cuadrillas corporativas, ahora homologados para su hogar.',
-    en: 'The same chemical and electronic supplies our corporate crews deploy, now approved for your home.',
+    es: 'Los mismos productos de limpieza e higiene con los que trabajamos, seleccionados por departamento para que repongas sin pensarlo.',
+    en: 'The same cleaning and hygiene products we work with, sorted by department so restocking takes no thought.',
   },
   'store.departments': { es: 'Departamentos', en: 'Departments' },
   'store.allDepartments': { es: 'Todos', en: 'All' },
@@ -372,19 +469,18 @@ export const TRANSLATIONS = {
     en: 'No products published in this department yet. Coming soon.',
   },
   'store.emptyCatalog': { es: 'El catálogo está vacío por ahora.', en: 'The catalog is empty for now.' },
-  'store.estimatedPrice': { es: 'Inversión Estimada', en: 'Estimated Investment' },
+  'store.estimatedPrice': { es: 'Precio', en: 'Price' },
   'store.specs': { es: 'Especificaciones', en: 'Specifications' },
-  'store.concierge': { es: 'Contactar Concierge', en: 'Contact Concierge' },
+  'store.concierge': { es: 'Consultar', en: 'Enquire' },
   'store.buyAmazon': { es: 'Comprar en Amazon', en: 'Buy on Amazon' },
   'store.soldOut': { es: 'Agotado', en: 'Sold Out' },
-  'store.verifiedStock': { es: 'Stock Verificado', en: 'Verified Stock' },
   'store.direct': { es: 'Directo', en: 'Direct' },
   'store.amazonPartner': { es: 'Socio Amazon', en: 'Amazon Partner' },
-  'store.footerBadge': { es: 'Estándar Forense Autorizado', en: 'Authorized Forensic Standard' },
+  'store.footerBadge': { es: 'Productos seleccionados por nuestro equipo', en: 'Selected by our own crews' },
   'store.pilotBadge': { es: 'Catálogo piloto', en: 'Pilot catalogue' },
   'store.pilotNotice': {
-    es: 'Productos de prueba para validar catálogo, disponibilidad y atención concierge. Consulta antes de comprar.',
-    en: 'Test listings used to validate catalogue, availability and concierge support. Please enquire before purchasing.',
+    es: 'Estamos estrenando catálogo: confirmamos disponibilidad y precio antes de cada pedido.',
+    en: 'Our catalogue is new: we confirm availability and price before every order.',
   },
   'store.pilotPrice': { es: 'Precio piloto', en: 'Pilot price' },
   'store.pilotInquiry': { es: 'Consultar disponibilidad', en: 'Check availability' },

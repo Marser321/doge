@@ -52,17 +52,38 @@ export async function POST(request: Request) {
       return badRequest(createError.message);
     }
 
-    // Link to public.clients table for record keeping
-    try {
-      await serviceSupabase.from('clients').insert({
-        name,
-        email,
-        phone: phone || null,
-        segment: 'standard',
-        locale: 'es',
-      });
-    } catch (clientErr) {
-      console.warn('[Signup] Could not create client row:', clientErr);
+    // Link the auth user to its client record. A plain insert used to fail
+    // silently against `clients_active_email_unique` whenever the email already
+    // had anonymous bookings, leaving the auth user with no client row at all.
+    //
+    // That index is partial (`where archived_at is null`), which PostgREST
+    // cannot name as an ON CONFLICT target, so the match is done explicitly:
+    // an existing record is adopted, otherwise a new one is created.
+    const { data: existing, error: lookupError } = await serviceSupabase
+      .from('clients')
+      .select('id, auth_user_id, phone')
+      .eq('email', email)
+      .is('archived_at', null)
+      .maybeSingle();
+    if (lookupError) throw new Error(`No fue posible verificar tu ficha de cliente: ${lookupError.message}`);
+
+    const linkError = existing
+      ? (existing.auth_user_id && existing.auth_user_id !== userData.user.id
+        // Someone else already owns this client record: never reassign it.
+        ? { message: 'Esta ficha de cliente ya está vinculada a otra cuenta.' }
+        : (await serviceSupabase
+          .from('clients')
+          .update({ auth_user_id: userData.user.id, name, phone: phone || existing.phone })
+          .eq('id', existing.id)).error)
+      : (await serviceSupabase
+        .from('clients')
+        .insert({ name, email, phone: phone || null, locale: 'es', auth_user_id: userData.user.id })).error;
+
+    if (linkError) {
+      // Without a client row the account cannot reach its own panel, so this is
+      // fatal: roll the auth user back rather than leave it orphaned.
+      await serviceSupabase.auth.admin.deleteUser(userData.user.id).catch(() => {});
+      throw new Error(`No fue posible vincular la cuenta con tu ficha de cliente: ${linkError.message}`);
     }
 
     return NextResponse.json({

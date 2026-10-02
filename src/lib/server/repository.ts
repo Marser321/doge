@@ -767,10 +767,17 @@ export async function listAuditEvents() {
   return assertResult(await db.from('audit_events').select('*').order('created_at', { ascending: false }).limit(300));
 }
 
-export async function createBooking(input: Record<string, unknown>, attachmentKeys: string[]) {
+export async function createBooking(
+  input: Record<string, unknown>,
+  attachmentKeys: string[],
+  authUserId: string | null = null,
+) {
   return assertResult(await getServiceSupabase().rpc('create_public_service_request', {
     p_input: input,
     p_attachment_keys: attachmentKeys,
+    // Null keeps the anonymous path identical; a value links the request to the
+    // signed-in account so it shows up in the customer panel.
+    p_auth_user_id: authUserId,
   }));
 }
 

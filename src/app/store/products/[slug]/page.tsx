@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, ChevronRight, ExternalLink, FlaskConical, MessageCircle, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, ChevronRight, ExternalLink, MessageCircle, ShoppingBag } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageProvider';
 import { resolveDepartment, resolveSubcategory } from '@/content/store-taxonomy';
 import { db, Product } from '@/lib/db';
@@ -67,7 +67,7 @@ export default function StoreProductPage() {
         <Link href="/store" className="inline-flex items-center gap-2 text-sm text-accent transition hover:text-foreground"><ArrowLeft className="size-4" /> Catálogo</Link>
         <Link href="/booking" className="text-sm font-medium text-accent transition hover:text-foreground">Solicitar servicio</Link>
       </nav>
-      {pilot && <div className="sticky top-3 z-30 mx-auto max-w-7xl px-6 md:px-10"><p className="inline-flex max-w-2xl items-start gap-2 rounded-xl border border-sky-400/20 bg-background/95 px-3 py-2 text-xs leading-5 text-sky-100 shadow-lg shadow-black/10 backdrop-blur"><FlaskConical className="mt-0.5 size-3.5 shrink-0 text-sky-300" />{t('store.pilotNotice')}</p></div>}
+      {pilot && <div className="sticky top-3 z-30 mx-auto max-w-7xl px-6 md:px-10"><p className="inline-flex max-w-2xl items-start gap-2 rounded-xl border border-sky-400/20 bg-background/95 px-3 py-2 text-xs leading-5 text-sky-100 shadow-lg shadow-black/10 backdrop-blur">{t('store.pilotNotice')}</p></div>}
 
       <section className="mx-auto grid max-w-7xl gap-10 px-6 py-10 md:grid-cols-2 md:px-10 md:py-20">
         <div className="relative min-h-80 overflow-hidden rounded-3xl border border-white/10 bg-foreground/[0.04] sm:min-h-[34rem]">
@@ -85,8 +85,8 @@ export default function StoreProductPage() {
               )}
             </nav>
           )}
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">{product.brand || 'DOGE'}</p>
-          {pilot && <p className="mt-3 inline-flex w-fit items-center gap-2 rounded-full border border-sky-400/20 bg-sky-400/5 px-3 py-1.5 text-xs font-semibold text-sky-200"><FlaskConical className="size-3.5" /> {t('store.pilotBadge')}</p>}
+          {product.brand && <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">{product.brand}</p>}
+          {pilot && <p className="mt-3 inline-flex w-fit items-center gap-2 rounded-full border border-sky-400/20 bg-sky-400/5 px-3 py-1.5 text-xs font-semibold text-sky-200"> {t('store.pilotBadge')}</p>}
           <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-6xl">{product.name}</h1>
           {product.tagline && <p className="mt-5 text-lg text-accent">{product.tagline}</p>}
           <p className="mt-6 max-w-xl leading-7 text-zinc-400">{product.description}</p>
@@ -114,7 +114,7 @@ export default function StoreProductPage() {
         </div>
       </section>
 
-      {related.length > 0 && <section className="mx-auto max-w-7xl px-6 py-16 md:px-10"><h2 className="text-2xl font-semibold">También puede interesarte</h2><div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{related.map((item) => <Link key={item.id} href={`/store/products/${item.slug}`} className="group rounded-2xl border border-white/10 bg-foreground/[0.03] p-5 transition hover:border-white/25"><div className="relative h-40"><Image src={productImage(item)} alt={item.name} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-contain" /></div><p className="mt-4 text-xs uppercase tracking-wider text-accent">{item.brand || 'DOGE'}</p><h3 className="mt-2 font-semibold">{item.name}</h3><p className="mt-2 text-sm text-zinc-400">${Number(item.price).toLocaleString()} USD</p></Link>)}</div></section>}
+      {related.length > 0 && <section className="mx-auto max-w-7xl px-6 py-16 md:px-10"><h2 className="text-2xl font-semibold">También puede interesarte</h2><div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{related.map((item) => <Link key={item.id} href={`/store/products/${item.slug}`} className="group rounded-2xl border border-white/10 bg-foreground/[0.03] p-5 transition hover:border-white/25"><div className="relative h-40"><Image src={productImage(item)} alt={item.name} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-contain" /></div>{item.brand && <p className="mt-4 text-xs uppercase tracking-wider text-accent">{item.brand}</p>}<h3 className="mt-2 font-semibold">{item.name}</h3><p className="mt-2 text-sm text-zinc-400">${Number(item.price).toLocaleString()} USD</p></Link>)}</div></section>}
     </main>
   );
 }

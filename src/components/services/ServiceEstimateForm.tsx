@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowLeft, Send, CheckCircle, ShieldCheck, FileText } from 'lucide-react'
+import { ArrowLeft, Send, CheckCircle, ShieldCheck, FileText, MessageCircle } from 'lucide-react'
 import { useLanguage } from '@/components/LanguageProvider'
 import type { ServiceDefinition } from '@/content/services'
 import type { TranslationKey } from '@/data/i18n'
@@ -18,9 +18,15 @@ export function ServiceEstimateForm({ service }: { service: ServiceDefinition })
   const { lang, t } = useLanguage()
   const [textDescription, setTextDescription] = useState('')
   const [name, setName] = useState('')
-  const [contact, setContact] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
+  const [city, setCity] = useState('')
   const [notes, setNotes] = useState('')
+  const [consent, setConsent] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
+  const [reference, setReference] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
   const ServiceIcon = service.icon
@@ -33,25 +39,64 @@ export function ServiceEstimateForm({ service }: { service: ServiceDefinition })
     }
   }, [])
 
-  const handleSubmit = () => {
+  const whatsappUrl = () => {
     const message = encodeURIComponent(
       `${t('estimate.waIntro')} ${service.name[lang]}.\n\n` +
       `📝 ${t('estimate.waDescription')}: ${textDescription.trim()}\n` +
       `👤 ${t('estimate.waName')}: ${name.trim()}\n` +
-      `📞 ${t('estimate.waContact')}: ${contact.trim()}\n` +
-      `📍 ${t('estimate.waAddress')}: ${address.trim()}\n` +
+      `📞 ${t('estimate.waContact')}: ${[email.trim(), phone.trim()].filter(Boolean).join(' · ')}\n` +
+      `📍 ${t('estimate.waAddress')}: ${[address.trim(), city.trim()].filter(Boolean).join(', ')}\n` +
       (notes.trim() ? `💬 ${t('estimate.waNotes')}: ${notes.trim()}` : '')
     )
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`
+  }
 
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank', 'noopener,noreferrer')
-    setSubmitted(true)
+  /**
+   * The request is persisted first, so the lead exists in the CRM and in the
+   * customer's panel. WhatsApp stays available afterwards as a direct channel,
+   * but it is no longer the only place this information lands.
+   */
+  const handleSubmit = async () => {
+    if (!isValid || submitting) return
+    setSubmitting(true)
+    setError('')
+
+    const form = new FormData()
+    form.set('name', name.trim())
+    form.set('email', email.trim())
+    form.set('phone', phone.trim())
+    form.set('address', address.trim())
+    form.set('city', city.trim())
+    form.set('property_type', 'Residencial')
+    form.set('service_code', service.id)
+    form.set('locale', lang)
+    form.set('consent', consent ? 'accepted' : '')
+    form.set('notes', [textDescription.trim(), notes.trim()].filter(Boolean).join('\n\n'))
+
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Idempotency-Key': crypto.randomUUID() },
+        body: form,
+      })
+      const payload = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(payload.error || 'No fue posible registrar la solicitud.')
+      setReference(String(payload.reference || ''))
+      setSubmitted(true)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'No fue posible registrar la solicitud.')
+      setSubmitting(false)
+    }
   }
 
   const isValid = Boolean(
     name.trim() &&
-    contact.trim() &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) &&
+    phone.trim() &&
     address.trim() &&
-    textDescription.trim()
+    city.trim() &&
+    textDescription.trim() &&
+    consent
   )
 
   if (submitted) {
@@ -75,9 +120,14 @@ export function ServiceEstimateForm({ service }: { service: ServiceDefinition })
             {t('estimate.sentTitle')} <br />
             <span className="silver-text">{t('estimate.sentTitle2')}</span>
           </h2>
-          <p className="text-accent text-lg font-medium leading-relaxed mb-12">
+          <p className="text-accent text-lg font-medium leading-relaxed mb-8">
             {t('estimate.sentBody')}
           </p>
+          {reference && (
+            <p className="mb-12 text-sm text-accent">
+              {t('estimate.referenceIs')} <span className="font-mono text-foreground">{reference}</span>
+            </p>
+          )}
           <div className="flex flex-col sm:flex-row gap-4">
             <Link href="/services" className="flex-1 py-5 border border-accent/10 rounded-2xl font-black uppercase tracking-widest text-accent hover:bg-foreground/5 transition-all text-center text-sm">
               {t('estimate.moreServices')}
@@ -183,17 +233,35 @@ export function ServiceEstimateForm({ service }: { service: ServiceDefinition })
               />
             </div>
 
-            <div>
-              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
-                {t('estimate.contactLabel')}
-              </label>
-              <input
-                type="text"
-                value={contact}
-                onChange={(e) => setContact(e.target.value)}
-                placeholder={t('estimate.contactPlaceholder')}
-                className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="estimate-email" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                  {t('estimate.emailLabel')}
+                </label>
+                <input
+                  id="estimate-email"
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={t('estimate.emailPlaceholder')}
+                  className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
+                />
+              </div>
+              <div>
+                <label htmlFor="estimate-phone" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                  {t('estimate.phoneLabel')}
+                </label>
+                <input
+                  id="estimate-phone"
+                  type="tel"
+                  autoComplete="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder={t('estimate.phonePlaceholder')}
+                  className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
+                />
+              </div>
             </div>
 
             <div>
@@ -205,6 +273,21 @@ export function ServiceEstimateForm({ service }: { service: ServiceDefinition })
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder={t('estimate.addressPlaceholder')}
+                className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="estimate-city" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                {t('estimate.cityLabel')}
+              </label>
+              <input
+                id="estimate-city"
+                type="text"
+                autoComplete="address-level2"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder={t('estimate.cityPlaceholder')}
                 className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
               />
             </div>
@@ -222,29 +305,60 @@ export function ServiceEstimateForm({ service }: { service: ServiceDefinition })
               />
             </div>
 
+            {/* Consent is required before anything is stored. */}
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 accent-current"
+              />
+              <span className="text-xs font-medium leading-relaxed text-accent">{t('estimate.consent')}</span>
+            </label>
+
+            {error && (
+              <p role="alert" className="rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
+                {error}
+              </p>
+            )}
+
             {/* Submit CTA */}
             <motion.button
-              whileHover={isValid ? { scale: 1.02, y: -2 } : {}}
+              type="button"
+              whileHover={isValid && !submitting ? { scale: 1.02, y: -2 } : {}}
               onClick={handleSubmit}
-              disabled={!isValid}
+              disabled={!isValid || submitting}
               className={`w-full py-6 rounded-2xl font-black uppercase tracking-[0.3em] shadow-2xl font-michroma flex items-center justify-center gap-3 transition-all relative group overflow-hidden ${
-                isValid
+                isValid && !submitting
                   ? 'bg-foreground text-background cursor-pointer cta-glow hover:shadow-[0_0_40px_8px_rgba(255,255,255,0.15)]'
                   : 'bg-accent/20 text-accent/40 cursor-not-allowed'
               }`}
             >
-              {isValid && (
+              {isValid && !submitting && (
                 <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 pointer-events-none" />
               )}
               <span className="relative z-10 flex items-center gap-3">
                 <Send className="w-5 h-5" />
-                {t('estimate.submit')}
+                {submitting ? t('estimate.sending') : t('estimate.submit')}
               </span>
             </motion.button>
 
+            {/* WhatsApp stays available, but it is no longer where the lead lives. */}
+            <div className="text-center">
+              <p className="mb-2 text-[11px] font-medium text-accent/60">{t('estimate.whatsappHint')}</p>
+              <a
+                href={whatsappUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-accent/20 px-5 py-3 text-[10px] font-black uppercase tracking-widest text-accent transition-colors hover:border-accent/50 hover:text-foreground"
+              >
+                <MessageCircle className="h-4 w-4" /> {t('estimate.whatsapp')}
+              </a>
+            </div>
+
             {/* Info Note */}
             <div className="bg-accent/5 p-4 rounded-xl border border-accent/10 flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mt-1 shrink-0"></div>
+              <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1 shrink-0"></div>
               <span className="text-[10px] font-bold text-accent uppercase tracking-widest leading-relaxed">
                 {t('estimate.note')}
               </span>

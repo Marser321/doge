@@ -6,6 +6,14 @@ import Link from 'next/link'
 import { ArrowLeft, ShieldCheck, CheckCircle, Crown, Send } from 'lucide-react'
 import { useLanguage } from '@/components/LanguageProvider'
 
+type DbPlan = {
+  id: string
+  name: string
+  description: string | null
+  cadence_days: number
+  base_price_cents: number
+}
+
 export default function MembershipPage() {
   const { lang, t } = useLanguage()
   const [name, setName] = useState('')
@@ -14,7 +22,7 @@ export default function MembershipPage() {
   const [address, setAddress] = useState('')
   const [city, setCity] = useState('Miami')
   const [consent, setConsent] = useState(false)
-  const [selectedPlan, setSelectedPlan] = useState('plata')
+  const [selectedPlan, setSelectedPlan] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [reference, setReference] = useState('')
   const [loading, setLoading] = useState(false)
@@ -27,31 +35,36 @@ export default function MembershipPage() {
     }
   }, [])
 
-  const plans = [
-    {
-      id: 'bronce',
-      name: 'Bronce',
-      freqEs: 'Mensual',
-      freqEn: 'Monthly',
-      popular: false,
-    },
-    {
-      id: 'plata',
-      name: 'Plata',
-      freqEs: 'Quincenal',
-      freqEn: 'Biweekly',
-      popular: true,
-    },
-    {
-      id: 'oro',
-      name: 'Oro VIP',
-      freqEs: 'Semanal',
-      freqEn: 'Weekly',
-      popular: false,
-    },
-  ]
+  // Plans come from `subscription_plans`, not from this file: a hardcoded list
+  // drifted from what the team could actually fulfil.
+  const [plans, setPlans] = useState<DbPlan[]>([])
+  const [signedIn, setSignedIn] = useState(false)
+  const [myProperties, setMyProperties] = useState<{ id: string; label: string | null; address: string }[]>([])
 
-  const chosen = plans.find(p => p.id === selectedPlan) || plans[1]
+  useEffect(() => {
+    let active = true
+    void (async () => {
+      const [planResponse, meResponse] = await Promise.all([
+        fetch('/api/catalog/plans', { cache: 'no-store' }).catch(() => null),
+        fetch('/api/me', { credentials: 'same-origin', cache: 'no-store' }).catch(() => null),
+      ])
+      if (!active) return
+      if (planResponse?.ok) {
+        const list: DbPlan[] = await planResponse.json()
+        setPlans(list)
+        // Preselect the first real plan; ids are uuids now, not slugs.
+        setSelectedPlan((current) => current || list[0]?.id || '')
+      }
+      if (meResponse?.ok) {
+        setSignedIn(true)
+        const propertyResponse = await fetch('/api/me/properties', { credentials: 'same-origin', cache: 'no-store' }).catch(() => null)
+        if (active && propertyResponse?.ok) setMyProperties(await propertyResponse.json())
+      }
+    })()
+    return () => { active = false }
+  }, [])
+
+  const chosen = plans.find((plan) => plan.id === selectedPlan) || plans[0] || null
 
   const isValid = name.trim() && email.trim() && phone.trim() && address.trim() && city.trim() && consent
 
@@ -59,6 +72,32 @@ export default function MembershipPage() {
     if (!isValid || loading) return
     setLoading(true)
     setError('')
+    // Signed in with a property on file: create a real pending membership
+    // instead of a service request with the plan written into the notes.
+    if (signedIn && chosen && myProperties.length > 0) {
+      try {
+        const response = await fetch('/api/me/membership', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            plan_id: chosen.id,
+            property_id: myProperties[0].id,
+            notes: `${chosen.name} · ${chosen.cadence_days} ${lang === 'es' ? 'días' : 'days'}`,
+          }),
+        })
+        const payload = await response.json().catch(() => ({}))
+        if (!response.ok) throw new Error(payload.error || 'No fue posible registrar la membresía.')
+        setReference('')
+        setSubmitted(true)
+      } catch (cause) {
+        setError(cause instanceof Error ? cause.message : 'No fue posible registrar la membresía.')
+      } finally {
+        setLoading(false)
+      }
+      return
+    }
+
     const form = new FormData()
     form.set('name', name)
     form.set('email', email)
@@ -69,7 +108,7 @@ export default function MembershipPage() {
     form.set('service_code', 'window-cleaning')
     form.set('locale', lang)
     form.set('consent', 'accepted')
-    form.set('notes', `Interés en plan ${chosen.name} · ${lang === 'es' ? chosen.freqEs : chosen.freqEn}. Requiere evaluación y cotización.`)
+    form.set('notes', `Interés en plan ${chosen?.name ?? ''}. Requiere evaluación y cotización.`)
     try {
       const response = await fetch('/api/bookings', {
         method: 'POST',
@@ -185,19 +224,10 @@ export default function MembershipPage() {
                       : 'bg-foreground/5 border-accent/10 hover:border-accent/40'
                   }`}
                 >
-                  {plan.popular && (
-                    <div className={`absolute top-3 right-3 text-[7px] font-black px-2 py-1 rounded-full uppercase tracking-widest ${
-                      selectedPlan === plan.id
-                        ? 'bg-background/20 text-background'
-                        : 'bg-accent/10 text-accent'
-                    }`}>
-                      {lang === 'es' ? 'Popular' : 'Popular'}
-                    </div>
-                  )}
                   <span className={`text-[10px] font-black uppercase tracking-[0.3em] block mb-2 ${
                     selectedPlan === plan.id ? 'opacity-60' : 'text-accent'
                   }`}>
-                    {lang === 'es' ? plan.freqEs : plan.freqEn}
+                    {lang === 'es' ? `Cada ${plan.cadence_days} días` : `Every ${plan.cadence_days} days`}
                   </span>
                   <h3 className="text-xl font-black uppercase font-michroma mb-3">{plan.name}</h3>
                   <div>

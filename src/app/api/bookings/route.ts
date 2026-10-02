@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import sharp from 'sharp';
 
 import { badRequest, errorResponse, rateLimit, runIdempotentJson } from '@/lib/server/http';
-import { getServiceSupabase } from '@/lib/server/supabase';
+import { createUserSupabase, getServiceSupabase } from '@/lib/server/supabase';
 import { dispatchEmailOutbox } from '@/lib/server/email';
 import { createBooking } from '@/lib/server/repository';
 import { validateBookingFields } from '@/lib/booking';
@@ -103,6 +103,17 @@ export async function POST(request: Request) {
       return badRequest('Uno de los archivos no es una imagen válida.');
     }
 
+    // Booking stays open to anonymous visitors; when a session happens to be
+    // present the request is attached to that account instead.
+    let authUserId: string | null = null;
+    try {
+      const sessionClient = await createUserSupabase();
+      const { data: current } = await sessionClient.auth.getUser();
+      authUserId = current.user?.id ?? null;
+    } catch {
+      authUserId = null;
+    }
+
     return await runIdempotentJson(
       request,
       'public-booking:create',
@@ -123,7 +134,7 @@ export async function POST(request: Request) {
           if (error) throw new Error(`No fue posible adjuntar ${file.name}.`);
           uploaded.push(key);
         }
-        const booking = await createBooking(input, uploaded);
+        const booking = await createBooking(input, uploaded, authUserId);
         await dispatchEmailOutbox(1).catch(() => undefined);
         return booking;
       },

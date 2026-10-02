@@ -54,7 +54,7 @@ function SignupForm() {
           password,
         })
         if (!signInError) {
-          router.replace('/')
+          router.replace('/account')
           router.refresh()
           return
         }
@@ -85,7 +85,7 @@ function SignupForm() {
       if (signUpError) throw signUpError
 
       if (data.session) {
-        router.replace('/')
+        router.replace('/account')
         router.refresh()
       } else {
         setSuccess(true)

@@ -2,9 +2,11 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Moon, Globe, ShoppingCart, MoreVertical, User, X, ArrowRight, BriefcaseBusiness, Sparkles, LogIn, UserPlus } from 'lucide-react'
+import { Sun, Moon, Globe, ShoppingCart, MoreVertical, User, X, ArrowRight, BriefcaseBusiness, Sparkles, LogIn, LogOut, UserPlus, LayoutDashboard } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useLanguage } from './LanguageProvider'
+import { getBrowserSupabase } from '@/lib/supabase/client'
 
 interface HeaderActionsProps {
   theme: 'dark' | 'light'
@@ -13,8 +15,38 @@ interface HeaderActionsProps {
 
 export default function HeaderActions({ theme, onToggleTheme }: HeaderActionsProps) {
   const { lang, toggleLang, t } = useLanguage()
+  const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [account, setAccount] = useState<{ name: string } | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
+
+  // The header used to claim "Invitado" for everyone, signed in or not. Resolve
+  // the real session once the menu is first opened, so a visitor who never
+  // touches it costs no request.
+  useEffect(() => {
+    if (!menuOpen || account) return
+    let active = true
+    void (async () => {
+      try {
+        const response = await fetch('/api/me', { credentials: 'same-origin', cache: 'no-store' })
+        if (active && response.ok) {
+          const body = await response.json()
+          setAccount({ name: String(body.name || '') })
+        }
+      } catch {
+        // Stay anonymous: the menu simply keeps offering sign in.
+      }
+    })()
+    return () => { active = false }
+  }, [menuOpen, account])
+
+  const signOut = async () => {
+    await getBrowserSupabase().auth.signOut()
+    setAccount(null)
+    setMenuOpen(false)
+    router.replace('/')
+    router.refresh()
+  }
 
   // Close menu on click outside
   useEffect(() => {
@@ -38,12 +70,18 @@ export default function HeaderActions({ theme, onToggleTheme }: HeaderActionsPro
     return () => document.removeEventListener('keydown', handleEsc)
   }, [])
 
-  const MENU_ITEMS = [
-    { icon: LogIn, label: lang === 'es' ? 'Iniciar sesión' : 'Sign In', href: '/login', disabled: false },
-    { icon: UserPlus, label: lang === 'es' ? 'Crear cuenta' : 'Create Account', href: '/signup', disabled: false },
-    { icon: BriefcaseBusiness, label: t('nav.services'), href: '/services', disabled: false },
-    { icon: Sparkles, label: t('nav.memberships'), href: '/#suscripciones', disabled: false },
-  ]
+  const MENU_ITEMS = account
+    ? [
+      { icon: LayoutDashboard, label: t('panel.tabHome'), href: '/account', disabled: false },
+      { icon: BriefcaseBusiness, label: t('nav.services'), href: '/services', disabled: false },
+      { icon: Sparkles, label: t('nav.memberships'), href: '/#suscripciones', disabled: false },
+    ]
+    : [
+      { icon: LogIn, label: lang === 'es' ? 'Iniciar sesión' : 'Sign In', href: '/login', disabled: false },
+      { icon: UserPlus, label: lang === 'es' ? 'Crear cuenta' : 'Create Account', href: '/signup', disabled: false },
+      { icon: BriefcaseBusiness, label: t('nav.services'), href: '/services', disabled: false },
+      { icon: Sparkles, label: t('nav.memberships'), href: '/#suscripciones', disabled: false },
+    ]
 
   return (
     <div className="flex items-center gap-2">
@@ -118,9 +156,11 @@ export default function HeaderActions({ theme, onToggleTheme }: HeaderActionsPro
                     <User className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <span className="block text-sm font-bold text-white">{lang === 'es' ? 'Invitado' : 'Guest'}</span>
+                    <span className="block text-sm font-bold text-white">
+                      {account ? account.name : (lang === 'es' ? 'Invitado' : 'Guest')}
+                    </span>
                     <span className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                      {lang === 'es' ? 'Sin suscripción' : 'No subscription'}
+                      {account ? t('panel.tabHome') : (lang === 'es' ? 'Sin sesión' : 'Signed out')}
                     </span>
                   </div>
                 </div>
@@ -142,6 +182,16 @@ export default function HeaderActions({ theme, onToggleTheme }: HeaderActionsPro
                     </span>
                   </Link>
                 ))}
+                {account && (
+                  <button
+                    type="button"
+                    onClick={signOut}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:bg-white/5 hover:text-white transition-all"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span className="text-xs font-bold uppercase tracking-wider">{t('account.logout')}</span>
+                  </button>
+                )}
               </div>
 
               {/* Membership CTA */}

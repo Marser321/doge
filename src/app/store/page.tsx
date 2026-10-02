@@ -4,9 +4,8 @@ import React, { useMemo, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Sparkles, ArrowLeft, ShieldCheck, ShoppingCart, LayoutGrid, FlaskConical } from 'lucide-react'
+import { Sparkles, ArrowLeft, ShieldCheck, ShoppingCart, LayoutGrid } from 'lucide-react'
 
-import { BrandMarquee } from '@/components/BrandMarquee'
 import { useLanguage } from '@/components/LanguageProvider'
 import { STORE_DEPARTMENTS, resolveDepartment, type DepartmentId } from '@/content/store-taxonomy'
 import { db, Product } from '@/lib/db'
@@ -179,7 +178,6 @@ export default function StorePage() {
 
       <div className="sticky top-3 z-40 mx-auto -mt-2 max-w-7xl px-6 md:px-12">
         <div className="inline-flex max-w-2xl items-start gap-3 rounded-2xl border border-sky-400/20 bg-background/95 px-4 py-3 text-left text-sm text-accent shadow-xl shadow-black/10 backdrop-blur">
-          <FlaskConical className="mt-0.5 size-4 shrink-0 text-sky-300" />
           <span>{t('store.pilotNotice')}</span>
         </div>
       </div>
@@ -203,8 +201,6 @@ export default function StorePage() {
         </motion.div>
       </header>
 
-      {/* 2.5 BRANDS MARQUEE (TRUST BADGES & PARTNERS) */}
-      <BrandMarquee />
 
       {/* 3. DEPARTAMENTOS */}
       <section className="px-6 md:px-12 pt-16 max-w-7xl mx-auto relative z-10">
@@ -289,7 +285,7 @@ export default function StorePage() {
                 key={product.id}
                 initial={{ opacity: 0, y: isMobile ? 30 : 60 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: isMobile ? 0 : idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.6, delay: isMobile ? 0 : Math.min(idx * 0.05, 0.3), ease: [0.16, 1, 0.3, 1] }}
                 className="bg-foreground/5 luxury-glass rounded-[32px] overflow-hidden group hover:border-accent/40 transition-all cursor-hover-target flex flex-col shadow-xl"
               >
                 <Link href={`/store/products/${product.slug}`} className="block relative h-64 md:h-80 bg-foreground/5 p-8 flex items-center justify-center overflow-hidden">
@@ -297,29 +293,31 @@ export default function StorePage() {
 
                   {/* Brand Badge */}
                   <div className="absolute top-6 left-6 z-20 flex flex-col gap-1">
-                    <span className="text-[10px] font-black uppercase text-accent tracking-[0.2em]">{product.brand || 'DOGE Lab'}</span>
-                    <div className="h-0.5 w-8 bg-accent animate-pulse"></div>
+                    {product.brand && (
+                      <span className="text-[10px] font-black uppercase text-accent tracking-[0.2em]">{product.brand}</span>
+                    )}
                   </div>
 
                   <motion.div
-                    whileHover={{ scale: 1.05, rotate: 2 }}
+                    whileHover={{ scale: 1.03 }}
                     transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                     className="relative w-full h-full drop-shadow-2xl z-10"
                   >
                     <Image src={getImageUrl(product)} alt={product.name} fill className="object-contain" />
                   </motion.div>
-                  <div className="absolute bottom-4 right-6 text-6xl font-black text-foreground/5 uppercase select-none pointer-events-none">
-                    0{idx + 1}
-                  </div>
                 </Link>
 
                 <div className="p-8 md:p-10 flex flex-col flex-grow">
-                  {/* Member Benefit Pill */}
+                  {/* Sale channel, plus a benefit pill only when there is a real one. */}
                   <div className="flex items-center gap-2 mb-4">
-                    <div className="px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-[9px] font-black uppercase tracking-widest text-accent">
-                      {product.benefit_label || t('store.verifiedStock')}
-                    </div>
-                    <div className="h-1 w-1 bg-accent/30 rounded-full"></div>
+                    {product.benefit_label && (
+                      <>
+                        <div className="px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-[9px] font-black uppercase tracking-widest text-accent">
+                          {product.benefit_label}
+                        </div>
+                        <div className="h-1 w-1 bg-accent/30 rounded-full"></div>
+                      </>
+                    )}
                     <span className="text-[9px] font-bold text-accent/50 uppercase tracking-widest">
                       {product.sale_type === 'amazon_affiliate' ? t('store.amazonPartner') : t('store.direct')}
                     </span>

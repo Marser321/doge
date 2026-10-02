@@ -48,6 +48,53 @@ export async function getStaffIdentity(): Promise<StaffIdentity> {
   };
 }
 
+export type ClientIdentity = {
+  userId: string;
+  clientId: string;
+  email: string | null;
+  name: string;
+  phone: string | null;
+  locale: 'es' | 'en';
+};
+
+/**
+ * Resolves the signed-in customer behind the request.
+ *
+ * This is the customer-side twin of `getStaffIdentity`: a customer has no row
+ * in `profiles` (that table is staff-only), they are matched through
+ * `clients.auth_user_id`. Throwing here yields a 401 via `errorResponse`.
+ */
+export async function getClientIdentity(): Promise<ClientIdentity> {
+  const client = await createUserSupabase();
+  const { data: current, error: userError } = await client.auth.getUser();
+  if (userError || !current.user) throw new Error('No autorizado: la sesión no es válida.');
+
+  const { data, error } = await client
+    .from('clients')
+    .select('id, name, email, phone, locale')
+    .eq('auth_user_id', current.user.id)
+    .is('archived_at', null)
+    .maybeSingle();
+
+  const row = data as {
+    id: string;
+    name: string;
+    email: string | null;
+    phone: string | null;
+    locale: 'es' | 'en';
+  } | null;
+  if (error || !row) throw new Error('No autorizado: la cuenta no tiene una ficha de cliente.');
+
+  return {
+    userId: current.user.id,
+    clientId: row.id,
+    email: row.email ?? (typeof current.user.email === 'string' ? current.user.email : null),
+    name: row.name,
+    phone: row.phone,
+    locale: row.locale,
+  };
+}
+
 export async function requireStaff(
   permitted: StaffRole[] = ['owner', 'manager', 'dispatcher'],
   options: { requireMfa?: boolean } = {},
