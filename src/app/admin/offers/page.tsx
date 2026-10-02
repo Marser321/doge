@@ -1,23 +1,27 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Plus, Tag, Copy, Power, Trash2 } from 'lucide-react'
+import { Plus, Tag, Copy, Power, Trash2 , LoaderCircle } from 'lucide-react'
 import { db, Offer } from '@/lib/db'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale/es'
 import Link from 'next/link'
-import { CrmPageIntro } from '@/components/admin/CrmPrimitives'
+import { CrmPageIntro, CrmError } from '@/components/admin/CrmPrimitives'
 
 export default function OffersDashboard() {
   const [offers, setOffers] = useState<Offer[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [actionError, setActionError] = useState<string | null>(null)
 
   const fetchOffers = async () => {
     try {
       const { data } = await db.offers.getAll()
       if (data) setOffers(data)
     } catch (error) {
-      console.error('Error fetching offers:', error)
+        // Un fallo de carga se mostraba como estado vacio: el usuario leia
+        // "no hay datos" cuando en realidad la peticion habia fallado.
+        setLoadError(error instanceof Error ? error.message : 'Error de red.')
     } finally {
       setLoading(false)
     }
@@ -34,10 +38,10 @@ export default function OffersDashboard() {
       if (!error) {
         setOffers(offers.map(o => o.id === offer.id ? { ...o, status: newStatus as any } : o))
       } else {
-        alert('Failed to update offer status: ' + error.message)
+        setActionError('No fue posible actualizar la oferta: ' + error.message)
       }
     } catch (err: any) {
-      alert('An unexpected error occurred: ' + err.message)
+      setActionError('Ocurrió un error inesperado: ' + err.message)
     }
   }
 
@@ -48,24 +52,31 @@ export default function OffersDashboard() {
         if (!error) {
           setOffers(offers.filter(o => o.id !== id))
         } else {
-          alert('Failed to delete offer: ' + error.message)
+          setActionError('No fue posible eliminar la oferta: ' + error.message)
         }
       } catch (err: any) {
-        alert('An unexpected error occurred: ' + err.message)
+        setActionError('Ocurrió un error inesperado: ' + err.message)
       }
     }
   }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="w-8 h-8 border-4 border-subtle border-t-white rounded-full animate-spin" data-motion="progress"></div>
+      <div className="flex items-center justify-center min-h-96">
+        <LoaderCircle data-motion="progress" className="size-6 animate-spin text-muted" />
       </div>
     )
   }
 
+  if (loadError) {
+    return <CrmError message={loadError} />
+  }
+
   return (
     <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out space-y-8">
+      {actionError && (
+        <p role="alert" className="rounded-xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">{actionError}</p>
+      )}
        
        <CrmPageIntro eyebrow="Comercio · promociones" title="Ofertas y promociones" description="Gestiona ventas cruzadas, incentivos y códigos de descuento." actions={<>
           <Link 
@@ -107,17 +118,17 @@ export default function OffersDashboard() {
 
                <div className="flex items-center gap-8 md:gap-12 w-full md:w-auto border-t border-subtle md:border-t-0 pt-4 md:pt-0">
                  <div>
-                   <p className="text-[10px] text-muted uppercase tracking-widest font-bold mb-1">Target</p>
+                   <p className="text-[10px] text-muted uppercase tracking-widest font-bold mb-1">Audiencia</p>
                    <p className="text-secondary text-sm font-medium">{offer.target_audience}</p>
                  </div>
                  <div>
-                   <p className="text-[10px] text-muted uppercase tracking-widest font-bold mb-1">Uses</p>
+                   <p className="text-[10px] text-muted uppercase tracking-widest font-bold mb-1">Usos</p>
                    <p className="text-primary text-sm font-michroma font-bold">{offer.usage_count}</p>
                  </div>
                  <div>
-                   <p className="text-[10px] text-muted uppercase tracking-widest font-bold mb-1">Expires</p>
+                   <p className="text-[10px] text-muted uppercase tracking-widest font-bold mb-1">Vence</p>
                    <p className="text-secondary text-sm font-medium">
-                     {offer.expires_at ? format(new Date(offer.expires_at), 'MMM d, yyyy', { locale: es }) : 'No Expiry'}
+                     {offer.expires_at ? format(new Date(offer.expires_at), 'MMM d, yyyy', { locale: es }) : 'Sin vencimiento'}
                    </p>
                  </div>
                  
@@ -144,7 +155,7 @@ export default function OffersDashboard() {
           
           {offers.length === 0 && (
             <div className="text-center py-12 text-muted">
-              No offers found. Create your first one above.
+              Todavía no hay ofertas. Creá la primera desde el botón de arriba.
             </div>
           )}
        </div>

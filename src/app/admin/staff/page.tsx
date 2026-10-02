@@ -7,7 +7,7 @@ import { apiRequest } from '@/lib/api-client';
 import { db } from '@/lib/db';
 import { newYorkLocalToIso } from '@/lib/domain';
 import type { CurrentStaffUser, StaffProfile, StaffRole, Team } from '@/lib/types';
-import { CrmPageIntro } from '@/components/admin/CrmPrimitives';
+import { CrmPageIntro, CrmEmptyState } from '@/components/admin/CrmPrimitives';
 
 const roles: StaffRole[] = ['owner', 'manager', 'dispatcher', 'crew'];
 
@@ -116,6 +116,13 @@ export default function StaffPage() {
       {message && <p className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">{message}</p>}
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <section className="overflow-hidden rounded-2xl border border-subtle bg-surface-1">
+          {staff.length === 0 && (
+            <CrmEmptyState
+              icon={UserRoundCog}
+              title="Todavía no hay personal cargado"
+              detail="Invitá al primer miembro del equipo desde el formulario de la derecha."
+            />
+          )}
           {staff.map((profile) => (
             <article key={profile.id} className="grid gap-4 border-b border-subtle px-5 py-4 last:border-0 md:grid-cols-[1fr_160px_100px] md:items-center">
               <div className="flex items-center gap-3">

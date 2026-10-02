@@ -1,17 +1,18 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Search, Mail, Phone, ExternalLink, ShieldCheck, Download } from 'lucide-react'
+import { Search, Mail, Phone, ExternalLink, ShieldCheck, Download , LoaderCircle } from 'lucide-react'
 import { db, Client } from '@/lib/db'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale/es'
 import Link from 'next/link'
-import { CrmPageIntro } from '@/components/admin/CrmPrimitives'
+import { CrmPageIntro, CrmError } from '@/components/admin/CrmPrimitives'
 
 export default function ClientsDashboard() {
   const [clients, setClients] = useState<Client[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchClients() {
@@ -19,7 +20,9 @@ export default function ClientsDashboard() {
         const { data } = await db.clients.getAll()
         if (data) setClients(data)
       } catch (error) {
-        console.error('Error fetching clients:', error)
+        // Un fallo de carga se mostraba como estado vacio: el usuario leia
+        // "no hay datos" cuando en realidad la peticion habia fallado.
+        setLoadError(error instanceof Error ? error.message : 'Error de red.')
       } finally {
         setLoading(false)
       }
@@ -73,10 +76,14 @@ export default function ClientsDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="w-8 h-8 border-4 border-subtle border-t-white rounded-full animate-spin" data-motion="progress"></div>
+      <div className="flex items-center justify-center min-h-96">
+        <LoaderCircle data-motion="progress" className="size-6 animate-spin text-muted" />
       </div>
     )
+  }
+
+  if (loadError) {
+    return <CrmError message={loadError} />
   }
 
   return (

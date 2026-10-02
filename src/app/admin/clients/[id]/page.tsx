@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Building2, CalendarDays, Mail, MapPin, Phone, ShoppingBag } from 'lucide-react'
+import { ArrowLeft, Building2, CalendarDays, Mail, MapPin, Phone, ShoppingBag , LoaderCircle } from 'lucide-react'
 
 import { db } from '@/lib/db'
 import type { ClientDetail, ServiceRequest } from '@/lib/types'
@@ -49,7 +49,7 @@ export default function ClientDetailPage() {
     return <div className="glass-panel overflow-hidden rounded-2xl border border-red-500/20 p-8 text-red-200">{error}</div>
   }
   if (!detail) {
-    return <div className="min-h-[360px] flex items-center justify-center"><div className="w-8 h-8 rounded-full border-4 border-subtle border-t-white animate-spin" data-motion="progress" /></div>
+    return <div className="min-h-96 flex items-center justify-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-muted" /></div>
   }
 
   const { client } = detail

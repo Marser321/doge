@@ -65,7 +65,7 @@ export default function NewSubscriptionPage() {
       <Link href="/admin/subscriptions" className="inline-flex items-center gap-2 text-sm text-secondary hover:text-primary"><ArrowLeft className="size-4" /> Volver a suscripciones</Link>
       <div className="mt-5"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Recurrencia operativa</p><h1 className="mt-2 text-3xl font-semibold text-primary">Nueva suscripción</h1><p className="mt-2 text-sm text-secondary">Generará solicitudes aprobadas automáticamente hasta 30 días por adelantado.</p></div>
       {error && <p role="alert" className="mt-6 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
-      {loading ? <div className="grid min-h-72 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-muted" /></div> : (
+      {loading ? <div className="grid min-h-96 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-muted" /></div> : (
         <form onSubmit={submit} className="mt-7 space-y-6 rounded-2xl border border-subtle bg-surface-1 p-6 sm:p-8">
           <div className="flex items-center gap-3 border-b border-subtle pb-4"><Repeat className="size-5 text-red-300" /><h2 className="font-semibold">Contrato y servicio</h2></div>
           <div className="grid gap-5 sm:grid-cols-2">

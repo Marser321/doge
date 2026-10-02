@@ -1,12 +1,12 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Plus, Search, Pencil, ExternalLink, Box, TrendingUp, AlertTriangle, Star, Boxes } from 'lucide-react'
+import { Plus, Search, Pencil, ExternalLink, Box, TrendingUp, AlertTriangle, Star, Boxes , LoaderCircle } from 'lucide-react'
 import { db, Product } from '@/lib/db'
 import Image from 'next/image'
 import Link from 'next/link'
 import { isCatalogPilot } from '@/lib/catalog-pilot'
-import { CrmPageIntro, CrmStatusPill } from '@/components/admin/CrmPrimitives'
+import { CrmPageIntro, CrmStatusPill, CrmError } from '@/components/admin/CrmPrimitives'
 
 /** Same fallback chain the storefront and the detail page use. */
 const imageFor = (product: Product) =>
@@ -19,6 +19,7 @@ export default function ProductsDashboard() {
   const [searchTerm, setSearchTerm] = useState('')
   const [channelFilter, setChannelFilter] = useState<'all' | 'own_stock' | 'amazon_affiliate' | 'low_stock' | 'pilot'>('all')
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchProducts() {
@@ -26,7 +27,9 @@ export default function ProductsDashboard() {
         const { data } = await db.products.getAll()
         if (data) setProducts(data)
       } catch (error) {
-        console.error('Error fetching products:', error)
+        // Un fallo de carga se mostraba como estado vacio: el usuario leia
+        // "no hay datos" cuando en realidad la peticion habia fallado.
+        setLoadError(error instanceof Error ? error.message : 'Error de red.')
       } finally {
         setLoading(false)
       }
@@ -79,10 +82,14 @@ export default function ProductsDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="w-8 h-8 border-4 border-subtle border-t-white rounded-full animate-spin" data-motion="progress"></div>
+      <div className="flex items-center justify-center min-h-96">
+        <LoaderCircle data-motion="progress" className="size-6 animate-spin text-muted" />
       </div>
     )
+  }
+
+  if (loadError) {
+    return <CrmError message={loadError} />
   }
 
   const lowStockCount = products.filter(p => p.sale_type === 'own_stock' && p.stock_quantity <= p.low_stock_threshold).length

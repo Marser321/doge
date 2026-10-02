@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from 'react';
-import type { LucideProps } from 'lucide-react';
+import { LoaderCircle, TriangleAlert, type LucideProps } from 'lucide-react';
 
 type Tone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 
@@ -36,7 +36,7 @@ export function CrmMetricCard({ label, value, icon: Icon, href }: { label: strin
       <p className="mt-3 sm:mt-5 font-mono text-xl sm:text-3xl font-bold tracking-tight text-primary">{value}</p>
     </>
   );
-  const className = 'group relative overflow-hidden rounded-2xl border border-subtle bg-surface-1 p-3.5 sm:p-5 transition-all duration-300 hover:border-sky-400/30 hover:bg-white/[0.06] hover:shadow-[0_0_25px_rgba(56,189,248,0.08)]';
+  const className = 'group relative overflow-hidden rounded-2xl border border-subtle bg-surface-1 p-3.5 sm:p-5 transition-all duration-300 hover:border-sky-400/30 hover:bg-surface-2 hover:shadow-[0_0_25px_rgba(56,189,248,0.08)]';
   return href ? <a href={href} className={className}>{content}</a> : <div className={className}>{content}</div>;
 }
 
@@ -46,4 +46,58 @@ export function CrmStatusPill({ children, tone = 'neutral' }: { children: ReactN
 
 export function CrmEmptyState({ icon: Icon, title, detail }: { icon: ComponentType<LucideProps>; title: string; detail: string }) {
   return <div className="grid min-h-56 place-items-center px-6 text-center"><div><span className="mx-auto grid size-11 place-items-center rounded-2xl border border-subtle bg-surface-1"><Icon className="size-5 text-muted" /></span><p className="mt-4 text-sm font-medium text-secondary">{title}</p><p className="mt-1 max-w-sm text-xs leading-5 text-muted">{detail}</p></div></div>;
+}
+
+/**
+ * One loading state for the whole panel.
+ *
+ * There used to be three spinner implementations and five container heights,
+ * so moving between pages shifted the layout by up to 150px. The skeleton
+ * variant mirrors the shape of what is coming instead of showing a spinner
+ * over an empty box.
+ */
+export function CrmLoading({ rows = 0, label = 'Cargando…' }: { rows?: number; label?: string }) {
+  if (rows > 0) {
+    return (
+      <div className="min-h-96 space-y-3" role="status" aria-busy="true" aria-label={label}>
+        {Array.from({ length: rows }).map((_, index) => (
+          <div key={index} className="skeleton h-16 rounded-2xl border border-subtle" />
+        ))}
+        <span className="sr-only">{label}</span>
+      </div>
+    );
+  }
+  return (
+    <div className="grid min-h-96 place-items-center" role="status" aria-busy="true">
+      <LoaderCircle data-motion="progress" className="size-6 animate-spin text-muted" />
+      <span className="sr-only">{label}</span>
+    </div>
+  );
+}
+
+/**
+ * Failures used to surface as an empty state — "no products found" when the
+ * request had actually errored — which reads as a false negative.
+ */
+export function CrmError({ message, onRetry }: { message: string; onRetry?: () => void }) {
+  return (
+    <div role="alert" className="grid min-h-56 place-items-center px-6 text-center">
+      <div>
+        <span className="mx-auto grid size-11 place-items-center rounded-2xl border border-rose-400/20 bg-rose-400/10">
+          <TriangleAlert className="size-5 text-rose-300" />
+        </span>
+        <p className="mt-4 text-sm font-medium text-primary">No se pudieron cargar los datos</p>
+        <p className="mt-1 max-w-sm text-xs leading-5 text-secondary">{message}</p>
+        {onRetry && (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="mt-4 rounded-xl border border-subtle px-4 py-2 text-xs font-semibold text-secondary transition hover:border-strong hover:text-primary"
+          >
+            Reintentar
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }
