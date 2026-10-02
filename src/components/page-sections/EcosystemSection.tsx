@@ -27,7 +27,7 @@ export const EcosystemSection = ({ t }: { t: any }) => {
                       {t('eco.title')} <br /> <span className="silver-text">{t('eco.title2')}</span>
                     </h2>
                   </div>
-                  <p className="text-zinc-300 dark:text-zinc-300 max-w-sm font-medium border-l border-white/20 pl-6 h-fit">
+                  <p className="text-secondary dark:text-secondary max-w-sm font-medium border-l border-strong pl-6 h-fit">
                     {t('eco.subtitle')}
                   </p>
                 </motion.div>
@@ -50,13 +50,13 @@ export const EcosystemSection = ({ t }: { t: any }) => {
                           <div className="group luxury-glass p-8 md:p-10 rounded-[32px] overflow-hidden cursor-hover-target shadow-xl h-full flex flex-col justify-between min-h-[240px] hover:border-accent/30 transition-all relative">
                             <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-100 transition-opacity duration-700`}></div>
                             <div className="relative z-10">
-                              <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mb-6 border border-white/10 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                              <div className="w-14 h-14 bg-surface-2 rounded-2xl flex items-center justify-center mb-6 border border-subtle group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
                                 <item.icon className="w-7 h-7 text-foreground" />
                               </div>
                               <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight font-michroma mb-3">{t(item.titleKey)}</h3>
-                              <p className="text-zinc-300 dark:text-zinc-300 font-medium leading-relaxed text-sm">{t(item.descKey)}</p>
+                              <p className="text-secondary dark:text-secondary font-medium leading-relaxed text-sm">{t(item.descKey)}</p>
                             </div>
-                            <div className="relative z-10 pt-6 flex items-center gap-2 text-zinc-300 group-hover:text-white transition-colors">
+                            <div className="relative z-10 pt-6 flex items-center gap-2 text-secondary group-hover:text-primary transition-colors">
                               <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
                             </div>
                           </div>
@@ -81,12 +81,12 @@ export const EcosystemSection = ({ t }: { t: any }) => {
                   <div className="flex-grow">
                     <h3 className="text-lg font-black uppercase font-michroma mb-3 text-foreground">{t('eco.advantage')}</h3>
                     <div className="space-y-2">
-                      <p className="text-zinc-300 dark:text-zinc-300 font-medium text-sm leading-relaxed">• {t('eco.adv1')}</p>
-                      <p className="text-zinc-300 dark:text-zinc-300 font-medium text-sm leading-relaxed">• {t('eco.adv2')}</p>
+                      <p className="text-secondary dark:text-secondary font-medium text-sm leading-relaxed">• {t('eco.adv1')}</p>
+                      <p className="text-secondary dark:text-secondary font-medium text-sm leading-relaxed">• {t('eco.adv2')}</p>
                     </div>
                   </div>
                   <MagneticButton href="/membership" className="cursor-hover-target whitespace-nowrap">
-                    <span className="inline-flex items-center px-8 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-black bg-white rounded-xl shadow-xl hover:bg-zinc-200 transition-all">
+                    <span className="inline-flex items-center px-8 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-black bg-white rounded-xl shadow-xl hover:opacity-90 transition-all">
                       {t('mem.cta')}
                     </span>
                   </MagneticButton>

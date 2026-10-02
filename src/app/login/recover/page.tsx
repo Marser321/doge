@@ -30,18 +30,18 @@ export default function PasswordRecoveryPage() {
   }
 
   return (
-    <main className="grid min-h-screen place-items-center bg-[#0b0b0c] px-5 text-white">
-      <section className="w-full max-w-md rounded-3xl border border-white/10 bg-white/[0.03] p-8">
-        <Link href="/login" className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white"><ArrowLeft className="size-4" /> Volver</Link>
+    <main className="grid min-h-screen place-items-center bg-surface-0 px-5 text-primary">
+      <section className="w-full max-w-md rounded-3xl border border-subtle bg-surface-1 p-8">
+        <Link href="/login" className="inline-flex items-center gap-2 text-sm text-secondary hover:text-primary"><ArrowLeft className="size-4" /> Volver</Link>
         <Mail className="mx-auto mt-5 size-9 text-red-300" aria-hidden />
         <h1 className="mt-5 text-center text-2xl font-semibold">Recuperar acceso</h1>
-        <p className="mt-2 text-center text-sm text-zinc-400">Enviaremos el enlace al email registrado.</p>
+        <p className="mt-2 text-center text-sm text-secondary">Enviaremos el enlace al email registrado.</p>
         {message ? (
           <p role="status" className="mt-8 rounded-xl border border-emerald-400/20 bg-emerald-500/10 p-4 text-sm text-emerald-100">{message}</p>
         ) : (
           <form onSubmit={submit} className="mt-8 space-y-5">
-            <label className="block text-sm text-zinc-300">Email
-              <input required name="email" type="email" autoComplete="email" className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 outline-none focus:border-red-400" />
+            <label className="block text-sm text-secondary">Email
+              <input required name="email" type="email" autoComplete="email" className="mt-2 w-full rounded-xl border border-strong bg-surface-1 px-4 py-3 outline-none focus:border-red-400" />
             </label>
             {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-100">{error}</p>}
             <button disabled={loading} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold transition hover:bg-red-600 disabled:opacity-50">

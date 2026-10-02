@@ -180,15 +180,15 @@ export default function NewProductForm() {
        {/* Header */}
        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
-            <Link href="/admin/products" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-2 text-sm font-bold tracking-widest uppercase">
+            <Link href="/admin/products" className="inline-flex items-center gap-2 text-secondary hover:text-primary transition-colors mb-2 text-sm font-bold tracking-widest uppercase">
               <ArrowLeft className="w-4 h-4" /> Volver al catálogo
             </Link>
-            <h1 className="text-3xl font-michroma font-bold text-white tracking-wide">Crear producto</h1>
+            <h1 className="text-3xl font-michroma font-bold text-primary tracking-wide">Crear producto</h1>
           </div>
           <button 
             onClick={handleSubmit}
             disabled={loading}
-            className="px-6 py-3 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] disabled:opacity-50 disabled:cursor-not-allowed cursor-hover-target"
+            className="px-6 py-3 flex items-center gap-2 rounded-xl bg-foreground text-background font-bold hover:opacity-90 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] disabled:opacity-50 disabled:cursor-not-allowed cursor-hover-target"
           >
             {loading ? <LoaderCircle data-motion="progress" className="w-4 h-4 animate-spin text-zinc-900" /> : <Save className="w-4 h-4" />} 
             {loading ? 'Guardando...' : 'Guardar producto'}
@@ -205,34 +205,34 @@ export default function NewProductForm() {
          <fieldset disabled={loading} className="group/fieldset contents">
           
           {/* Main Info */}
-          <div className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 space-y-6">
-             <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-6">
+          <div className="glass-panel p-6 md:p-8 rounded-2xl border border-subtle space-y-6">
+             <div className="flex items-center gap-3 border-b border-subtle pb-4 mb-6">
                <Box className="w-5 h-5 text-accent" />
-               <h2 className="text-lg font-bold font-michroma text-white">Información básica</h2>
+               <h2 className="text-lg font-bold font-michroma text-primary">Información básica</h2>
              </div>
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Nombre del producto *</label>
-                  <input required name="name" value={formData.name} onChange={handleInputChange} type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors" placeholder="Ej. Dyson V15 Detect Absolute" />
+                  <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Nombre del producto *</label>
+                  <input required name="name" value={formData.name} onChange={handleInputChange} type="text" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary focus:outline-none focus:border-strong transition-colors" placeholder="Ej. Dyson V15 Detect Absolute" />
                 </div>
                 
                 <div>
-                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Slug (URL amigable)</label>
-                  <input required name="slug" value={formData.slug} onChange={handleInputChange} type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-zinc-300 font-mono text-sm focus:outline-none focus:border-accent/50 transition-colors" placeholder="dyson-v15-detect" />
+                  <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Slug (URL amigable)</label>
+                  <input required name="slug" value={formData.slug} onChange={handleInputChange} type="text" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-secondary font-mono text-sm focus:outline-none focus:border-strong transition-colors" placeholder="dyson-v15-detect" />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Marca</label>
-                  <input name="brand" value={formData.brand} onChange={handleInputChange} type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors" placeholder="Ej. Dyson, Miele, Roomba..." />
+                  <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Marca</label>
+                  <input name="brand" value={formData.brand} onChange={handleInputChange} type="text" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary focus:outline-none focus:border-strong transition-colors" placeholder="Ej. Dyson, Miele, Roomba..." />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Departamento</label>
+                  <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Departamento</label>
                   <select
                     value={department}
                     onChange={(e) => handleDepartmentChange(e.target.value)}
-                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors appearance-none"
+                    className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary focus:outline-none focus:border-strong transition-colors appearance-none"
                   >
                     <option value="">Sin departamento</option>
                     {STORE_DEPARTMENTS.map((item) => (
@@ -242,13 +242,13 @@ export default function NewProductForm() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Subcategoría</label>
+                  <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Subcategoría</label>
                   <select
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
                     disabled={!activeDepartment}
-                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors appearance-none disabled:opacity-40"
+                    className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary focus:outline-none focus:border-strong transition-colors appearance-none disabled:opacity-40"
                   >
                     <option value="">{activeDepartment ? 'Todo el departamento' : 'Selecciona primero un departamento'}</option>
                     {activeDepartment?.subcategories.map((item) => (
@@ -258,34 +258,34 @@ export default function NewProductForm() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Lema / Subtítulo</label>
-                  <input name="tagline" value={formData.tagline} onChange={handleInputChange} type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors" placeholder="Frase corta y atractiva para destacar en portada" />
+                  <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Lema / Subtítulo</label>
+                  <input name="tagline" value={formData.tagline} onChange={handleInputChange} type="text" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary focus:outline-none focus:border-strong transition-colors" placeholder="Frase corta y atractiva para destacar en portada" />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Descripción corta (Tarjeta de tienda)</label>
-                  <textarea name="description" value={formData.description} onChange={handleInputChange} rows={2} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors resize-none" placeholder="Texto resumen que aparece en la cuadrícula de la tienda..." />
+                  <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Descripción corta (Tarjeta de tienda)</label>
+                  <textarea name="description" value={formData.description} onChange={handleInputChange} rows={2} className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary focus:outline-none focus:border-strong transition-colors resize-none" placeholder="Texto resumen que aparece en la cuadrícula de la tienda..." />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Descripción detallada</label>
-                  <textarea name="detailed_description" value={formData.detailed_description} onChange={handleInputChange} rows={4} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors resize-none" placeholder="Detalle completo con prestaciones y beneficios para la página individual..." />
+                  <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Descripción detallada</label>
+                  <textarea name="detailed_description" value={formData.detailed_description} onChange={handleInputChange} rows={4} className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary focus:outline-none focus:border-strong transition-colors resize-none" placeholder="Detalle completo con prestaciones y beneficios para la página individual..." />
                 </div>
              </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
              {/* Pricing & Sales */}
-             <div className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 space-y-6">
-                 <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-6">
-                   <span className="text-zinc-400 font-bold font-michroma">$</span>
-                   <h2 className="text-lg font-bold font-michroma text-white">Precios y canal</h2>
+             <div className="glass-panel p-6 md:p-8 rounded-2xl border border-subtle space-y-6">
+                 <div className="flex items-center gap-3 border-b border-subtle pb-4 mb-6">
+                   <span className="text-secondary font-bold font-michroma">$</span>
+                   <h2 className="text-lg font-bold font-michroma text-primary">Precios y canal</h2>
                  </div>
 
                  <div className="space-y-6">
                     <div>
-                      <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Canal de venta *</label>
-                      <select name="sale_type" value={formData.sale_type} onChange={handleInputChange} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors appearance-none">
+                      <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Canal de venta *</label>
+                      <select name="sale_type" value={formData.sale_type} onChange={handleInputChange} className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary focus:outline-none focus:border-strong transition-colors appearance-none">
                         <option value="own_stock">Venta directa (Stock propio en almacén DOGE)</option>
                         <option value="amazon_affiliate">Afiliado Amazon (Comisión por recomendación)</option>
                         <option value="whatsapp_concierge">Concierge WhatsApp (Cotización personalizada)</option>
@@ -294,12 +294,12 @@ export default function NewProductForm() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Precio de venta ($) *</label>
-                        <input required name="price" value={formData.price || ''} onChange={handleInputChange} type="number" min="0" step="0.01" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white font-michroma focus:outline-none focus:border-accent/50" />
+                        <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Precio de venta ($) *</label>
+                        <input required name="price" value={formData.price || ''} onChange={handleInputChange} type="number" min="0" step="0.01" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary font-michroma focus:outline-none focus:border-strong" />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Precio de referencia ($)</label>
-                        <input name="compare_at_price" value={formData.compare_at_price || ''} onChange={handleInputChange} type="number" min="0" step="0.01" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white font-michroma focus:outline-none focus:border-accent/50" placeholder="Tachado" />
+                        <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Precio de referencia ($)</label>
+                        <input name="compare_at_price" value={formData.compare_at_price || ''} onChange={handleInputChange} type="number" min="0" step="0.01" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary font-michroma focus:outline-none focus:border-strong" placeholder="Tachado" />
                       </div>
                     </div>
 
@@ -307,11 +307,11 @@ export default function NewProductForm() {
                        <div className="space-y-4 p-4 rounded-xl bg-amber-500/5 border border-amber-500/10">
                           <div>
                             <label className="block text-xs font-bold text-amber-500/80 uppercase tracking-wider mb-2">URL de referido Amazon</label>
-                            <input name="amazon_affiliate_url" value={formData.amazon_affiliate_url} onChange={handleInputChange} type="url" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500/50" placeholder="https://amzn.to/..." />
+                            <input name="amazon_affiliate_url" value={formData.amazon_affiliate_url} onChange={handleInputChange} type="url" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary text-sm focus:outline-none focus:border-amber-500/50" placeholder="https://amzn.to/..." />
                           </div>
                           <div>
                             <label className="block text-xs font-bold text-amber-500/80 uppercase tracking-wider mb-2">Código ASIN de Amazon</label>
-                            <input name="amazon_asin" value={formData.amazon_asin} onChange={handleInputChange} type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-amber-500/50" placeholder="B0CY4K3XTK" />
+                            <input name="amazon_asin" value={formData.amazon_asin} onChange={handleInputChange} type="text" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary text-sm font-mono focus:outline-none focus:border-amber-500/50" placeholder="B0CY4K3XTK" />
                           </div>
                        </div>
                     )}
@@ -320,11 +320,11 @@ export default function NewProductForm() {
                        <div className="grid grid-cols-2 gap-4 p-4 rounded-xl bg-blue-500/5 border border-blue-500/10">
                           <div>
                             <label className="block text-xs font-bold text-blue-400/80 uppercase tracking-wider mb-2">Cantidad inicial</label>
-                            <input name="stock_quantity" value={formData.stock_quantity || ''} onChange={handleInputChange} type="number" min="0" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white font-michroma focus:outline-none focus:border-blue-500/50" />
+                            <input name="stock_quantity" value={formData.stock_quantity || ''} onChange={handleInputChange} type="number" min="0" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary font-michroma focus:outline-none focus:border-blue-500/50" />
                           </div>
                           <div>
                             <label className="block text-xs font-bold text-blue-400/80 uppercase tracking-wider mb-2">Alerta stock bajo</label>
-                            <input name="low_stock_threshold" value={formData.low_stock_threshold || ''} onChange={handleInputChange} type="number" min="0" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white font-michroma focus:outline-none focus:border-blue-500/50" />
+                            <input name="low_stock_threshold" value={formData.low_stock_threshold || ''} onChange={handleInputChange} type="number" min="0" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary font-michroma focus:outline-none focus:border-blue-500/50" />
                           </div>
                        </div>
                     )}
@@ -332,41 +332,41 @@ export default function NewProductForm() {
              </div>
 
              {/* Aesthetics & Media */}
-             <div className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 space-y-6">
-                 <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-6">
+             <div className="glass-panel p-6 md:p-8 rounded-2xl border border-subtle space-y-6">
+                 <div className="flex items-center gap-3 border-b border-subtle pb-4 mb-6">
                    <Sparkles className="w-5 h-5 text-accent" />
-                   <h2 className="text-lg font-bold font-michroma text-white">Presentación visual</h2>
+                   <h2 className="text-lg font-bold font-michroma text-primary">Presentación visual</h2>
                  </div>
 
                  <div className="space-y-6">
                     <div>
-                      <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Imagen principal</label>
+                      <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Imagen principal</label>
                       <div className="flex gap-2">
-                         <div className="relative w-12 h-12 rounded-xl border border-white/10 bg-black/50 flex items-center justify-center shrink-0 overflow-hidden">
+                         <div className="relative w-12 h-12 rounded-xl border border-subtle bg-surface-0/60 flex items-center justify-center shrink-0 overflow-hidden">
                             {imagePreview ? (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img src={imagePreview} alt="Vista previa" className="absolute inset-0 h-full w-full rounded-xl object-cover" />
                             ) : (
-                              <ImageIcon className="w-5 h-5 text-zinc-600" />
+                              <ImageIcon className="w-5 h-5 text-muted" />
                             )}
                          </div>
-                         <input onChange={(e) => setImageFile(e.target.files?.[0] || null)} type="file" accept="image/jpeg,image/png,image/webp" className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm file:mr-3 file:border-0 file:bg-white/10 file:text-white" />
+                         <input onChange={(e) => setImageFile(e.target.files?.[0] || null)} type="file" accept="image/jpeg,image/png,image/webp" className="flex-1 bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary text-sm file:mr-3 file:border-0 file:bg-surface-3 file:text-primary" />
                       </div>
-                      <p className="text-[10px] text-zinc-500 mt-2">Se almacena de forma segura en Supabase Storage.</p>
+                      <p className="text-[10px] text-muted mt-2">Se almacena de forma segura en Supabase Storage.</p>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Texto alternativo (Accesibilidad)</label>
-                      <input value={imageAlt} onChange={(event) => setImageAlt(event.target.value)} type="text" maxLength={300} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-accent/50" placeholder="Describe la imagen para accesibilidad" />
+                      <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Texto alternativo (Accesibilidad)</label>
+                      <input value={imageAlt} onChange={(event) => setImageAlt(event.target.value)} type="text" maxLength={300} className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary text-sm focus:outline-none focus:border-strong" placeholder="Describe la imagen para accesibilidad" />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Etiqueta destacada</label>
-                        <input name="benefit_label" value={formData.benefit_label} onChange={handleInputChange} type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-accent/50" placeholder="Ej. Validado VIP, Edición Limitada" />
+                        <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Etiqueta destacada</label>
+                        <input name="benefit_label" value={formData.benefit_label} onChange={handleInputChange} type="text" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary text-sm focus:outline-none focus:border-strong" placeholder="Ej. Validado VIP, Edición Limitada" />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Gradiente de tarjeta</label>
-                        <select name="accent_gradient" value={formData.accent_gradient} onChange={handleInputChange} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 appearance-none text-sm">
+                        <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">Gradiente de tarjeta</label>
+                        <select name="accent_gradient" value={formData.accent_gradient} onChange={handleInputChange} className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary focus:outline-none focus:border-strong appearance-none text-sm">
                           <option value="from-zinc-500 to-zinc-800">Titanio (Grises sobrios)</option>
                           <option value="from-purple-600 to-purple-900">Royal (Púrpuras premium)</option>
                           <option value="from-yellow-400 to-yellow-700">Gold (Dorados)</option>
@@ -376,23 +376,23 @@ export default function NewProductForm() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-6 pt-4 border-t border-white/5">
+                    <div className="flex items-center gap-6 pt-4 border-t border-subtle">
                       <label className="flex items-center gap-3 cursor-pointer group">
                         <div className="relative flex items-center justify-center">
                           <input type="checkbox" name="is_active" checked={formData.is_active} onChange={handleInputChange} className="peer sr-only" />
                           <div className="w-10 h-6 bg-zinc-800 rounded-full peer peer-checked:bg-green-500 transition-colors"></div>
                           <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4"></div>
                         </div>
-                        <span className="text-sm font-bold text-white group-hover:text-accent transition-colors">Visible en tienda</span>
+                        <span className="text-sm font-bold text-primary group-hover:text-accent transition-colors">Visible en tienda</span>
                       </label>
 
                       <label className="flex items-center gap-3 cursor-pointer group">
                         <div className="relative flex items-center justify-center">
                           <input type="checkbox" name="is_featured" checked={formData.is_featured} onChange={handleInputChange} className="peer sr-only" />
-                          <div className="w-10 h-6 bg-zinc-800 rounded-full peer peer-checked:bg-accent transition-colors"></div>
+                          <div className="w-10 h-6 bg-surface-2 rounded-full peer peer-checked:bg-accent transition-colors"></div>
                           <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4"></div>
                         </div>
-                        <span className="text-sm font-bold text-white group-hover:text-accent transition-colors">Destacado</span>
+                        <span className="text-sm font-bold text-primary group-hover:text-accent transition-colors">Destacado</span>
                       </label>
                     </div>
                  </div>
@@ -400,10 +400,10 @@ export default function NewProductForm() {
           </div>
 
           {/* Specifications */}
-          <div className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 space-y-6">
-             <div className="flex items-center justify-between border-b border-white/5 pb-4 mb-6">
-               <h2 className="text-lg font-bold font-michroma text-white">Ficha técnica y especificaciones</h2>
-               <button type="button" onClick={addSpec} className="text-xs font-bold text-accent hover:text-white transition-colors flex items-center gap-1">
+          <div className="glass-panel p-6 md:p-8 rounded-2xl border border-subtle space-y-6">
+             <div className="flex items-center justify-between border-b border-subtle pb-4 mb-6">
+               <h2 className="text-lg font-bold font-michroma text-primary">Ficha técnica y especificaciones</h2>
+               <button type="button" onClick={addSpec} className="text-xs font-bold text-accent hover:text-primary transition-colors flex items-center gap-1">
                  <Plus className="w-3 h-3" /> Añadir especificación
                </button>
              </div>
@@ -415,14 +415,14 @@ export default function NewProductForm() {
                        value={spec.label} 
                        onChange={(e) => handleSpecChange(index, 'label', e.target.value)} 
                        type="text" 
-                       className="w-1/3 bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent/50" 
+                       className="w-1/3 bg-surface-0/60 border border-subtle rounded-xl px-4 py-2.5 text-primary text-sm focus:outline-none focus:border-strong" 
                        placeholder="Ej. Potencia de succión" 
                      />
                      <input 
                        value={spec.value} 
                        onChange={(e) => handleSpecChange(index, 'value', e.target.value)} 
                        type="text" 
-                       className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent/50" 
+                       className="flex-1 bg-surface-0/60 border border-subtle rounded-xl px-4 py-2.5 text-primary text-sm focus:outline-none focus:border-strong" 
                        placeholder="Ej. 240 AW / Motor V15" 
                      />
                      <button type="button" onClick={() => removeSpec(index)} aria-label="Eliminar especificación" className="p-2.5 text-zinc-500 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors">
@@ -431,7 +431,7 @@ export default function NewProductForm() {
                   </div>
                 ))}
                 {specs.length === 0 && (
-                  <p className="text-zinc-500 text-sm text-center py-4">No se han añadido especificaciones aún.</p>
+                  <p className="text-muted text-sm text-center py-4">No se han añadido especificaciones aún.</p>
                 )}
               </div>
           </div>

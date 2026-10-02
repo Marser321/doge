@@ -74,12 +74,12 @@ function MfaForm() {
   }
 
   return (
-    <main className="grid min-h-screen place-items-center bg-[#0b0b0c] px-5 text-white">
-      <section className="w-full max-w-md rounded-3xl border border-white/10 bg-white/[0.03] p-8">
+    <main className="grid min-h-screen place-items-center bg-surface-0 px-5 text-primary">
+      <section className="w-full max-w-md rounded-3xl border border-subtle bg-surface-1 p-8">
         <ShieldCheck className="mx-auto size-9 text-red-300" aria-hidden />
         <h1 className="mt-5 text-center text-2xl font-semibold">Verificación en dos pasos</h1>
         {loading && !factorId ? (
-          <p className="mt-8 flex items-center justify-center gap-2 text-sm text-zinc-400"><LoaderCircle data-motion="progress" className="size-4 animate-spin" /> Preparando acceso seguro…</p>
+          <p className="mt-8 flex items-center justify-center gap-2 text-sm text-secondary"><LoaderCircle data-motion="progress" className="size-4 animate-spin" /> Preparando acceso seguro…</p>
         ) : (
           <>
             {enrollment && (
@@ -90,16 +90,16 @@ function MfaForm() {
               </div>
             )}
             <form onSubmit={verify} className="mt-6 space-y-4">
-              <label className="block text-sm text-zinc-300">Código de seis dígitos
-                <input name="code" required inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-center font-mono text-xl tracking-[0.4em] outline-none focus:border-red-400" />
+              <label className="block text-sm text-secondary">Código de seis dígitos
+                <input name="code" required inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} className="mt-2 w-full rounded-xl border border-strong bg-surface-1 px-4 py-3 text-center font-mono text-xl tracking-[0.4em] outline-none focus:border-red-400" />
               </label>
               {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-100">{error}</p>}
               <button disabled={loading || !factorId} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold transition hover:bg-red-600 disabled:opacity-50">
                 <KeyRound className="size-4" /> Verificar
               </button>
             </form>
-            <div className="mt-5 border-t border-white/10 pt-4 text-center">
-              <Link href="/admin" className="text-sm text-zinc-400 hover:text-white transition">
+            <div className="mt-5 border-t border-subtle pt-4 text-center">
+              <Link href="/admin" className="text-sm text-secondary hover:text-primary transition">
                 Continuar al panel directamente →
               </Link>
             </div>
@@ -112,7 +112,7 @@ function MfaForm() {
 
 export default function MfaPage() {
   return (
-    <Suspense fallback={<main className="min-h-screen bg-[#0b0b0c]" />}>
+    <Suspense fallback={<main className="min-h-screen bg-surface-0" />}>
       <MfaForm />
     </Suspense>
   );

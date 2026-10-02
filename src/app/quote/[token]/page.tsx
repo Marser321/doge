@@ -34,23 +34,23 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
     : { eyebrow: 'Propuesta de servicio', hello: 'Hola', intro: 'Esta es la propuesta para', subtotal: 'Subtotal', discount: 'Descuento', taxes: 'Impuestos', total: 'Total', valid: 'Válida hasta', note: 'La aprobación no confirma automáticamente una fecha.' };
 
   return (
-    <main className="min-h-screen bg-[#0b0b0c] px-5 py-8 text-white sm:py-14">
+    <main className="min-h-screen bg-surface-0 px-5 py-8 text-primary sm:py-14">
       <section className="mx-auto max-w-3xl">
         <header className="flex items-center justify-between">
           <Link href="/" aria-label="DOGE inicio"><BrandMark size="lg" /></Link>
-          <span className="font-mono text-xs text-zinc-500">{quote.quote_number}</span>
+          <span className="font-mono text-xs text-muted">{quote.quote_number}</span>
         </header>
-        <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.03] p-6 shadow-2xl shadow-black/30 sm:p-9">
+        <div className="mt-10 rounded-3xl border border-subtle bg-surface-1 p-6 shadow-2xl shadow-black/30 sm:p-9">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">{labels.eyebrow}</p>
           <h1 className="mt-3 text-3xl font-semibold">{labels.hello}, {String(request?.contact_name || (locale === 'en' ? 'client' : 'cliente'))}.</h1>
-          <p className="mt-3 text-zinc-300">{labels.intro} {String(request?.service_name_snapshot || (locale === 'en' ? 'the requested service' : 'el servicio solicitado'))}.</p>
+          <p className="mt-3 text-secondary">{labels.intro} {String(request?.service_name_snapshot || (locale === 'en' ? 'the requested service' : 'el servicio solicitado'))}.</p>
 
-          <div className="mt-8 overflow-hidden rounded-2xl border border-white/10">
+          <div className="mt-8 overflow-hidden rounded-2xl border border-subtle">
             {items.map((item: Record<string, unknown>, index: number) => (
-              <div key={`${item.description}-${index}`} className="grid grid-cols-[1fr_auto] gap-4 border-b border-white/10 px-4 py-4 last:border-0">
+              <div key={`${item.description}-${index}`} className="grid grid-cols-[1fr_auto] gap-4 border-b border-subtle px-4 py-4 last:border-0">
                 <div>
                   <p className="font-medium">{String(item.description)}</p>
-                  <p className="mt-1 text-xs text-zinc-500">{Number(item.quantity)} × {money(Number(item.unit_price_cents), String(quote.currency))}</p>
+                  <p className="mt-1 text-xs text-muted">{Number(item.quantity)} × {money(Number(item.unit_price_cents), String(quote.currency))}</p>
                 </div>
                 <p className="font-mono text-sm">{money(Number(item.total_cents), String(quote.currency))}</p>
               </div>
@@ -58,14 +58,14 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
           </div>
 
           <dl className="ml-auto mt-6 max-w-sm space-y-2 text-sm">
-            <div className="flex justify-between text-zinc-400"><dt>{labels.subtotal}</dt><dd>{money(Number(quote.subtotal_cents), String(quote.currency))}</dd></div>
-            {Number(quote.discount_cents) > 0 && <div className="flex justify-between text-zinc-400"><dt>{labels.discount}</dt><dd>−{money(Number(quote.discount_cents), String(quote.currency))}</dd></div>}
-            {Number(quote.tax_cents) > 0 && <div className="flex justify-between text-zinc-400"><dt>{labels.taxes}</dt><dd>{money(Number(quote.tax_cents), String(quote.currency))}</dd></div>}
-            <div className="flex justify-between border-t border-white/10 pt-3 text-lg font-semibold"><dt>{labels.total}</dt><dd>{money(Number(quote.total_cents), String(quote.currency))}</dd></div>
+            <div className="flex justify-between text-secondary"><dt>{labels.subtotal}</dt><dd>{money(Number(quote.subtotal_cents), String(quote.currency))}</dd></div>
+            {Number(quote.discount_cents) > 0 && <div className="flex justify-between text-secondary"><dt>{labels.discount}</dt><dd>−{money(Number(quote.discount_cents), String(quote.currency))}</dd></div>}
+            {Number(quote.tax_cents) > 0 && <div className="flex justify-between text-secondary"><dt>{labels.taxes}</dt><dd>{money(Number(quote.tax_cents), String(quote.currency))}</dd></div>}
+            <div className="flex justify-between border-t border-subtle pt-3 text-lg font-semibold"><dt>{labels.total}</dt><dd>{money(Number(quote.total_cents), String(quote.currency))}</dd></div>
           </dl>
 
-          {quote.notes && <p className="mt-7 rounded-xl bg-white/5 p-4 text-sm leading-6 text-zinc-300">{String(quote.notes)}</p>}
-          <p className="mt-7 text-xs text-zinc-500">{labels.valid} {new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'es-US', { dateStyle: 'long' }).format(new Date(String(quote.expires_at)))}. {labels.note}</p>
+          {quote.notes && <p className="mt-7 rounded-xl bg-surface-2 p-4 text-sm leading-6 text-secondary">{String(quote.notes)}</p>}
+          <p className="mt-7 text-xs text-muted">{labels.valid} {new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'es-US', { dateStyle: 'long' }).format(new Date(String(quote.expires_at)))}. {labels.note}</p>
           <div className="mt-7"><QuoteDecision token={token} locale={locale} /></div>
         </div>
       </section>

@@ -73,14 +73,14 @@ export default function ProductsDashboard() {
       case 'whatsapp_concierge': 
         return { label: 'Concierge WhatsApp', style: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' }
       default: 
-        return { label: type.replace('_', ' '), style: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20' }
+        return { label: type.replace('_', ' '), style: 'bg-zinc-500/10 text-secondary border-zinc-500/20' }
     }
   }
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="w-8 h-8 border-4 border-white/10 border-t-white rounded-full animate-spin" data-motion="progress"></div>
+        <div className="w-8 h-8 border-4 border-subtle border-t-white rounded-full animate-spin" data-motion="progress"></div>
       </div>
     )
   }
@@ -98,13 +98,13 @@ export default function ProductsDashboard() {
            <div className="flex items-center gap-3">
              <Link 
                href="/admin/inventory" 
-               className="px-4 py-2.5 flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 text-zinc-300 font-semibold hover:bg-white/10 transition-all text-sm"
+               className="px-4 py-2.5 flex items-center gap-2 rounded-xl border border-subtle bg-surface-2 text-secondary font-semibold hover:bg-surface-3 transition-all text-sm"
              >
-               <Boxes className="w-4 h-4 text-zinc-400" /> Control de inventario
+               <Boxes className="w-4 h-4 text-secondary" /> Control de inventario
              </Link>
              <Link 
                href="/admin/products/new" 
-               className="px-5 py-2.5 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target"
+               className="px-5 py-2.5 flex items-center gap-2 rounded-xl bg-foreground text-background font-bold hover:opacity-90 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target"
              >
                <Plus className="w-4 h-4" /> Añadir producto
              </Link>
@@ -114,13 +114,13 @@ export default function ProductsDashboard() {
 
        {/* Stats Grid */}
        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="glass-panel p-4 rounded-xl border border-white/5 flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-white/5 text-white">
+          <div className="glass-panel p-4 rounded-xl border border-subtle flex items-center gap-4">
+            <div className="p-3 rounded-lg bg-surface-2 text-primary">
               <Box className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold font-michroma">Total de productos</p>
-              <p className="text-xl font-michroma font-bold text-white">{products.length}</p>
+              <p className="text-[10px] text-muted uppercase tracking-widest font-bold font-michroma">Total de productos</p>
+              <p className="text-xl font-michroma font-bold text-primary">{products.length}</p>
             </div>
           </div>
           <div className="glass-panel p-4 rounded-xl border border-sky-400/10 flex items-center gap-4">
@@ -128,26 +128,26 @@ export default function ProductsDashboard() {
               <Star className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold font-michroma">Fichas piloto</p>
-              <p className="text-xl font-michroma font-bold text-white">{products.filter(isCatalogPilot).length}</p>
+              <p className="text-[10px] text-muted uppercase tracking-widest font-bold font-michroma">Fichas piloto</p>
+              <p className="text-xl font-michroma font-bold text-primary">{products.filter(isCatalogPilot).length}</p>
             </div>
           </div>
-          <div className="glass-panel p-4 rounded-xl border border-white/5 flex items-center gap-4">
+          <div className="glass-panel p-4 rounded-xl border border-subtle flex items-center gap-4">
             <div className="p-3 rounded-lg bg-green-500/10 text-green-400 border border-green-500/20">
               <TrendingUp className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold font-michroma">Publicados</p>
-              <p className="text-xl font-michroma font-bold text-white">{products.filter(p => p.is_active).length}</p>
+              <p className="text-[10px] text-muted uppercase tracking-widest font-bold font-michroma">Publicados</p>
+              <p className="text-xl font-michroma font-bold text-primary">{products.filter(p => p.is_active).length}</p>
             </div>
           </div>
-          <div className="glass-panel p-4 rounded-xl border border-white/5 flex items-center gap-4">
+          <div className="glass-panel p-4 rounded-xl border border-subtle flex items-center gap-4">
             <div className="p-3 rounded-lg bg-orange-500/10 text-orange-400 border border-orange-500/20">
               <AlertTriangle className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold font-michroma">Stock bajo</p>
-              <p className="text-xl font-michroma font-bold text-white">
+              <p className="text-[10px] text-muted uppercase tracking-widest font-bold font-michroma">Stock bajo</p>
+              <p className="text-xl font-michroma font-bold text-primary">
                 {lowStockCount}
               </p>
             </div>
@@ -157,11 +157,11 @@ export default function ProductsDashboard() {
        {/* Toolbar: Search + Channel Filter Pills */}
        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
          <div className="relative flex-1 max-w-md">
-           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
            <input 
              type="text" 
              placeholder="Buscar por nombre, marca o slug..."
-             className="w-full bg-zinc-950/80 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-red-500/50 transition-colors"
+             className="w-full bg-surface-0/80 border border-subtle rounded-xl pl-10 pr-4 py-2.5 text-primary text-sm focus:outline-none focus:border-red-500/50 transition-colors"
              value={searchTerm}
              onChange={(e) => setSearchTerm(e.target.value)}
            />
@@ -171,7 +171,7 @@ export default function ProductsDashboard() {
            <button
              type="button"
              onClick={() => setChannelFilter('all')}
-             className={`rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'all' ? 'bg-white text-zinc-900 font-semibold' : 'border border-white/10 text-zinc-400 hover:bg-white/5'}`}
+             className={`rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'all' ? 'bg-foreground text-background font-semibold' : 'border border-subtle text-secondary hover:bg-surface-2'}`}
            >
              Todos ({products.length})
            </button>
@@ -209,28 +209,28 @@ export default function ProductsDashboard() {
        </div>
 
        {/* Products Table */}
-       <div className="glass-panel rounded-2xl border border-white/10 overflow-hidden shadow-2xl shadow-black/50">
+       <div className="glass-panel rounded-2xl border border-subtle overflow-hidden shadow-2xl shadow-black/50">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-white/5 bg-white/5">
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Producto</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Canal</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Precio</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Inventario</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Estado</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider text-center">Destacado</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider text-right">Acciones</th>
+                <tr className="border-b border-subtle bg-surface-2">
+                  <th className="p-4 text-xs font-michroma font-bold text-secondary uppercase tracking-wider">Producto</th>
+                  <th className="p-4 text-xs font-michroma font-bold text-secondary uppercase tracking-wider">Canal</th>
+                  <th className="p-4 text-xs font-michroma font-bold text-secondary uppercase tracking-wider">Precio</th>
+                  <th className="p-4 text-xs font-michroma font-bold text-secondary uppercase tracking-wider">Inventario</th>
+                  <th className="p-4 text-xs font-michroma font-bold text-secondary uppercase tracking-wider">Estado</th>
+                  <th className="p-4 text-xs font-michroma font-bold text-secondary uppercase tracking-wider text-center">Destacado</th>
+                  <th className="p-4 text-xs font-michroma font-bold text-secondary uppercase tracking-wider text-right">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-subtle">
                 {filteredProducts.map((p) => {
                   const saleInfo = getSaleTypeInfo(p.sale_type)
                   return (
-                    <tr key={p.id} className="hover:bg-white/[0.02] transition-colors group">
+                    <tr key={p.id} className="hover:bg-surface-1 transition-colors group">
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                           <div className={`relative w-12 h-12 rounded-lg bg-gradient-to-br ${p.accent_gradient || 'from-zinc-800 to-zinc-900'} border border-white/10 flex items-center justify-center overflow-hidden shrink-0 shadow-inner`}>
+                           <div className={`relative w-12 h-12 rounded-lg bg-gradient-to-br ${p.accent_gradient || 'from-zinc-800 to-zinc-900'} border border-subtle flex items-center justify-center overflow-hidden shrink-0 shadow-inner`}>
                               <Image
                                 src={imageFor(p)}
                                 alt={p.product_images?.find((image) => image.is_primary)?.alt_text || p.name}
@@ -240,8 +240,8 @@ export default function ProductsDashboard() {
                               />
                            </div>
                            <div>
-                             <p className="font-bold text-white text-sm">{p.name}</p>
-                             <p className="text-[10px] text-zinc-500 font-mono tracking-tighter">{p.slug}</p>
+                             <p className="font-bold text-primary text-sm">{p.name}</p>
+                             <p className="text-[10px] text-muted font-mono tracking-tighter">{p.slug}</p>
                              {isCatalogPilot(p) && (
                                <span className="mt-1 inline-flex rounded-full border border-sky-400/20 bg-sky-400/5 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-sky-200">
                                  Catálogo piloto
@@ -256,11 +256,11 @@ export default function ProductsDashboard() {
                         </span>
                       </td>
                       <td className="p-4">
-                        <p className="font-michroma font-bold text-white text-sm">
+                        <p className="font-michroma font-bold text-primary text-sm">
                           ${p.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </p>
                         {p.compare_at_price && (
-                          <p className="text-[10px] text-zinc-500 line-through">
+                          <p className="text-[10px] text-muted line-through">
                             ${p.compare_at_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </p>
                         )}
@@ -268,7 +268,7 @@ export default function ProductsDashboard() {
                       <td className="p-4">
                         {p.sale_type === 'own_stock' ? (
                           <div className="flex items-center gap-2">
-                             <span className={`text-sm font-medium ${p.stock_quantity <= p.low_stock_threshold ? 'text-orange-400' : 'text-zinc-300'}`}>
+                             <span className={`text-sm font-medium ${p.stock_quantity <= p.low_stock_threshold ? 'text-orange-400' : 'text-secondary'}`}>
                                {p.stock_quantity} unidades
                              </span>
                              {p.stock_quantity <= p.low_stock_threshold && (
@@ -276,7 +276,7 @@ export default function ProductsDashboard() {
                              )}
                           </div>
                         ) : (
-                          <span className="text-zinc-500 text-xs italic">
+                          <span className="text-muted text-xs italic">
                             {p.sale_type === 'amazon_affiliate' ? 'Enlace afiliado' : 'Consulta personalizada'}
                           </span>
                         )}
@@ -290,7 +290,7 @@ export default function ProductsDashboard() {
                         <div className="flex items-center justify-center">
                           <button 
                             onClick={() => handleToggleFeatured(p)}
-                            className={`p-2 rounded-lg transition-colors ${p.is_featured ? 'text-accent hover:bg-accent/10' : 'text-zinc-600 hover:text-accent hover:bg-white/5'}`}
+                            className={`p-2 rounded-lg transition-colors ${p.is_featured ? 'text-accent hover:bg-accent/10' : 'text-muted hover:text-accent hover:bg-surface-2'}`}
                             title={p.is_featured ? 'Quitar de destacados' : 'Marcar como destacado'}
                           >
                             <Star className={`w-5 h-5 ${p.is_featured ? 'fill-accent' : ''}`} />
@@ -304,7 +304,7 @@ export default function ProductsDashboard() {
                               href={p.amazon_affiliate_url} 
                               target="_blank" 
                               rel="noopener noreferrer" 
-                              className="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-white transition-colors"
+                              className="p-2 hover:bg-surface-3 rounded-lg text-secondary hover:text-primary transition-colors"
                               title="Ver en Amazon"
                             >
                               <ExternalLink className="w-4 h-4" />
@@ -313,7 +313,7 @@ export default function ProductsDashboard() {
                           <Link 
                             href={`/admin/products/${p.id}`} 
                             aria-label={`Editar ${p.name}`} 
-                            className="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-white transition-colors"
+                            className="p-2 hover:bg-surface-3 rounded-lg text-secondary hover:text-primary transition-colors"
                             title="Editar ficha de producto"
                           >
                             <Pencil className="w-4 h-4" />
@@ -328,8 +328,8 @@ export default function ProductsDashboard() {
           </div>
           
           {filteredProducts.length === 0 && (
-             <div className="p-12 text-center text-zinc-500 space-y-2">
-               <p className="font-semibold text-white">No se encontraron productos</p>
+             <div className="p-12 text-center text-muted space-y-2">
+               <p className="font-semibold text-primary">No se encontraron productos</p>
                <p className="text-sm">Prueba ajustando los filtros de canal o el término de búsqueda.</p>
              </div>
           )}

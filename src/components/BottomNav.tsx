@@ -38,14 +38,14 @@ export default function BottomNav() {
       <div className="h-20 w-full md:hidden"></div>
       
       {/* iOS App Style Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 w-full bg-zinc-950/80 backdrop-blur-2xl border-t border-white/5 z-[990] md:hidden pb-safe">
+      <nav className="fixed bottom-0 left-0 w-full bg-surface-0/80 backdrop-blur-2xl border-t border-subtle z-[990] md:hidden pb-safe">
         <div className="flex justify-around items-center h-16 px-2">
           {TABS.map((tab, idx) => {
             const active = !tab.disabled && !tab.isSearch && isActive(tab.href.split('#')[0] || '/');
             const className = `flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${
               active
-                ? 'text-white'
-                : 'text-zinc-500 hover:text-zinc-300'
+                ? 'text-primary'
+                : 'text-muted hover:text-secondary'
             }`;
 
             if (tab.isSearch) {
@@ -54,7 +54,7 @@ export default function BottomNav() {
                   key={idx}
                   type="button"
                   onClick={() => setSearchOpen(true)}
-                  className="flex flex-col items-center justify-center w-full h-full gap-1 transition-colors text-zinc-500 hover:text-zinc-300"
+                  className="flex flex-col items-center justify-center w-full h-full gap-1 transition-colors text-muted hover:text-secondary"
                 >
                   <tab.icon className="w-6 h-6 opacity-60" strokeWidth={1.5} />
                   <span className="text-[10px] font-bold tracking-tight uppercase opacity-60">

@@ -20,7 +20,7 @@ type Props = {
   }) => Promise<void>
 }
 
-const field = 'w-full rounded-xl border border-accent/15 bg-foreground/5 px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-accent/30 focus:border-accent/50'
+const field = 'w-full rounded-xl border border-accent/15 bg-foreground/5 px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-accent/30 focus:border-strong'
 const labelClass = 'mb-2 block text-[10px] font-black uppercase tracking-[0.2em] text-accent'
 
 export function AreaForm({ areaTypes, properties, lang, t, onCancel, onSubmit }: Props) {

@@ -59,7 +59,7 @@ export default function OffersDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="w-8 h-8 border-4 border-white/10 border-t-white rounded-full animate-spin" data-motion="progress"></div>
+        <div className="w-8 h-8 border-4 border-subtle border-t-white rounded-full animate-spin" data-motion="progress"></div>
       </div>
     )
   }
@@ -70,7 +70,7 @@ export default function OffersDashboard() {
        <CrmPageIntro eyebrow="Comercio · promociones" title="Ofertas y promociones" description="Gestiona ventas cruzadas, incentivos y códigos de descuento." actions={<>
           <Link 
             href="/admin/offers/new"
-            className="px-5 py-2.5 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target"
+            className="px-5 py-2.5 flex items-center gap-2 rounded-xl bg-foreground text-background font-bold hover:opacity-90 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target"
           >
             <Plus className="w-4 h-4" /> Nueva oferta
           </Link>
@@ -79,44 +79,44 @@ export default function OffersDashboard() {
        {/* Offers List */}
        <div className="space-y-4">
           {offers.map((offer) => (
-             <div key={offer.id} className="glass-panel p-6 rounded-2xl border border-white/10 hover:border-white/20 transition-all flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden group">
+             <div key={offer.id} className="glass-panel p-6 rounded-2xl border border-subtle hover:border-strong transition-all flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden group">
                
                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
                <div className="flex items-center gap-5">
-                  <div className={`p-4 rounded-xl flex items-center justify-center ${offer.status === 'Active' ? 'bg-zinc-100 text-zinc-900' : 'bg-black/30 border border-white/10 text-zinc-500'}`}>
+                  <div className={`p-4 rounded-xl flex items-center justify-center ${offer.status === 'Active' ? 'bg-zinc-100 text-zinc-900' : 'bg-black/30 border border-subtle text-muted'}`}>
                     <Tag className="w-6 h-6" />
                   </div>
                   <div>
                     <div className="flex items-center gap-3 mb-1">
-                      <h3 className={`font-bold text-lg ${offer.status === 'Active' ? 'text-white' : 'text-zinc-500'}`}>{offer.title}</h3>
+                      <h3 className={`font-bold text-lg ${offer.status === 'Active' ? 'text-primary' : 'text-muted'}`}>{offer.title}</h3>
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                        offer.status === 'Active' ? 'bg-green-500/20 text-green-400' : 'bg-zinc-500/20 text-zinc-400'
+                        offer.status === 'Active' ? 'bg-green-500/20 text-green-400' : 'bg-surface-2 text-secondary'
                       }`}>
                         {offer.status}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 group/code cursor-pointer w-max">
-                      <code className={`font-mono text-xs px-2 py-1 rounded bg-black/40 border border-black/50 ${offer.status === 'Active' ? 'text-blue-300' : 'text-zinc-600'}`}>
+                      <code className={`font-mono text-xs px-2 py-1 rounded bg-surface-0/50 border border-black/50 ${offer.status === 'Active' ? 'text-blue-300' : 'text-muted'}`}>
                         {offer.code}
                       </code>
-                      <Copy className="w-3 h-3 text-zinc-600 group-hover/code:text-white transition-colors" />
+                      <Copy className="w-3 h-3 text-muted group-hover/code:text-primary transition-colors" />
                     </div>
                   </div>
                </div>
 
-               <div className="flex items-center gap-8 md:gap-12 w-full md:w-auto border-t border-white/5 md:border-t-0 pt-4 md:pt-0">
+               <div className="flex items-center gap-8 md:gap-12 w-full md:w-auto border-t border-subtle md:border-t-0 pt-4 md:pt-0">
                  <div>
-                   <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Target</p>
-                   <p className="text-zinc-300 text-sm font-medium">{offer.target_audience}</p>
+                   <p className="text-[10px] text-muted uppercase tracking-widest font-bold mb-1">Target</p>
+                   <p className="text-secondary text-sm font-medium">{offer.target_audience}</p>
                  </div>
                  <div>
-                   <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Uses</p>
-                   <p className="text-white text-sm font-michroma font-bold">{offer.usage_count}</p>
+                   <p className="text-[10px] text-muted uppercase tracking-widest font-bold mb-1">Uses</p>
+                   <p className="text-primary text-sm font-michroma font-bold">{offer.usage_count}</p>
                  </div>
                  <div>
-                   <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Expires</p>
-                   <p className="text-zinc-400 text-sm font-medium">
+                   <p className="text-[10px] text-muted uppercase tracking-widest font-bold mb-1">Expires</p>
+                   <p className="text-secondary text-sm font-medium">
                      {offer.expires_at ? format(new Date(offer.expires_at), 'MMM d, yyyy', { locale: es }) : 'No Expiry'}
                    </p>
                  </div>
@@ -124,14 +124,14 @@ export default function OffersDashboard() {
                  <div className="flex items-center gap-2 ml-auto">
                     <button 
                       onClick={() => handleToggleStatus(offer)}
-                      className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-zinc-400 transition-colors" 
+                      className="p-2 bg-surface-2 hover:bg-surface-3 rounded-lg text-secondary transition-colors" 
                       title="Toggle Status"
                     >
                       <Power className={`w-4 h-4 ${offer.status === 'Active' ? 'text-green-400' : ''}`} />
                     </button>
                     <button 
                       onClick={() => handleDelete(offer.id)}
-                      className="p-2 bg-white/5 hover:bg-red-500/20 hover:text-red-400 rounded-lg text-zinc-500 transition-colors" 
+                      className="p-2 bg-surface-2 hover:bg-red-500/20 hover:text-red-400 rounded-lg text-muted transition-colors" 
                       title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -143,7 +143,7 @@ export default function OffersDashboard() {
           ))}
           
           {offers.length === 0 && (
-            <div className="text-center py-12 text-zinc-500">
+            <div className="text-center py-12 text-muted">
               No offers found. Create your first one above.
             </div>
           )}

@@ -6,6 +6,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import AuraCursor from "@/components/AuraCursor";
 import BottomNav from "@/components/BottomNav";
 import { LanguageProvider } from "@/components/LanguageProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,6 +58,7 @@ export default function RootLayout({
         one flat black sheet. The colour comes from the `body` rule instead.
       */}
       <body className="min-h-full flex flex-col font-sans tracking-tight text-foreground">
+        <ThemeProvider>
         <LanguageProvider>
           <SmoothScroll>
             <AuraCursor />
@@ -64,6 +66,7 @@ export default function RootLayout({
           </SmoothScroll>
           <BottomNav />
         </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

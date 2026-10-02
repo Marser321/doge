@@ -129,10 +129,10 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             exit={{ opacity: 0, y: -20, scale: 0.96, filter: 'blur(8px)' }}
             transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-2xl bg-zinc-950 border border-white/10 rounded-[32px] shadow-2xl overflow-hidden"
+            className="w-full max-w-2xl bg-surface-0 border border-subtle rounded-[32px] shadow-2xl overflow-hidden"
           >
             {/* Search Input */}
-            <div className="flex items-center gap-4 p-6 border-b border-white/5">
+            <div className="flex items-center gap-4 p-6 border-b border-subtle">
               <Search className="w-6 h-6 text-accent shrink-0" />
               <input
                 ref={inputRef}
@@ -144,7 +144,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               />
               <button
                 onClick={onClose}
-                className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors shrink-0"
+                className="w-8 h-8 rounded-full bg-surface-2 flex items-center justify-center hover:bg-surface-3 transition-colors shrink-0"
               >
                 <X className="w-4 h-4 text-accent" />
               </button>
@@ -169,9 +169,9 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                           key={idx}
                           href={item.href}
                           onClick={onClose}
-                          className="flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-white/5 transition-all group"
+                          className="flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-surface-2 transition-all group"
                         >
-                          <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform">
+                          <div className="w-10 h-10 rounded-xl bg-surface-2 flex items-center justify-center border border-subtle shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform">
                             <item.icon className="w-5 h-5 text-accent" />
                           </div>
                           <div className="flex-grow min-w-0">
@@ -188,7 +188,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-white/5 flex justify-between items-center">
+            <div className="p-4 border-t border-subtle flex justify-between items-center">
               <span className="text-[9px] font-black text-accent/30 uppercase tracking-widest">
                 {filtered.length} {lang === 'es' ? 'resultados' : 'results'}
               </span>

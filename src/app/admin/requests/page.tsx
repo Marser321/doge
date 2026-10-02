@@ -183,7 +183,7 @@ export default function RequestsPage() {
 
   if (loading) return (
     <div className="grid min-h-96 place-items-center">
-      <LoaderCircle data-motion="progress" className="size-8 animate-spin text-zinc-500" />
+      <LoaderCircle data-motion="progress" className="size-8 animate-spin text-muted" />
     </div>
   );
 
@@ -198,18 +198,18 @@ export default function RequestsPage() {
         
         {/* Search Input */}
         <div className="relative w-full sm:w-80 shrink-0">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-zinc-500" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar cliente, código, teléfono..."
-            className="w-full rounded-xl border border-white/10 bg-white/[0.04] pl-10 pr-4 py-2.5 text-xs text-white placeholder:text-zinc-500 outline-none focus:border-red-400/50 transition-colors"
+            className="w-full rounded-xl border border-subtle bg-surface-1 pl-10 pr-4 py-2.5 text-xs text-primary placeholder:text-muted outline-none focus:border-red-400/50 transition-colors"
           />
           {searchQuery && (
             <button 
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
             >
               <X className="size-3.5" />
             </button>
@@ -237,7 +237,7 @@ export default function RequestsPage() {
           <div className="flex items-center gap-2.5">
             <CheckCircle2 className="size-5 text-amber-400 shrink-0" />
             <div>
-              <p className="font-semibold text-white">Enlace de aprobación listo para el cliente</p>
+              <p className="font-semibold text-primary">Enlace de aprobación listo para el cliente</p>
               <p className="text-xs text-amber-300/80 mt-0.5 truncate max-w-md">{generatedApprovalUrl}</p>
             </div>
           </div>
@@ -255,7 +255,7 @@ export default function RequestsPage() {
             </button>
             <button
               onClick={() => setGeneratedApprovalUrl(null)}
-              className="p-1.5 text-amber-300 hover:text-white"
+              className="p-1.5 text-amber-300 hover:text-primary"
             >
               <X className="size-4" />
             </button>
@@ -270,23 +270,23 @@ export default function RequestsPage() {
             {columns.map((column) => {
               const columnRequests = grouped[column.status] || [];
               return (
-                <div key={column.status} className={`w-[260px] shrink-0 rounded-2xl border border-white/10 bg-white/[0.02] p-3 flex flex-col min-h-[520px] shadow-sm transition-colors ${column.borderAccent}`}>
-                  <div className="flex items-center justify-between px-1 pb-3 border-b border-white/10">
+                <div key={column.status} className={`w-[260px] shrink-0 rounded-2xl border border-subtle bg-surface-1 p-3 flex flex-col min-h-[520px] shadow-sm transition-colors ${column.borderAccent}`}>
+                  <div className="flex items-center justify-between px-1 pb-3 border-b border-subtle">
                     <div className="flex items-center gap-2 min-w-0">
                       <span className={`size-2 rounded-full ${column.dotBg} shrink-0`} />
                       <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-200 truncate">
                         {column.label}
                       </h2>
                     </div>
-                    <span className="font-mono text-xs px-2 py-0.5 rounded-full bg-white/10 text-white font-semibold shrink-0">
+                    <span className="font-mono text-xs px-2 py-0.5 rounded-full bg-surface-3 text-primary font-semibold shrink-0">
                       {columnRequests.length}
                     </span>
                   </div>
 
                   <div className="mt-3 space-y-2 flex-1">
                     {columnRequests.length === 0 ? (
-                      <div className="h-32 grid place-items-center rounded-xl border border-dashed border-white/10 bg-white/[0.01] p-3 text-center">
-                        <span className="text-[11px] font-medium text-zinc-400">Sin solicitudes</span>
+                      <div className="h-32 grid place-items-center rounded-xl border border-dashed border-subtle bg-white/[0.01] p-3 text-center">
+                        <span className="text-[11px] font-medium text-secondary">Sin solicitudes</span>
                       </div>
                     ) : (
                       columnRequests.map((request) => (
@@ -296,25 +296,25 @@ export default function RequestsPage() {
                           className={`w-full rounded-xl border p-3 text-left transition-all duration-200 ${
                             selected?.id === request.id 
                               ? 'border-red-400/60 bg-red-500/10 shadow-lg shadow-red-950/20 ring-1 ring-red-400/40' 
-                              : 'border-white/10 bg-black/30 hover:border-white/20 hover:bg-white/[0.04]'
+                              : 'border-subtle bg-black/30 hover:border-strong hover:bg-surface-1'
                           }`}
                         >
                           <div className="flex items-start justify-between gap-2">
-                            <p className="line-clamp-1 text-sm font-semibold text-white">
+                            <p className="line-clamp-1 text-sm font-semibold text-primary">
                               {request.contact_name}
                             </p>
-                            <span className="font-mono text-[10px] text-zinc-400 shrink-0">
+                            <span className="font-mono text-[10px] text-secondary shrink-0">
                               {request.reference_code.slice(-4)}
                             </span>
                           </div>
 
-                          <p className="mt-1 line-clamp-1 text-xs text-zinc-300">
+                          <p className="mt-1 line-clamp-1 text-xs text-secondary">
                             {request.service_name_snapshot}
                           </p>
 
                           {request.preferred_date && (
-                            <div className="mt-2.5 flex items-center gap-1.5 text-[10px] text-zinc-400">
-                              <Clock className="size-3 text-zinc-400" />
+                            <div className="mt-2.5 flex items-center gap-1.5 text-[10px] text-secondary">
+                              <Clock className="size-3 text-secondary" />
                               <span>{request.preferred_date}</span>
                             </div>
                           )}
@@ -330,15 +330,15 @@ export default function RequestsPage() {
 
         {/* Selected Request Detail Sidebar */}
         {selected && (
-          <aside className="h-fit rounded-3xl border border-white/10 bg-white/[0.03] p-6 xl:sticky xl:top-24 backdrop-blur-xl shadow-2xl animate-in fade-in slide-in-from-right-4 duration-300">
+          <aside className="h-fit rounded-3xl border border-subtle bg-surface-1 p-6 xl:sticky xl:top-24 backdrop-blur-xl shadow-2xl animate-in fade-in slide-in-from-right-4 duration-300">
             <div className="space-y-6">
               {/* Header */}
-              <div className="flex items-start justify-between gap-4 pb-4 border-b border-white/10">
+              <div className="flex items-start justify-between gap-4 pb-4 border-b border-subtle">
                 <div>
                   <p className="font-mono text-xs text-red-300 font-semibold tracking-wider">
                     {selected.reference_code}
                   </p>
-                  <h2 className="mt-1 text-xl font-bold text-white tracking-tight">
+                  <h2 className="mt-1 text-xl font-bold text-primary tracking-tight">
                     {selected.contact_name}
                   </h2>
                 </div>
@@ -348,7 +348,7 @@ export default function RequestsPage() {
                   </CrmStatusPill>
                   <button
                     onClick={() => setSelected(null)}
-                    className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+                    className="p-1 rounded-lg text-secondary hover:text-primary hover:bg-surface-3 transition-colors"
                     title="Cerrar panel de detalle"
                   >
                     <X className="size-4" />
@@ -372,46 +372,46 @@ export default function RequestsPage() {
               {/* Detail Fields */}
               <dl className="space-y-4 text-xs">
                 <div>
-                  <dt className="text-[10px] uppercase font-bold tracking-wider text-zinc-500">Servicio Solicitado</dt>
-                  <dd className="mt-1 text-sm font-semibold text-white">{selected.service_name_snapshot}</dd>
+                  <dt className="text-[10px] uppercase font-bold tracking-wider text-muted">Servicio Solicitado</dt>
+                  <dd className="mt-1 text-sm font-semibold text-primary">{selected.service_name_snapshot}</dd>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <dt className="text-[10px] uppercase font-bold tracking-wider text-zinc-500">Email</dt>
-                    <dd className="mt-1 text-zinc-300 truncate" title={selected.contact_email || ''}>
+                    <dt className="text-[10px] uppercase font-bold tracking-wider text-muted">Email</dt>
+                    <dd className="mt-1 text-secondary truncate" title={selected.contact_email || ''}>
                       {selected.contact_email || 'No indicado'}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-[10px] uppercase font-bold tracking-wider text-zinc-500">Teléfono</dt>
-                    <dd className="mt-1 text-zinc-300">{selected.contact_phone || 'No indicado'}</dd>
+                    <dt className="text-[10px] uppercase font-bold tracking-wider text-muted">Teléfono</dt>
+                    <dd className="mt-1 text-secondary">{selected.contact_phone || 'No indicado'}</dd>
                   </div>
                 </div>
 
                 <div>
-                  <dt className="text-[10px] uppercase font-bold tracking-wider text-zinc-500">Propiedad</dt>
-                  <dd className="mt-1 text-zinc-300">
+                  <dt className="text-[10px] uppercase font-bold tracking-wider text-muted">Propiedad</dt>
+                  <dd className="mt-1 text-secondary">
                     {selected.property?.address || 'Dirección pendiente'}<br />
-                    <span className="text-zinc-500">{selected.property?.city || 'South Florida'} · {selected.property?.property_type || 'Residencial'}</span>
+                    <span className="text-muted">{selected.property?.city || 'South Florida'} · {selected.property?.property_type || 'Residencial'}</span>
                   </dd>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <dt className="text-[10px] uppercase font-bold tracking-wider text-zinc-500">Fecha de Registro</dt>
-                    <dd className="mt-1 text-zinc-300">{formatDate(selected.created_at)}</dd>
+                    <dt className="text-[10px] uppercase font-bold tracking-wider text-muted">Fecha de Registro</dt>
+                    <dd className="mt-1 text-secondary">{formatDate(selected.created_at)}</dd>
                   </div>
                   <div>
-                    <dt className="text-[10px] uppercase font-bold tracking-wider text-zinc-500">Fecha Preferida</dt>
-                    <dd className="mt-1 text-zinc-300">{selected.preferred_date || 'A convenir'}</dd>
+                    <dt className="text-[10px] uppercase font-bold tracking-wider text-muted">Fecha Preferida</dt>
+                    <dd className="mt-1 text-secondary">{selected.preferred_date || 'A convenir'}</dd>
                   </div>
                 </div>
 
                 {/* Structured Service Notes / Badges */}
                 {structuredNotes && (
                   <div>
-                    <dt className="text-[10px] uppercase font-bold tracking-wider text-zinc-500 mb-1.5">Detalles del Servicio</dt>
+                    <dt className="text-[10px] uppercase font-bold tracking-wider text-muted mb-1.5">Detalles del Servicio</dt>
                     <div className="flex flex-wrap gap-1.5">
                       {structuredNotes.badges.map((badge, idx) => (
                         <span key={idx} className="inline-flex items-center gap-1 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-[11px] font-medium text-cyan-200">
@@ -420,7 +420,7 @@ export default function RequestsPage() {
                       ))}
                     </div>
                     {structuredNotes.freeText && (
-                      <p className="mt-2 text-zinc-300 whitespace-pre-wrap rounded-xl border border-white/5 bg-white/[0.02] p-2.5">
+                      <p className="mt-2 text-secondary whitespace-pre-wrap rounded-xl border border-subtle bg-surface-1 p-2.5">
                         {structuredNotes.freeText}
                       </p>
                     )}
@@ -429,8 +429,8 @@ export default function RequestsPage() {
 
                 {!structuredNotes && selected.notes && (
                   <div>
-                    <dt className="text-[10px] uppercase font-bold tracking-wider text-zinc-500">Notas Adicionales</dt>
-                    <dd className="mt-1 whitespace-pre-wrap text-zinc-300 rounded-xl border border-white/5 bg-white/[0.02] p-2.5">
+                    <dt className="text-[10px] uppercase font-bold tracking-wider text-muted">Notas Adicionales</dt>
+                    <dd className="mt-1 whitespace-pre-wrap text-secondary rounded-xl border border-subtle bg-surface-1 p-2.5">
                       {selected.notes}
                     </dd>
                   </div>
@@ -438,14 +438,14 @@ export default function RequestsPage() {
               </dl>
 
               {/* Status Transition & Actions */}
-              <div className="pt-4 border-t border-white/10 space-y-3">
-                <p className="text-[10px] uppercase font-bold tracking-wider text-zinc-500">Acciones del Pipeline</p>
+              <div className="pt-4 border-t border-subtle space-y-3">
+                <p className="text-[10px] uppercase font-bold tracking-wider text-muted">Acciones del Pipeline</p>
 
                 {nextAction && (
                   <button 
                     disabled={busy} 
                     onClick={() => transition(nextAction.status)} 
-                    className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-white px-4 text-xs font-bold text-black transition hover:bg-zinc-200 disabled:opacity-50 shadow-lg"
+                    className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-white px-4 text-xs font-bold text-black transition hover:opacity-90 disabled:opacity-50 shadow-lg"
                   >
                     {busy ? <LoaderCircle data-motion="progress" className="size-4 animate-spin" /> : <CheckCircle2 className="size-4 text-emerald-600" />} 
                     {nextAction.label}
@@ -473,21 +473,21 @@ export default function RequestsPage() {
 
                 {/* Quick Status Override Dropdown for Owner/Manager */}
                 <div className="pt-2">
-                  <label className="block text-[10px] uppercase font-bold tracking-wider text-zinc-500 mb-1.5">
+                  <label className="block text-[10px] uppercase font-bold tracking-wider text-muted mb-1.5">
                     Mover a otro estado directamente:
                   </label>
                   <select
                     disabled={busy}
                     value={selected.status}
                     onChange={(e) => transition(e.target.value as RequestStatus)}
-                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-zinc-300 outline-none focus:border-red-400"
+                    className="w-full rounded-xl border border-subtle bg-surface-1 px-3 py-2 text-xs text-secondary outline-none focus:border-red-400"
                   >
                     {columns.map((c) => (
-                      <option key={c.status} value={c.status} className="bg-zinc-900 text-white">
+                      <option key={c.status} value={c.status} className="bg-surface-1 text-primary">
                         {c.label}
                       </option>
                     ))}
-                    <option value="cancelled" className="bg-zinc-900 text-red-400">Cancelada</option>
+                    <option value="cancelled" className="bg-surface-1 text-red-400">Cancelada</option>
                   </select>
                 </div>
 
@@ -509,28 +509,28 @@ export default function RequestsPage() {
       {/* Quotation Modal */}
       {quoteOpen && selected && (
         <div className="fixed inset-0 z-[70] grid place-items-center bg-black/80 p-4 backdrop-blur-md">
-          <form onSubmit={submitQuote} className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-white/15 bg-zinc-950 p-6 sm:p-8 shadow-2xl">
-            <div className="flex items-start justify-between pb-4 border-b border-white/10">
+          <form onSubmit={submitQuote} className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-strong bg-surface-0 p-6 sm:p-8 shadow-2xl">
+            <div className="flex items-start justify-between pb-4 border-b border-subtle">
               <div>
                 <p className="text-xs uppercase tracking-wider text-red-400 font-bold">Generador de Cotizaciones</p>
-                <h2 className="mt-1 text-xl font-bold text-white">Conceptos, precios y condiciones</h2>
+                <h2 className="mt-1 text-xl font-bold text-primary">Conceptos, precios y condiciones</h2>
               </div>
-              <button type="button" onClick={() => setQuoteOpen(false)} className="rounded-lg p-2 text-zinc-400 hover:bg-white/10 hover:text-white">
+              <button type="button" onClick={() => setQuoteOpen(false)} className="rounded-lg p-2 text-secondary hover:bg-surface-3 hover:text-primary">
                 <X className="size-5" />
               </button>
             </div>
 
             <div className="mt-6 space-y-3">
-              <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Líneas de cotización</p>
+              <p className="text-xs font-semibold text-secondary uppercase tracking-wider">Líneas de cotización</p>
               {items.map((item, index) => (
-                <div key={item.key} className="grid gap-3 rounded-xl border border-white/10 bg-white/[0.02] p-3 sm:grid-cols-[1fr_90px_130px_auto]">
+                <div key={item.key} className="grid gap-3 rounded-xl border border-subtle bg-surface-1 p-3 sm:grid-cols-[1fr_90px_130px_auto]">
                   <input 
                     aria-label={`Descripción ${index + 1}`} 
                     required 
                     value={item.description} 
                     placeholder="Descripción del concepto"
                     onChange={(event) => setItems((current) => current.map((candidate) => candidate.key === item.key ? { ...candidate, description: event.target.value } : candidate))} 
-                    className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-white outline-none focus:border-red-400" 
+                    className="rounded-lg border border-subtle bg-surface-2 px-3 py-2 text-xs text-primary outline-none focus:border-red-400" 
                   />
                   <input 
                     aria-label={`Cantidad ${index + 1}`} 
@@ -540,7 +540,7 @@ export default function RequestsPage() {
                     step="0.01" 
                     value={item.quantity} 
                     onChange={(event) => setItems((current) => current.map((candidate) => candidate.key === item.key ? { ...candidate, quantity: Number(event.target.value) } : candidate))} 
-                    className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-white outline-none" 
+                    className="rounded-lg border border-subtle bg-surface-2 px-3 py-2 text-xs text-primary outline-none" 
                   />
                   <input 
                     aria-label={`Precio ${index + 1}`} 
@@ -550,14 +550,14 @@ export default function RequestsPage() {
                     step="0.01" 
                     value={item.unit_price_cents / 100} 
                     onChange={(event) => setItems((current) => current.map((candidate) => candidate.key === item.key ? { ...candidate, unit_price_cents: Math.round(Number(event.target.value) * 100) } : candidate))} 
-                    className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-white outline-none" 
+                    className="rounded-lg border border-subtle bg-surface-2 px-3 py-2 text-xs text-primary outline-none" 
                   />
                   <button 
                     type="button" 
                     aria-label="Eliminar concepto" 
                     disabled={items.length === 1} 
                     onClick={() => setItems((current) => current.filter((candidate) => candidate.key !== item.key))} 
-                    className="rounded-lg p-2 text-zinc-500 hover:text-red-300 disabled:opacity-30"
+                    className="rounded-lg p-2 text-muted hover:text-red-300 disabled:opacity-30"
                   >
                     <X className="size-4" />
                   </button>
@@ -572,18 +572,18 @@ export default function RequestsPage() {
               </button>
             </div>
 
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 pt-4 border-t border-white/10">
-              <label className="text-xs text-zinc-400">
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 pt-4 border-t border-subtle">
+              <label className="text-xs text-secondary">
                 Descuento especial (USD)
-                <input name="discount" type="number" min="0" step="0.01" defaultValue="0" className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white outline-none focus:border-red-400" />
+                <input name="discount" type="number" min="0" step="0.01" defaultValue="0" className="mt-1.5 w-full rounded-xl border border-subtle bg-surface-2 px-3 py-2 text-xs text-primary outline-none focus:border-red-400" />
               </label>
-              <label className="text-xs text-zinc-400">
+              <label className="text-xs text-secondary">
                 Impuestos (%)
-                <input name="tax" type="number" min="0" max="100" step="0.01" defaultValue="0" className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white outline-none focus:border-red-400" />
+                <input name="tax" type="number" min="0" max="100" step="0.01" defaultValue="0" className="mt-1.5 w-full rounded-xl border border-subtle bg-surface-2 px-3 py-2 text-xs text-primary outline-none focus:border-red-400" />
               </label>
-              <label className="text-xs text-zinc-400 sm:col-span-2">
+              <label className="text-xs text-secondary sm:col-span-2">
                 Notas y términos para el cliente
-                <textarea name="notes" rows={3} placeholder="Condiciones de pago, validez de la oferta..." className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white outline-none focus:border-red-400 resize-none" />
+                <textarea name="notes" rows={3} placeholder="Condiciones de pago, validez de la oferta..." className="mt-1.5 w-full rounded-xl border border-subtle bg-surface-2 px-3 py-2 text-xs text-primary outline-none focus:border-red-400 resize-none" />
               </label>
             </div>
 

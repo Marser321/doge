@@ -31,7 +31,7 @@ export const HeroSection = ({
         transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
         className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(700px,90vw)] h-[min(450px,60vh)] bg-accent/10 rounded-full blur-[100px] -z-10 pointer-events-none"
       />
-      <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-white/5 rounded-full blur-[90px] -z-10 pointer-events-none" />
+      <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-surface-2 rounded-full blur-[90px] -z-10 pointer-events-none" />
 
       <div className="max-w-5xl mx-auto px-6 w-full text-center relative z-10">
         <motion.div
@@ -43,7 +43,7 @@ export const HeroSection = ({
         >
           {/* Top Luxury Pill Badge */}
           <motion.div variants={fadeInUp} className="mb-6">
-            <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/15 bg-white/10 text-zinc-200 text-[11px] font-bold uppercase tracking-[0.25em] shadow-sm backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-strong bg-surface-3 text-zinc-200 text-[11px] font-bold uppercase tracking-[0.25em] shadow-sm backdrop-blur-md">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
               {t('hero.badge')} • MIAMI
             </span>
@@ -61,10 +61,10 @@ export const HeroSection = ({
           {/* Subtitle */}
           <motion.p
             variants={fadeInUp}
-            className="text-base sm:text-lg md:text-xl text-zinc-300 dark:text-zinc-300 mb-10 md:mb-12 leading-relaxed font-medium max-w-2xl mx-auto"
+            className="text-base sm:text-lg md:text-xl text-secondary dark:text-secondary mb-10 md:mb-12 leading-relaxed font-medium max-w-2xl mx-auto"
           >
             {t('hero.desc')}{' '}
-            <span className="text-white font-bold">{t('hero.desc_bold')}</span>
+            <span className="text-primary font-bold">{t('hero.desc_bold')}</span>
           </motion.p>
 
           {/* Action Buttons: Crear Cuenta & Iniciar Sesión */}
@@ -75,7 +75,7 @@ export const HeroSection = ({
             {/* Primary Action: Crear cuenta / Crear sesión */}
             <Link
               href="/signup"
-              className="inline-flex items-center justify-center px-8 py-5 text-xs font-black uppercase tracking-[0.22em] text-black bg-white rounded-2xl shadow-2xl hover:bg-zinc-200 transition-all group cursor-pointer w-full sm:w-auto cta-glow hover:shadow-[0_0_40px_8px_rgba(255,255,255,0.18)] relative overflow-hidden"
+              className="inline-flex items-center justify-center px-8 py-5 text-xs font-black uppercase tracking-[0.22em] text-black bg-white rounded-2xl shadow-2xl hover:opacity-90 transition-all group cursor-pointer w-full sm:w-auto cta-glow hover:shadow-[0_0_40px_8px_rgba(255,255,255,0.18)] relative overflow-hidden"
             >
               <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 pointer-events-none" />
               <span className="relative z-10 flex items-center gap-2.5">
@@ -88,10 +88,10 @@ export const HeroSection = ({
             {/* Secondary Action: Iniciar sesión */}
             <Link
               href="/login"
-              className="inline-flex items-center justify-center px-8 py-5 text-xs font-black uppercase tracking-[0.22em] text-white rounded-2xl border border-white/20 bg-white/5 backdrop-blur-xl hover:bg-white/10 hover:border-white/40 transition-all group cursor-pointer w-full sm:w-auto shadow-xl"
+              className="inline-flex items-center justify-center px-8 py-5 text-xs font-black uppercase tracking-[0.22em] text-primary rounded-2xl border border-strong bg-surface-2 backdrop-blur-xl hover:bg-surface-3 hover:border-strong transition-all group cursor-pointer w-full sm:w-auto shadow-xl"
             >
               <span className="flex items-center gap-2.5">
-                <LogIn className="w-4 h-4 text-zinc-300 group-hover:text-white transition-colors" />
+                <LogIn className="w-4 h-4 text-secondary group-hover:text-primary transition-colors" />
                 {t('hero.signIn')}
               </span>
             </Link>
@@ -101,10 +101,10 @@ export const HeroSection = ({
           <motion.div variants={fadeInUp} className="mb-14">
             <Link
               href="/services"
-              className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors py-2 px-4 rounded-xl hover:bg-white/5"
+              className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-secondary hover:text-primary transition-colors py-2 px-4 rounded-xl hover:bg-surface-2"
             >
               <span>{t('hero.guestExplore')}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
+              <ArrowRight className="w-3.5 h-3.5 text-secondary" />
             </Link>
           </motion.div>
 
@@ -113,38 +113,38 @@ export const HeroSection = ({
             variants={fadeInUp}
             className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 w-full text-left"
           >
-            <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl hover:border-white/20 transition-all shadow-lg">
-              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white mb-4">
+            <div className="p-6 rounded-2xl border border-subtle bg-surface-1 backdrop-blur-xl hover:border-strong transition-all shadow-lg">
+              <div className="w-10 h-10 rounded-xl bg-surface-2 border border-subtle flex items-center justify-center text-primary mb-4">
                 <ShieldCheck className="w-5 h-5 text-emerald-400" />
               </div>
-              <h3 className="text-sm font-bold uppercase tracking-wider text-white mb-1.5 font-michroma">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-primary mb-1.5 font-michroma">
                 {t('hero.feature1Title')}
               </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed font-medium">
+              <p className="text-xs text-secondary leading-relaxed font-medium">
                 {t('hero.feature1Desc')}
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl hover:border-white/20 transition-all shadow-lg">
-              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white mb-4">
+            <div className="p-6 rounded-2xl border border-subtle bg-surface-1 backdrop-blur-xl hover:border-strong transition-all shadow-lg">
+              <div className="w-10 h-10 rounded-xl bg-surface-2 border border-subtle flex items-center justify-center text-primary mb-4">
                 <Sparkles className="w-5 h-5 text-amber-400" />
               </div>
-              <h3 className="text-sm font-bold uppercase tracking-wider text-white mb-1.5 font-michroma">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-primary mb-1.5 font-michroma">
                 {t('hero.feature2Title')}
               </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed font-medium">
+              <p className="text-xs text-secondary leading-relaxed font-medium">
                 {t('hero.feature2Desc')}
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl hover:border-white/20 transition-all shadow-lg">
-              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white mb-4">
+            <div className="p-6 rounded-2xl border border-subtle bg-surface-1 backdrop-blur-xl hover:border-strong transition-all shadow-lg">
+              <div className="w-10 h-10 rounded-xl bg-surface-2 border border-subtle flex items-center justify-center text-primary mb-4">
                 <Award className="w-5 h-5 text-sky-400" />
               </div>
-              <h3 className="text-sm font-bold uppercase tracking-wider text-white mb-1.5 font-michroma">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-primary mb-1.5 font-michroma">
                 {t('hero.feature3Title')}
               </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed font-medium">
+              <p className="text-xs text-secondary leading-relaxed font-medium">
                 {t('hero.feature3Desc')}
               </p>
             </div>

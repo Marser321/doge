@@ -31,7 +31,7 @@ export default function QuoteDecision({ token, locale }: { token: string; locale
   }
 
   if (state === 'accepted') return <p className="flex items-center gap-2 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-4 text-emerald-100"><CheckCircle2 className="size-5" /> {locale === 'en' ? 'Proposal accepted. Our team will contact you to coordinate the date.' : 'Cotización aprobada. El equipo te contactará para coordinar la fecha.'}</p>;
-  if (state === 'declined') return <p className="flex items-center gap-2 rounded-2xl border border-zinc-500/30 bg-white/5 p-4 text-zinc-200"><XCircle className="size-5" /> {locale === 'en' ? 'Decision recorded. Thank you for letting us know.' : 'Decisión registrada. Gracias por informarnos.'}</p>;
+  if (state === 'declined') return <p className="flex items-center gap-2 rounded-2xl border border-zinc-500/30 bg-surface-2 p-4 text-zinc-200"><XCircle className="size-5" /> {locale === 'en' ? 'Decision recorded. Thank you for letting us know.' : 'Decisión registrada. Gracias por informarnos.'}</p>;
 
   return (
     <div className="space-y-3">
@@ -40,7 +40,7 @@ export default function QuoteDecision({ token, locale }: { token: string; locale
         <button disabled={state === 'loading'} onClick={() => decide('accepted')} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-red-700 px-5 font-semibold text-white transition hover:bg-red-600 disabled:opacity-50">
           {state === 'loading' ? <LoaderCircle data-motion="progress" className="size-4 animate-spin" /> : <CheckCircle2 className="size-4" />} {locale === 'en' ? 'Accept' : 'Aprobar'}
         </button>
-        <button disabled={state === 'loading'} onClick={() => decide('declined')} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 px-5 font-semibold text-zinc-200 transition hover:bg-white/5 disabled:opacity-50">
+        <button disabled={state === 'loading'} onClick={() => decide('declined')} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-strong px-5 font-semibold text-zinc-200 transition hover:bg-surface-2 disabled:opacity-50">
           <XCircle className="size-4" /> {locale === 'en' ? 'Decline' : 'Rechazar'}
         </button>
       </div>

@@ -58,18 +58,18 @@ export default function CrewDashboard({ initialAppointments, displayName }: { in
   }
 
   return (
-    <main className="min-h-screen bg-[#0b0b0c] pb-16 text-white">
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-[#0b0b0c]/95 px-4 py-4 backdrop-blur">
+    <main className="min-h-screen bg-surface-0 pb-16 text-primary">
+      <header className="sticky top-0 z-20 border-b border-subtle bg-surface-0/95 px-4 py-4 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
-          <div className="flex items-center gap-3"><BrandMark size="md" /><div><p className="text-xs uppercase tracking-wide text-zinc-500">Cuadrilla</p><p className="font-semibold">{displayName}</p></div></div>
-          <button onClick={signOut} aria-label="Cerrar sesión" className="rounded-full border border-white/10 p-2 text-zinc-400"><LogOut className="size-4" /></button>
+          <div className="flex items-center gap-3"><BrandMark size="md" /><div><p className="text-xs uppercase tracking-wide text-muted">Cuadrilla</p><p className="font-semibold">{displayName}</p></div></div>
+          <button onClick={signOut} aria-label="Cerrar sesión" className="rounded-full border border-subtle p-2 text-secondary"><LogOut className="size-4" /></button>
         </div>
       </header>
       <section className="mx-auto max-w-3xl space-y-4 px-4 pt-6">
-        <div><h1 className="text-2xl font-semibold">Mis asignaciones</h1><p className="mt-1 text-sm text-zinc-400">Solo se muestran los trabajos de tu equipo.</p></div>
+        <div><h1 className="text-2xl font-semibold">Mis asignaciones</h1><p className="mt-1 text-sm text-secondary">Solo se muestran los trabajos de tu equipo.</p></div>
         {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
         {appointments.length ? appointments.map((appointment) => (
-          <article key={appointment.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+          <article key={appointment.id} className="rounded-2xl border border-subtle bg-surface-1 p-5">
             <div className="flex items-start justify-between gap-4">
               <div><p className="font-mono text-xs text-red-300">{appointment.service_request?.reference_code}</p><h2 className="mt-2 text-lg font-semibold">{appointment.service_request?.service_name_snapshot || 'Servicio DOGE'}</h2></div>
               {(() => {
@@ -79,7 +79,7 @@ export default function CrewDashboard({ initialAppointments, displayName }: { in
                   completed: { label: 'Completado', style: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' },
                   cancelled: { label: 'Cancelado', style: 'border-red-500/30 bg-red-500/10 text-red-300' },
                 };
-                const config = statusStyles[appointment.status] || { label: appointment.status, style: 'border-white/10 text-zinc-300' };
+                const config = statusStyles[appointment.status] || { label: appointment.status, style: 'border-subtle text-secondary' };
                 return (
                   <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${config.style}`}>
                     {config.label}
@@ -87,9 +87,9 @@ export default function CrewDashboard({ initialAppointments, displayName }: { in
                 );
               })()}
             </div>
-            <div className="mt-5 space-y-2 text-sm text-zinc-300">
-              <p className="flex items-center gap-2"><Clock3 className="size-4 text-zinc-600" />{new Intl.DateTimeFormat('es-US', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/New_York' }).format(new Date(appointment.starts_at))}</p>
-              <p className="flex items-center gap-2"><MapPin className="size-4 text-zinc-600" />{appointment.property?.address}, {appointment.property?.city}</p>
+            <div className="mt-5 space-y-2 text-sm text-secondary">
+              <p className="flex items-center gap-2"><Clock3 className="size-4 text-muted" />{new Intl.DateTimeFormat('es-US', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/New_York' }).format(new Date(appointment.starts_at))}</p>
+              <p className="flex items-center gap-2"><MapPin className="size-4 text-muted" />{appointment.property?.address}, {appointment.property?.city}</p>
             </div>
             {appointment.property && 'access_notes' in appointment.property && Boolean(appointment.property.access_notes) && <p className="mt-4 rounded-xl bg-amber-500/10 p-3 text-sm text-amber-100">{String(appointment.property.access_notes)}</p>}
             <div className="mt-5 grid gap-2 sm:grid-cols-2">
@@ -97,18 +97,18 @@ export default function CrewDashboard({ initialAppointments, displayName }: { in
               {appointment.status === 'in_progress' && <button disabled={busy === appointment.id} onClick={() => transition(appointment, 'completed')} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-700 font-semibold"><CheckCircle2 className="size-4" /> Finalizar trabajo</button>}
             </div>
             {['in_progress', 'completed'].includes(appointment.status) && (
-              <form onSubmit={(event) => evidence(event, appointment)} className="mt-5 space-y-3 border-t border-white/10 pt-5">
+              <form onSubmit={(event) => evidence(event, appointment)} className="mt-5 space-y-3 border-t border-subtle pt-5">
                 <input type="hidden" name="appointmentId" value={appointment.id} />
-                <label className="block text-xs font-semibold uppercase tracking-wide text-zinc-500">Nota, evidencia o incidencia
-                  <select name="kind" className="mt-2 w-full rounded-xl border border-white/10 bg-zinc-950 px-3 py-3 text-sm text-white"><option value="note">Nota operativa</option><option value="after">Resultado</option><option value="before">Antes</option><option value="incident">Incidencia</option></select>
+                <label className="block text-xs font-semibold uppercase tracking-wide text-muted">Nota, evidencia o incidencia
+                  <select name="kind" className="mt-2 w-full rounded-xl border border-subtle bg-surface-0 px-3 py-3 text-sm text-primary"><option value="note">Nota operativa</option><option value="after">Resultado</option><option value="before">Antes</option><option value="incident">Incidencia</option></select>
                 </label>
-                <textarea name="note" maxLength={1000} rows={2} placeholder="Describe el avance o la incidencia" className="w-full rounded-xl border border-white/10 bg-zinc-950 px-3 py-3 text-sm" />
-                <input name="photo" type="file" accept="image/*" capture="environment" className="block w-full text-sm text-zinc-400 file:mr-3 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-white" />
-                <button disabled={busy === appointment.id} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-white/15 font-semibold">{busy === appointment.id ? <LoaderCircle data-motion="progress" className="size-4 animate-spin" /> : <Camera className="size-4" />} Guardar registro</button>
+                <textarea name="note" maxLength={1000} rows={2} placeholder="Describe el avance o la incidencia" className="w-full rounded-xl border border-subtle bg-surface-0 px-3 py-3 text-sm" />
+                <input name="photo" type="file" accept="image/*" capture="environment" className="block w-full text-sm text-secondary file:mr-3 file:rounded-lg file:border-0 file:bg-surface-3 file:px-3 file:py-2 file:text-primary" />
+                <button disabled={busy === appointment.id} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-strong font-semibold">{busy === appointment.id ? <LoaderCircle data-motion="progress" className="size-4 animate-spin" /> : <Camera className="size-4" />} Guardar registro</button>
               </form>
             )}
           </article>
-        )) : <div className="rounded-2xl border border-dashed border-white/10 py-20 text-center text-sm text-zinc-500"><AlertTriangle className="mx-auto mb-3 size-7" />No hay trabajos asignados.</div>}
+        )) : <div className="rounded-2xl border border-dashed border-subtle py-20 text-center text-sm text-muted"><AlertTriangle className="mx-auto mb-3 size-7" />No hay trabajos asignados.</div>}
       </section>
     </main>
   );

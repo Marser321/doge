@@ -4,7 +4,7 @@ import type { LucideProps } from 'lucide-react';
 type Tone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 
 const toneClasses: Record<Tone, string> = {
-  neutral: 'border-white/10 bg-white/[0.04] text-zinc-300',
+  neutral: 'border-subtle bg-surface-1 text-secondary',
   info: 'border-sky-400/20 bg-sky-400/10 text-sky-200',
   success: 'border-emerald-400/20 bg-emerald-400/10 text-emerald-200',
   warning: 'border-amber-400/20 bg-amber-400/10 text-amber-200',
@@ -13,11 +13,11 @@ const toneClasses: Record<Tone, string> = {
 
 export function CrmPageIntro({ eyebrow, title, description, actions }: { eyebrow: string; title: string; description: string; actions?: ReactNode }) {
   return (
-    <header className="flex flex-col gap-4 border-b border-white/10 pb-6 sm:flex-row sm:items-end sm:justify-between">
+    <header className="flex flex-col gap-4 border-b border-subtle pb-6 sm:flex-row sm:items-end sm:justify-between">
       <div>
         <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-sky-200/80">{eyebrow}</p>
-        <h1 className="mt-2 font-michroma text-2xl font-bold tracking-tight text-white">{title}</h1>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">{description}</p>
+        <h1 className="mt-2 font-michroma text-2xl font-bold tracking-tight text-primary">{title}</h1>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-secondary">{description}</p>
       </div>
       {actions && <div className="flex shrink-0 flex-wrap gap-2">{actions}</div>}
     </header>
@@ -28,15 +28,15 @@ export function CrmMetricCard({ label, value, icon: Icon, href }: { label: strin
   const content = (
     <>
       <div className="flex items-start justify-between gap-2">
-        <p className="text-xs font-semibold text-zinc-300 line-clamp-2 leading-snug">{label}</p>
-        <span className="rounded-xl border border-white/10 bg-white/[0.04] p-1.5 sm:p-2 text-sky-300 shrink-0">
+        <p className="text-xs font-semibold text-secondary line-clamp-2 leading-snug">{label}</p>
+        <span className="rounded-xl border border-subtle bg-surface-1 p-1.5 sm:p-2 text-sky-300 shrink-0">
           <Icon className="size-3.5 sm:size-4" />
         </span>
       </div>
-      <p className="mt-3 sm:mt-5 font-mono text-xl sm:text-3xl font-bold tracking-tight text-white">{value}</p>
+      <p className="mt-3 sm:mt-5 font-mono text-xl sm:text-3xl font-bold tracking-tight text-primary">{value}</p>
     </>
   );
-  const className = 'group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025] p-3.5 sm:p-5 transition-all duration-300 hover:border-sky-400/30 hover:bg-white/[0.06] hover:shadow-[0_0_25px_rgba(56,189,248,0.08)]';
+  const className = 'group relative overflow-hidden rounded-2xl border border-subtle bg-surface-1 p-3.5 sm:p-5 transition-all duration-300 hover:border-sky-400/30 hover:bg-white/[0.06] hover:shadow-[0_0_25px_rgba(56,189,248,0.08)]';
   return href ? <a href={href} className={className}>{content}</a> : <div className={className}>{content}</div>;
 }
 
@@ -45,5 +45,5 @@ export function CrmStatusPill({ children, tone = 'neutral' }: { children: ReactN
 }
 
 export function CrmEmptyState({ icon: Icon, title, detail }: { icon: ComponentType<LucideProps>; title: string; detail: string }) {
-  return <div className="grid min-h-56 place-items-center px-6 text-center"><div><span className="mx-auto grid size-11 place-items-center rounded-2xl border border-white/10 bg-white/[0.03]"><Icon className="size-5 text-zinc-500" /></span><p className="mt-4 text-sm font-medium text-zinc-300">{title}</p><p className="mt-1 max-w-sm text-xs leading-5 text-zinc-500">{detail}</p></div></div>;
+  return <div className="grid min-h-56 place-items-center px-6 text-center"><div><span className="mx-auto grid size-11 place-items-center rounded-2xl border border-subtle bg-surface-1"><Icon className="size-5 text-muted" /></span><p className="mt-4 text-sm font-medium text-secondary">{title}</p><p className="mt-1 max-w-sm text-xs leading-5 text-muted">{detail}</p></div></div>;
 }

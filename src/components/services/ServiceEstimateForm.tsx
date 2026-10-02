@@ -203,7 +203,7 @@ export function ServiceEstimateForm({ service }: { service: ServiceDefinition })
                 onChange={(e) => setTextDescription(e.target.value)}
                 placeholder={own('textPlaceholder')}
                 rows={10}
-                className="w-full bg-background/50 border border-accent/15 rounded-2xl p-5 text-foreground font-medium text-base outline-none focus:border-accent/50 transition-colors resize-none placeholder:text-accent/30 leading-relaxed"
+                className="w-full bg-background/50 border border-accent/15 rounded-2xl p-5 text-foreground font-medium text-base outline-none focus:border-strong transition-colors resize-none placeholder:text-accent/30 leading-relaxed"
               />
               <p className="mt-3 text-[11px] text-accent/60 font-medium">
                 {lang === 'es'

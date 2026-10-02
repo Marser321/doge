@@ -101,15 +101,15 @@ export default function NewOfferForm() {
     <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out pb-20">
        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
-            <Link href="/admin/offers" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-2 text-sm font-bold tracking-widest uppercase">
+            <Link href="/admin/offers" className="inline-flex items-center gap-2 text-secondary hover:text-primary transition-colors mb-2 text-sm font-bold tracking-widest uppercase">
               <ArrowLeft className="w-4 h-4" /> Back to Offers
             </Link>
-            <h1 className="text-3xl font-michroma font-bold text-white tracking-wide">Create Offer</h1>
+            <h1 className="text-3xl font-michroma font-bold text-primary tracking-wide">Create Offer</h1>
           </div>
           <button 
             onClick={handleSubmit}
             disabled={loading}
-            className="px-6 py-3 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] disabled:opacity-50"
+            className="px-6 py-3 flex items-center gap-2 rounded-xl bg-foreground text-background font-bold hover:opacity-90 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] disabled:opacity-50"
           >
             {loading ? <div className="w-4 h-4 rounded-full border-2 border-zinc-900 border-t-transparent animate-spin" data-motion="progress"></div> : <Save className="w-4 h-4" />} 
             {loading ? 'Saving...' : 'Save Offer'}
@@ -122,39 +122,39 @@ export default function NewOfferForm() {
          </div>
        )}
 
-       <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 space-y-6">
+       <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-2xl border border-subtle space-y-6">
          <fieldset disabled={loading} className="group/fieldset contents">
-          <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-6">
+          <div className="flex items-center gap-3 border-b border-subtle pb-4 mb-6">
             <Tag className="w-5 h-5 text-accent" />
-            <h2 className="text-lg font-bold font-michroma text-white">Offer Details</h2>
+            <h2 className="text-lg font-bold font-michroma text-primary">Offer Details</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              <div className="md:col-span-2">
-               <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Offer Title *</label>
-               <input required name="title" value={formData.title} onChange={handleInputChange} type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50" placeholder="e.g. 10% Off Annual Plan" />
+               <label className="block text-xs font-bold text-muted uppercase tracking-wider mb-2">Offer Title *</label>
+               <input required name="title" value={formData.title} onChange={handleInputChange} type="text" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary focus:outline-none focus:border-strong" placeholder="e.g. 10% Off Annual Plan" />
              </div>
              
              <div>
-               <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Promo Code *</label>
-               <input required name="code" value={formData.code} onChange={handleInputChange} type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white font-mono uppercase focus:outline-none focus:border-accent/50" placeholder="e.g. ANNUAL10" />
+               <label className="block text-xs font-bold text-muted uppercase tracking-wider mb-2">Promo Code *</label>
+               <input required name="code" value={formData.code} onChange={handleInputChange} type="text" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary font-mono uppercase focus:outline-none focus:border-strong" placeholder="e.g. ANNUAL10" />
              </div>
 
              <div>
-               <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Target Audience</label>
-               <input name="target_audience" value={formData.target_audience} onChange={handleInputChange} type="text" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50" placeholder="e.g. New Users, VIPs" />
+               <label className="block text-xs font-bold text-muted uppercase tracking-wider mb-2">Target Audience</label>
+               <input name="target_audience" value={formData.target_audience} onChange={handleInputChange} type="text" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary focus:outline-none focus:border-strong" placeholder="e.g. New Users, VIPs" />
              </div>
 
              <div>
-               <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Discount Type</label>
-               <select name="discount_type" value={formData.discount_type} onChange={handleInputChange} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 appearance-none">
+               <label className="block text-xs font-bold text-muted uppercase tracking-wider mb-2">Discount Type</label>
+               <select name="discount_type" value={formData.discount_type} onChange={handleInputChange} className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary focus:outline-none focus:border-strong appearance-none">
                  <option value="percent">Percentage (%)</option>
                  <option value="fixed_amount">Fixed Amount ($)</option>
                </select>
              </div>
 
              <div>
-               <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Discount Amount *</label>
+               <label className="block text-xs font-bold text-muted uppercase tracking-wider mb-2">Discount Amount *</label>
                <input 
                  required 
                  name="discount_amount" 
@@ -164,24 +164,24 @@ export default function NewOfferForm() {
                  min="0" 
                  max={formData.discount_type === 'percent' ? 100 : undefined}
                  step="0.01" 
-                 className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white font-michroma focus:outline-none focus:border-accent/50" 
+                 className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary font-michroma focus:outline-none focus:border-strong" 
                  placeholder={formData.discount_type === 'percent' ? "e.g. 15 (Max 100)" : "e.g. 50"} 
                />
              </div>
 
              <div>
-               <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Max Uses (Leave empty for unlimited)</label>
-               <input name="max_uses" value={formData.max_uses || ''} onChange={handleInputChange} type="number" min="1" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white font-michroma focus:outline-none focus:border-accent/50" placeholder="e.g. 100" />
+               <label className="block text-xs font-bold text-muted uppercase tracking-wider mb-2">Max Uses (Leave empty for unlimited)</label>
+               <input name="max_uses" value={formData.max_uses || ''} onChange={handleInputChange} type="number" min="1" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary font-michroma focus:outline-none focus:border-strong" placeholder="e.g. 100" />
              </div>
 
              <div>
-               <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Expires At (Optional)</label>
-               <input name="expires_at" value={formData.expires_at} onChange={handleInputChange} type="date" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 filter-[invert(1)_hue-rotate(180deg)]" />
+               <label className="block text-xs font-bold text-muted uppercase tracking-wider mb-2">Expires At (Optional)</label>
+               <input name="expires_at" value={formData.expires_at} onChange={handleInputChange} type="date" className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary focus:outline-none focus:border-strong filter-[invert(1)_hue-rotate(180deg)]" />
              </div>
 
              <div className="md:col-span-2">
-               <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Applies To</label>
-               <select name="applies_to" value={formData.applies_to} onChange={handleInputChange} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 appearance-none">
+               <label className="block text-xs font-bold text-muted uppercase tracking-wider mb-2">Applies To</label>
+               <select name="applies_to" value={formData.applies_to} onChange={handleInputChange} className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-primary focus:outline-none focus:border-strong appearance-none">
                  <option value="both">All (Products & Services)</option>
                  <option value="products">Only Products</option>
                  <option value="services">Only Services</option>

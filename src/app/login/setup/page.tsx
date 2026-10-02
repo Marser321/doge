@@ -45,17 +45,17 @@ export default function PasswordSetupPage() {
   }
 
   return (
-    <main className="grid min-h-screen place-items-center bg-[#0b0b0c] px-5 text-white">
-      <section className="w-full max-w-md rounded-3xl border border-white/10 bg-white/[0.03] p-8">
+    <main className="grid min-h-screen place-items-center bg-surface-0 px-5 text-primary">
+      <section className="w-full max-w-md rounded-3xl border border-subtle bg-surface-1 p-8">
         <KeyRound className="mx-auto size-9 text-red-300" aria-hidden />
         <h1 className="mt-5 text-center text-2xl font-semibold">Crea tu contraseña</h1>
-        <p className="mt-2 text-center text-sm text-zinc-400">Completa la invitación o recuperación de tu acceso DOGE.</p>
+        <p className="mt-2 text-center text-sm text-secondary">Completa la invitación o recuperación de tu acceso DOGE.</p>
         <form onSubmit={submit} className="mt-8 space-y-5">
-          <label className="block text-sm text-zinc-300">Nueva contraseña
-            <input required name="password" type="password" minLength={10} autoComplete="new-password" className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 outline-none focus:border-red-400" />
+          <label className="block text-sm text-secondary">Nueva contraseña
+            <input required name="password" type="password" minLength={10} autoComplete="new-password" className="mt-2 w-full rounded-xl border border-strong bg-surface-1 px-4 py-3 outline-none focus:border-red-400" />
           </label>
-          <label className="block text-sm text-zinc-300">Confirmar contraseña
-            <input required name="confirmation" type="password" minLength={10} autoComplete="new-password" className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 outline-none focus:border-red-400" />
+          <label className="block text-sm text-secondary">Confirmar contraseña
+            <input required name="confirmation" type="password" minLength={10} autoComplete="new-password" className="mt-2 w-full rounded-xl border border-strong bg-surface-1 px-4 py-3 outline-none focus:border-red-400" />
           </label>
           {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-100">{error}</p>}
           <button disabled={loading} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-red-700 font-semibold transition hover:bg-red-600 disabled:opacity-50">

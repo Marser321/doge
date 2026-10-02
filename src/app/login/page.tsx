@@ -47,20 +47,20 @@ function LoginForm() {
   }
 
   return (
-    <main className="grid min-h-screen place-items-center bg-[#0b0b0c] px-5 py-12 text-white">
-      <section className="w-full max-w-md rounded-3xl border border-white/10 bg-white/[0.03] p-8 shadow-2xl shadow-black/30 backdrop-blur-xl">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm text-zinc-400 transition hover:text-white">
+    <main className="grid min-h-screen place-items-center bg-surface-0 px-5 py-12 text-primary">
+      <section className="w-full max-w-md rounded-3xl border border-subtle bg-surface-1 p-8 shadow-2xl shadow-black/30 backdrop-blur-xl">
+        <Link href="/" className="inline-flex items-center gap-2 text-sm text-secondary transition hover:text-primary">
           <ArrowLeft className="size-4" /> Inicio
         </Link>
         <BrandMark size="xl" priority className="mx-auto mt-4" />
         <h1 className="mt-6 text-center text-2xl font-bold font-michroma uppercase tracking-tight">
           Iniciar sesión
         </h1>
-        <p className="mt-2 text-center text-sm text-zinc-400">
+        <p className="mt-2 text-center text-sm text-secondary">
           Ingresa a tu cuenta de DOGE.S.M
         </p>
         <form onSubmit={submit} className="mt-8 space-y-5">
-          <label className="block text-xs font-bold uppercase tracking-widest text-zinc-300">
+          <label className="block text-xs font-bold uppercase tracking-widest text-secondary">
             Email
             <input
               required
@@ -68,10 +68,10 @@ function LoginForm() {
               type="email"
               autoComplete="email"
               placeholder="tu@email.com"
-              className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-white/40 transition-colors text-sm"
+              className="mt-2 w-full rounded-xl border border-strong bg-surface-1 px-4 py-3 text-primary outline-none focus:border-strong transition-colors text-sm"
             />
           </label>
-          <label className="block text-xs font-bold uppercase tracking-widest text-zinc-300">
+          <label className="block text-xs font-bold uppercase tracking-widest text-secondary">
             Contraseña
             <input
               required
@@ -79,7 +79,7 @@ function LoginForm() {
               type="password"
               autoComplete="current-password"
               placeholder="••••••••"
-              className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-white outline-none focus:border-white/40 transition-colors text-sm"
+              className="mt-2 w-full rounded-xl border border-strong bg-surface-1 px-4 py-3 text-primary outline-none focus:border-strong transition-colors text-sm"
             />
           </label>
           {error && (
@@ -90,7 +90,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm font-bold uppercase tracking-wider transition hover:bg-zinc-200 disabled:opacity-60 cursor-pointer"
+            className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-foreground text-background px-5 py-3 text-sm font-bold uppercase tracking-wider transition hover:opacity-90 disabled:opacity-60 cursor-pointer"
           >
             {loading ? (
               <>
@@ -106,13 +106,13 @@ function LoginForm() {
         <div className="mt-6 flex flex-col gap-3 text-center text-sm">
           <Link
             href="/signup"
-            className="text-zinc-300 hover:text-white transition inline-flex items-center justify-center gap-1.5 font-medium"
+            className="text-secondary hover:text-primary transition inline-flex items-center justify-center gap-1.5 font-medium"
           >
-            ¿No tienes cuenta? <span className="underline underline-offset-4 text-white font-bold">Crear cuenta</span>
+            ¿No tienes cuenta? <span className="underline underline-offset-4 text-primary font-bold">Crear cuenta</span>
           </Link>
           <Link
             href="/login/recover"
-            className="text-zinc-500 transition hover:text-zinc-300 text-xs"
+            className="text-muted transition hover:text-secondary text-xs"
           >
             ¿Olvidaste tu contraseña?
           </Link>
@@ -124,7 +124,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0b0b0c]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-surface-0" />}>
       <LoginForm />
     </Suspense>
   );

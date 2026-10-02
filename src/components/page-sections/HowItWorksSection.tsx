@@ -81,7 +81,7 @@ export const HowItWorksSection = ({ t }: { t: any }) => {
                   className="text-center mt-16"
                 >
                   <MagneticButton href="/services" className="cursor-hover-target">
-                    <span className="inline-flex items-center px-10 py-5 text-sm font-black uppercase tracking-[0.2em] text-black bg-white rounded-xl shadow-2xl hover:bg-zinc-200 transition-all cta-glow btn-whimsy relative group">
+                    <span className="inline-flex items-center px-10 py-5 text-sm font-black uppercase tracking-[0.2em] text-black bg-white rounded-xl shadow-2xl hover:opacity-90 transition-all cta-glow btn-whimsy relative group">
                       <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 pointer-events-none" />
                       <span className="relative z-10 flex items-center gap-3">
                         {t('services.requestEstimate')} <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />

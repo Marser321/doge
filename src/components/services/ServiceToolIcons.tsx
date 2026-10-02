@@ -26,7 +26,7 @@
  *                                         w-6  h-6  dentro de caja 48px
  *  src/components/services/…EstimateForm  w-5  h-5  en la barra de navegación
  *
- * El contenedor es `bg-white/5 rounded-2xl border border-white/10` y en la
+ * El contenedor es `bg-surface-2 rounded-2xl border border-subtle` y en la
  * grilla de servicios escala a 110% y rota 3° en hover, así que el icono
  * debe seguir legible con una leve rotación.
  */

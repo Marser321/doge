@@ -30,9 +30,9 @@ export const ValuePropositionSection = ({ isMobile, t }: { isMobile: boolean, t:
                       className="relative"
                     >
                       <TiltCard maxTilt={5} scale={1.02} className="h-full">
-                        <div className="group relative bg-zinc-900/40 dark:bg-zinc-900/40 bg-zinc-100/80 p-10 md:p-12 rounded-2xl border border-white/5 dark:border-white/5 border-black/5 hover:border-accent transition-all overflow-hidden cursor-hover-target shadow-2xl h-full">
+                        <div className="group relative bg-surface-1/40 dark:bg-surface-1/40 bg-zinc-100/80 p-10 md:p-12 rounded-2xl border border-subtle dark:border-subtle border-black/5 hover:border-accent transition-all overflow-hidden cursor-hover-target shadow-2xl h-full">
                           <div className="absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-colors duration-700"></div>
-                          <div className="relative w-14 h-14 bg-accent/20 rounded-xl flex items-center justify-center mb-8 group-hover:rotate-6 group-hover:scale-110 transition-transform duration-500 border border-white/5">
+                          <div className="relative w-14 h-14 bg-accent/20 rounded-xl flex items-center justify-center mb-8 group-hover:rotate-6 group-hover:scale-110 transition-transform duration-500 border border-subtle">
                             <prop.icon className="w-7 h-7 text-foreground" />
                           </div>
                           <h3 className="text-xl md:text-2xl font-black text-foreground mb-4 tracking-tight uppercase font-michroma">{t(prop.titleKey)}</h3>

@@ -97,7 +97,7 @@ export default function SubscriptionsDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="w-8 h-8 border-4 border-white/10 border-t-white rounded-full animate-spin" data-motion="progress"></div>
+        <div className="w-8 h-8 border-4 border-subtle border-t-white rounded-full animate-spin" data-motion="progress"></div>
       </div>
     )
   }
@@ -108,7 +108,7 @@ export default function SubscriptionsDashboard() {
        <CrmPageIntro eyebrow="Operación · recurrencia" title="Suscripciones" description="Contratos recurrentes sin cobro automático." actions={<>
           <Link 
             href="/admin/subscriptions/new"
-            className="px-5 py-2.5 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target"
+            className="px-5 py-2.5 rounded-xl bg-foreground text-background font-bold hover:opacity-90 transition-all text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-hover-target"
           >
             + Nueva suscripción
           </Link>
@@ -117,11 +117,11 @@ export default function SubscriptionsDashboard() {
        {/* Toolbar */}
        <div className="flex flex-col sm:flex-row gap-4">
          <div className="relative flex-1">
-           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
            <input 
              type="text" 
              placeholder="Buscar por cliente o ID..."
-             className="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-white/30 transition-colors"
+             className="w-full bg-surface-0/40 border border-subtle rounded-xl pl-10 pr-4 py-2.5 text-primary text-sm focus:outline-none focus:border-strong transition-colors"
              value={searchTerm}
              onChange={(e) => setSearchTerm(e.target.value)}
            />
@@ -130,39 +130,39 @@ export default function SubscriptionsDashboard() {
        {message && <p role="alert" className="rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-100">{message}</p>}
 
        {/* Data Table */}
-       <div className="glass-panel rounded-2xl border border-white/10 overflow-hidden shadow-2xl shadow-black/50">
+       <div className="glass-panel rounded-2xl border border-subtle overflow-hidden shadow-2xl shadow-black/50">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-white/5 bg-white/5">
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Suscripción</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Cliente</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Plan</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Valor mensual</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Estado</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider">Próxima ocurrencia</th>
-                  <th className="p-4 text-xs font-michroma font-bold text-zinc-400 uppercase tracking-wider text-right">Acciones</th>
+                <tr className="border-b border-subtle bg-surface-2">
+                  <th className="p-4 text-xs font-michroma font-bold text-secondary uppercase tracking-wider">Suscripción</th>
+                  <th className="p-4 text-xs font-michroma font-bold text-secondary uppercase tracking-wider">Cliente</th>
+                  <th className="p-4 text-xs font-michroma font-bold text-secondary uppercase tracking-wider">Plan</th>
+                  <th className="p-4 text-xs font-michroma font-bold text-secondary uppercase tracking-wider">Valor mensual</th>
+                  <th className="p-4 text-xs font-michroma font-bold text-secondary uppercase tracking-wider">Estado</th>
+                  <th className="p-4 text-xs font-michroma font-bold text-secondary uppercase tracking-wider">Próxima ocurrencia</th>
+                  <th className="p-4 text-xs font-michroma font-bold text-secondary uppercase tracking-wider text-right">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-subtle">
                 {filteredSubs.map((sub) => (
-                  <tr key={sub.id} className="hover:bg-white/[0.02] transition-colors group cursor-pointer">
+                  <tr key={sub.id} className="hover:bg-surface-1 transition-colors group cursor-pointer">
                     <td className="p-4">
-                      <span className="font-mono text-[10px] text-zinc-500">{sub.id.substring(0, 8)}</span>
+                      <span className="font-mono text-[10px] text-muted">{sub.id.substring(0, 8)}</span>
                     </td>
                     <td className="p-4">
-                      <p className="font-bold text-white text-sm">{sub.client?.name || 'Cliente'}</p>
+                      <p className="font-bold text-primary text-sm">{sub.client?.name || 'Cliente'}</p>
                     </td>
                     <td className="p-4">
-                      <span className="text-zinc-300 text-sm">{sub.tier?.name || 'Estándar'}</span>
+                      <span className="text-secondary text-sm">{sub.tier?.name || 'Estándar'}</span>
                     </td>
                     <td className="p-4">
-                      <span className="font-michroma font-bold text-white text-sm">${sub.mrr.toLocaleString()}</span>
+                      <span className="font-michroma font-bold text-primary text-sm">${sub.mrr.toLocaleString()}</span>
                     </td>
                     <td className="p-4">
                       {getStatusBadge(sub.status)}
                     </td>
-                    <td className="p-4 text-sm text-zinc-400">
+                    <td className="p-4 text-sm text-secondary">
                       <span className="block">{sub.next_billing_date ? format(new Date(`${sub.next_billing_date}T12:00:00Z`), 'PPP', { locale: es }) : 'Sin configurar'}</span>
                       <input
                         aria-label={`Próxima ocurrencia de ${sub.client?.name || sub.id}`}
@@ -171,15 +171,15 @@ export default function SubscriptionsDashboard() {
                         min={new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(new Date())}
                         disabled={busy === sub.id || sub.status === 'Cancelled'}
                         onChange={(event) => changeNextOccurrence(sub, event.target.value)}
-                        className="mt-1 rounded border border-white/10 bg-black/20 px-2 py-1 text-xs disabled:opacity-40"
+                        className="mt-1 rounded border border-subtle bg-surface-0/40 px-2 py-1 text-xs disabled:opacity-40"
                       />
                     </td>
                     <td className="p-4 text-right">
                       <div className="inline-flex items-center gap-1">
                         {sub.status === 'Active' ? (
-                          <button disabled={busy === sub.id} onClick={() => changeStatus(sub, 'Paused')} aria-label="Pausar suscripción" className="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-white disabled:opacity-40"><PauseCircle className="w-4 h-4" /></button>
+                          <button disabled={busy === sub.id} onClick={() => changeStatus(sub, 'Paused')} aria-label="Pausar suscripción" className="p-2 hover:bg-surface-3 rounded-lg text-secondary hover:text-primary disabled:opacity-40"><PauseCircle className="w-4 h-4" /></button>
                         ) : sub.status !== 'Cancelled' ? (
-                          <button disabled={busy === sub.id} onClick={() => changeStatus(sub, 'Active')} aria-label="Activar suscripción" className="p-2 hover:bg-white/10 rounded-lg text-emerald-400 disabled:opacity-40"><PlayCircle className="w-4 h-4" /></button>
+                          <button disabled={busy === sub.id} onClick={() => changeStatus(sub, 'Active')} aria-label="Activar suscripción" className="p-2 hover:bg-surface-3 rounded-lg text-emerald-400 disabled:opacity-40"><PlayCircle className="w-4 h-4" /></button>
                         ) : null}
                         {sub.status !== 'Cancelled' && <button disabled={busy === sub.id} onClick={() => changeStatus(sub, 'Cancelled')} aria-label="Cancelar suscripción" className="p-2 hover:bg-red-500/10 rounded-lg text-red-400 disabled:opacity-40"><XCircle className="w-4 h-4" /></button>}
                       </div>
@@ -191,13 +191,13 @@ export default function SubscriptionsDashboard() {
           </div>
           
           {filteredSubs.length === 0 && (
-             <div className="p-8 text-center text-zinc-500">
+             <div className="p-8 text-center text-muted">
                <p>No hay suscripciones que coincidan con la búsqueda.</p>
              </div>
           )}
           
           {/* Pagination Footer */}
-          <div className="p-4 border-t border-white/5 bg-white/[0.02] text-sm text-zinc-400">Mostrando {filteredSubs.length} de {subscriptions.length} suscripciones</div>
+          <div className="p-4 border-t border-subtle bg-surface-1 text-sm text-secondary">Mostrando {filteredSubs.length} de {subscriptions.length} suscripciones</div>
        </div>
 
     </div>

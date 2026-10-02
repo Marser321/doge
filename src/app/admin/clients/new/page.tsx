@@ -66,18 +66,18 @@ export default function NewClientForm() {
         <div>
           <Link 
             href="/admin/clients" 
-            className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-2 text-xs font-bold tracking-widest uppercase"
+            className="inline-flex items-center gap-2 text-secondary hover:text-primary transition-colors mb-2 text-xs font-bold tracking-widest uppercase"
           >
             <ArrowLeft className="w-4 h-4" /> Volver a Clientes
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-michroma font-bold text-white tracking-wide">
+          <h1 className="text-2xl sm:text-3xl font-michroma font-bold text-primary tracking-wide">
             Registrar Cliente
           </h1>
         </div>
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className="px-6 py-3 flex items-center gap-2 rounded-xl bg-white text-zinc-900 font-bold hover:bg-zinc-200 transition-all text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(255,255,255,0.3)] disabled:opacity-50"
+          className="px-6 py-3 flex items-center gap-2 rounded-xl bg-foreground text-background font-bold hover:opacity-90 transition-all text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(255,255,255,0.3)] disabled:opacity-50"
         >
           {loading ? <LoaderCircle data-motion="progress" className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           {loading ? 'Guardando...' : 'Guardar Cliente'}
@@ -90,16 +90,16 @@ export default function NewClientForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 space-y-6">
+      <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-2xl border border-subtle space-y-6">
         <fieldset disabled={loading} className="group/fieldset contents">
-          <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-6">
+          <div className="flex items-center gap-3 border-b border-subtle pb-4 mb-6">
             <User className="w-5 h-5 text-red-400" />
-            <h2 className="text-base font-bold font-michroma text-white">Información del Cliente</h2>
+            <h2 className="text-base font-bold font-michroma text-primary">Información del Cliente</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
-              <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">
                 Nombre Completo *
               </label>
               <input
@@ -108,13 +108,13 @@ export default function NewClientForm() {
                 value={formData.name}
                 onChange={handleInputChange}
                 type="text"
-                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-400"
+                className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-sm text-primary focus:outline-none focus:border-red-400"
                 placeholder="Ej. Juan Pérez"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">
                 Empresa (Opcional)
               </label>
               <input
@@ -122,29 +122,29 @@ export default function NewClientForm() {
                 value={formData.company}
                 onChange={handleInputChange}
                 type="text"
-                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-400"
+                className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-sm text-primary focus:outline-none focus:border-red-400"
                 placeholder="Ej. Acme Corp o Residencia"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">
                 Nivel / Segmento
               </label>
               <select
                 name="status"
                 value={formData.status}
                 onChange={handleInputChange}
-                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-400"
+                className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-sm text-primary focus:outline-none focus:border-red-400"
               >
-                <option value="Standard" className="bg-zinc-900">Estándar</option>
-                <option value="Corporate" className="bg-zinc-900">Corporativo</option>
-                <option value="VIP" className="bg-zinc-900">VIP</option>
+                <option value="Standard" className="bg-surface-1">Estándar</option>
+                <option value="Corporate" className="bg-surface-1">Corporativo</option>
+                <option value="VIP" className="bg-surface-1">VIP</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">
                 Correo Electrónico
               </label>
               <input
@@ -152,13 +152,13 @@ export default function NewClientForm() {
                 value={formData.email}
                 onChange={handleInputChange}
                 type="email"
-                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-400"
+                className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-sm text-primary focus:outline-none focus:border-red-400"
                 placeholder="juan@ejemplo.com"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">
                 Teléfono de Contacto
               </label>
               <input
@@ -166,13 +166,13 @@ export default function NewClientForm() {
                 value={formData.phone}
                 onChange={handleInputChange}
                 type="tel"
-                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-400"
+                className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-sm text-primary focus:outline-none focus:border-red-400"
                 placeholder="+1 (305) 000-0000"
               />
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">
                 Dirección / Propiedad Principal
               </label>
               <input
@@ -180,13 +180,13 @@ export default function NewClientForm() {
                 value={formData.address}
                 onChange={handleInputChange}
                 type="text"
-                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-400"
+                className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-sm text-primary focus:outline-none focus:border-red-400"
                 placeholder="Ej. 1200 Brickell Ave, Miami, FL 33131"
               />
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">
                 Notas Internas Operativas
               </label>
               <textarea
@@ -194,7 +194,7 @@ export default function NewClientForm() {
                 value={formData.notes}
                 onChange={handleInputChange}
                 rows={3}
-                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-400 resize-none"
+                className="w-full bg-surface-0/60 border border-subtle rounded-xl px-4 py-3 text-sm text-primary focus:outline-none focus:border-red-400 resize-none"
                 placeholder="Códigos de acceso al portón, preferencias particulares, horario de contacto preferido..."
               />
             </div>

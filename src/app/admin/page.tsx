@@ -48,7 +48,7 @@ export default function AdminDashboard() {
       <CrmPageIntro eyebrow="Control del negocio" title="Resumen operativo" description="Señales accionables de CRM, agenda, comercio e inventario en una sola vista." />
       {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
       {loading ? (
-        <div className="grid min-h-64 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-zinc-500" /></div>
+        <div className="grid min-h-64 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-muted" /></div>
       ) : (
         <>
           <section className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 2xl:grid-cols-6">
@@ -56,18 +56,18 @@ export default function AdminDashboard() {
               <CrmMetricCard key={label} label={label} value={value} icon={Icon} href={href} />
             ))}
           </section>
-          <section className="rounded-2xl border border-white/10 bg-white/[0.025]">
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-              <h2 className="font-semibold text-white">Solicitudes recientes</h2>
+          <section className="rounded-2xl border border-subtle bg-surface-1">
+            <div className="flex items-center justify-between border-b border-subtle px-5 py-4">
+              <h2 className="font-semibold text-primary">Solicitudes recientes</h2>
               <Link href="/admin/requests" className="text-sm text-red-300 hover:text-red-200">Ver pipeline</Link>
             </div>
             {summary.recent_requests.length ? (
-              <div className="divide-y divide-white/10">
+              <div className="divide-y divide-subtle">
                 {summary.recent_requests.map((request) => (
-                  <Link href={`/admin/requests?request=${request.id}`} key={request.id} className="grid gap-2 px-5 py-4 transition hover:bg-white/[0.03] sm:grid-cols-[1fr_auto]">
+                  <Link href={`/admin/requests?request=${request.id}`} key={request.id} className="grid gap-2 px-5 py-4 transition hover:bg-surface-1 sm:grid-cols-[1fr_auto]">
                     <div>
-                      <p className="font-medium text-white">{request.contact_name} · {request.service_name_snapshot}</p>
-                      <p className="mt-1 font-mono text-xs text-zinc-500">{request.reference_code}</p>
+                      <p className="font-medium text-primary">{request.contact_name} · {request.service_name_snapshot}</p>
+                      <p className="mt-1 font-mono text-xs text-muted">{request.reference_code}</p>
                     </div>
                     <CrmStatusPill tone={request.status === 'cancelled' ? 'danger' : request.status === 'completed' ? 'success' : request.status === 'quoted' ? 'info' : 'warning'}>{request.status}</CrmStatusPill>
                   </Link>

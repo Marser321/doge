@@ -50,7 +50,7 @@ export const SubscriptionsSection = ({ isMobile, t }: { isMobile: boolean, t: (k
                         <div className={`relative rounded-2xl p-10 md:p-12 transition-all flex flex-col cursor-hover-target border h-full ${
                           plan.popular
                           ? `bg-zinc-100 text-black border-white shadow-2xl z-10 md:scale-105`
-                          : 'bg-zinc-900/30 border-white/5 text-white hover:border-white/10'
+                          : 'bg-surface-1/30 border-subtle text-primary hover:border-subtle'
                         }`}>
                           {plan.popular && (
                             <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-accent text-background text-[9px] font-black px-6 py-2 rounded-full tracking-[0.2em] uppercase shadow-xl whitespace-nowrap">

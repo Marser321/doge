@@ -24,18 +24,18 @@ export default function AuditPage() {
       .catch((cause) => setError(cause instanceof Error ? cause.message : 'No fue posible cargar la auditoría.'))
       .finally(() => setLoading(false));
   }, []);
-  if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-zinc-500" /></div>;
+  if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-muted" /></div>;
   return (
     <div className="mx-auto max-w-6xl space-y-7 pb-20">
-      <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Seguridad</p><h1 className="mt-2 text-3xl font-semibold text-white">Auditoría</h1><p className="mt-2 text-sm text-zinc-400">Eventos inmutables de las operaciones sensibles.</p></div>
+      <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Seguridad</p><h1 className="mt-2 text-3xl font-semibold text-primary">Auditoría</h1><p className="mt-2 text-sm text-secondary">Eventos inmutables de las operaciones sensibles.</p></div>
       {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
-      <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025]">
-        {events.length ? <div className="divide-y divide-white/10">{events.map((event) => (
+      <section className="overflow-hidden rounded-2xl border border-subtle bg-surface-1">
+        {events.length ? <div className="divide-y divide-subtle">{events.map((event) => (
           <article key={event.id} className="grid gap-2 px-5 py-4 sm:grid-cols-[1fr_auto]">
-            <div><p className="font-medium text-white">{event.action}</p><p className="mt-1 font-mono text-xs text-zinc-600">{event.entity_type} · {event.entity_id || '—'} · {event.actor_email || 'sistema'}</p></div>
-            <time className="text-xs text-zinc-500">{new Intl.DateTimeFormat('es-US', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(event.created_at))}</time>
+            <div><p className="font-medium text-primary">{event.action}</p><p className="mt-1 font-mono text-xs text-muted">{event.entity_type} · {event.entity_id || '—'} · {event.actor_email || 'sistema'}</p></div>
+            <time className="text-xs text-muted">{new Intl.DateTimeFormat('es-US', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(event.created_at))}</time>
           </article>
-        ))}</div> : <div className="py-20 text-center text-sm text-zinc-500"><ScrollText className="mx-auto mb-3 size-8" />Todavía no hay eventos.</div>}
+        ))}</div> : <div className="py-20 text-center text-sm text-muted"><ScrollText className="mx-auto mb-3 size-8" />Todavía no hay eventos.</div>}
       </section>
     </div>
   );

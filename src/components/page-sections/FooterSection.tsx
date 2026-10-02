@@ -6,11 +6,11 @@ import { BrandMark } from '@/components/brand/BrandMark'
 import Link from 'next/link'
 import type { TranslationKey } from '@/data/i18n'
 
-export const FooterSection = ({ t }: { theme?: string, t: (key: TranslationKey) => string }) => {
+export const FooterSection = ({ t }: { t: (key: TranslationKey) => string }) => {
   return (
     <>
             {/* 5. FOOTER (Noir Minimalist) */}
-            <footer className="py-12 md:py-16 relative z-20 border-t border-white/5 bg-[var(--footer-bg)] transition-colors duration-500">
+            <footer className="py-12 md:py-16 relative z-20 border-t border-subtle bg-[var(--footer-bg)] transition-colors duration-500">
               <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-20">
 
                 <div className="flex flex-col gap-8 max-w-sm">
@@ -44,13 +44,13 @@ export const FooterSection = ({ t }: { theme?: string, t: (key: TranslationKey) 
                 </div>
               </div>
 
-              <div className="max-w-7xl mx-auto px-6 mt-16 md:mt-24 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
-                <div className="flex flex-wrap items-center gap-6 text-[10px] font-bold text-zinc-400 uppercase tracking-[0.25em]">
-                  <Link href="/legal/licenses" className="hover:text-white transition-colors">{t('footer.licenses')}</Link>
-                  <Link href="/legal/registry" className="hover:text-white transition-colors">{t('footer.floridaRegistry')}</Link>
-                  <Link href="/legal/privacy" className="hover:text-white transition-colors">{t('footer.privacy')}</Link>
+              <div className="max-w-7xl mx-auto px-6 mt-16 md:mt-24 pt-8 border-t border-subtle flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="flex flex-wrap items-center gap-6 text-[10px] font-bold text-secondary uppercase tracking-[0.25em]">
+                  <Link href="/legal/licenses" className="hover:text-primary transition-colors">{t('footer.licenses')}</Link>
+                  <Link href="/legal/registry" className="hover:text-primary transition-colors">{t('footer.floridaRegistry')}</Link>
+                  <Link href="/legal/privacy" className="hover:text-primary transition-colors">{t('footer.privacy')}</Link>
                 </div>
-                <p className="text-zinc-400 font-medium text-[10px] uppercase tracking-[0.2em]">© {new Date().getFullYear()} DOGE.S.M LLC. {t('footer.copyright')}</p>
+                <p className="text-secondary font-medium text-[10px] uppercase tracking-[0.2em]">© {new Date().getFullYear()} DOGE.S.M LLC. {t('footer.copyright')}</p>
               </div>
             </footer>
     </>

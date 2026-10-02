@@ -28,7 +28,7 @@ export const CTASection = ({ t }: { t: (key: TranslationKey) => string }) => {
                     {t('cta.desc')}
                   </p>
                   <MagneticButton href="/booking" className="cursor-hover-target w-full sm:w-auto">
-                    <span className="flex sm:inline-flex justify-center items-center px-16 py-8 text-sm font-black uppercase tracking-[0.3em] text-black bg-white rounded-xl shadow-2xl hover:bg-zinc-200 transition-all cta-glow btn-whimsy hover:shadow-[0_0_40px_8px_rgba(255,255,255,0.15)] relative group">
+                    <span className="flex sm:inline-flex justify-center items-center px-16 py-8 text-sm font-black uppercase tracking-[0.3em] text-black bg-white rounded-xl shadow-2xl hover:opacity-90 transition-all cta-glow btn-whimsy hover:shadow-[0_0_40px_8px_rgba(255,255,255,0.15)] relative group">
                       <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 pointer-events-none" />
                       <span className="relative z-10 flex items-center">{t('cta.button')} <ArrowRight className="ml-4 w-6 h-6" /></span>
                     </span>

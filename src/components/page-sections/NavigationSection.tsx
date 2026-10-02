@@ -3,19 +3,12 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BrandMark } from '@/components/brand/BrandMark'
+import type { TranslationKey } from '@/data/i18n'
 import Link from 'next/link'
 import { Menu, X, ArrowRight, Sparkles, Store, Shield, Layers, CalendarPlus, UserPlus, LogIn } from 'lucide-react'
 import HeaderActions from '@/components/HeaderActions'
 
-export const NavigationSection = ({
-  t,
-  theme,
-  toggleTheme
-}: {
-  t: any
-  theme: 'dark' | 'light'
-  toggleTheme: () => void
-}) => {
+export const NavigationSection = ({ t }: { t: (key: TranslationKey) => string }) => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
   return (
@@ -25,7 +18,7 @@ export const NavigationSection = ({
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed w-full z-50 bg-black/60 backdrop-blur-2xl border-b border-white/5 pt-[env(safe-area-inset-top,0px)]"
+        className="fixed w-full z-50 bg-surface-0/70 backdrop-blur-2xl border-b border-subtle pt-[env(safe-area-inset-top,0px)]"
       >
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group cursor-pointer cursor-hover-target">
@@ -47,7 +40,7 @@ export const NavigationSection = ({
           </Link>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex gap-10 items-center text-[10px] font-black text-zinc-300 dark:text-zinc-300 tracking-[0.2em] z-50 uppercase">
+          <div className="hidden md:flex gap-10 items-center text-[10px] font-black text-secondary dark:text-secondary tracking-[0.2em] z-50 uppercase">
             <Link
               href="/services"
               className="hover:text-foreground transition-colors relative group cursor-hover-target"
@@ -78,15 +71,15 @@ export const NavigationSection = ({
             </Link>
 
             {/* Header Actions: Language, Theme, Cart, Account Menu */}
-            <HeaderActions theme={theme} onToggleTheme={toggleTheme} />
+            <HeaderActions />
           </div>
 
           {/* Mobile Actions & Menu Toggle */}
           <div className="flex items-center gap-2 md:hidden">
-            <HeaderActions theme={theme} onToggleTheme={toggleTheme} />
+            <HeaderActions />
             <button
               onClick={() => setMobileNavOpen(!mobileNavOpen)}
-              className="min-w-[44px] min-h-[44px] p-2.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center text-foreground cursor-pointer"
+              className="min-w-[44px] min-h-[44px] p-2.5 rounded-full border border-subtle bg-surface-2 hover:bg-surface-3 transition-all flex items-center justify-center text-foreground cursor-pointer"
               aria-label="Toggle Navigation Drawer"
               aria-expanded={mobileNavOpen}
             >
@@ -103,71 +96,71 @@ export const NavigationSection = ({
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="md:hidden border-t border-white/10 bg-black/95 backdrop-blur-3xl overflow-hidden px-6 py-6"
+              className="md:hidden border-t border-subtle bg-black/95 backdrop-blur-3xl overflow-hidden px-6 py-6"
             >
               <div className="flex flex-col gap-4">
                 <Link
                   href="/services"
                   onClick={() => setMobileNavOpen(false)}
-                  className="flex items-center justify-between p-4 rounded-xl border border-white/5 bg-white/5 text-sm font-bold text-foreground hover:bg-white/10 transition-all"
+                  className="flex items-center justify-between p-4 rounded-xl border border-subtle bg-surface-2 text-sm font-bold text-foreground hover:bg-surface-3 transition-all"
                 >
                   <div className="flex items-center gap-3">
                     <Sparkles className="w-4 h-4 text-accent" />
                     <span>{t('nav.services')}</span>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-zinc-500" />
+                  <ArrowRight className="w-4 h-4 text-muted" />
                 </Link>
 
                 <a
                   href="#suscripciones"
                   onClick={() => setMobileNavOpen(false)}
-                  className="flex items-center justify-between p-4 rounded-xl border border-white/5 bg-white/5 text-sm font-bold text-foreground hover:bg-white/10 transition-all"
+                  className="flex items-center justify-between p-4 rounded-xl border border-subtle bg-surface-2 text-sm font-bold text-foreground hover:bg-surface-3 transition-all"
                 >
                   <div className="flex items-center gap-3">
                     <Layers className="w-4 h-4 text-accent" />
                     <span>{t('nav.memberships')}</span>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-zinc-500" />
+                  <ArrowRight className="w-4 h-4 text-muted" />
                 </a>
 
                 <a
                   href="#confianza"
                   onClick={() => setMobileNavOpen(false)}
-                  className="flex items-center justify-between p-4 rounded-xl border border-white/5 bg-white/5 text-sm font-bold text-foreground hover:bg-white/10 transition-all"
+                  className="flex items-center justify-between p-4 rounded-xl border border-subtle bg-surface-2 text-sm font-bold text-foreground hover:bg-surface-3 transition-all"
                 >
                   <div className="flex items-center gap-3">
                     <Shield className="w-4 h-4 text-accent" />
                     <span>{t('nav.trust')}</span>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-zinc-500" />
+                  <ArrowRight className="w-4 h-4 text-muted" />
                 </a>
 
                 <Link
                   href="/store"
                   onClick={() => setMobileNavOpen(false)}
-                  className="flex items-center justify-between p-4 rounded-xl border border-white/5 bg-white/5 text-sm font-bold text-foreground hover:bg-white/10 transition-all"
+                  className="flex items-center justify-between p-4 rounded-xl border border-subtle bg-surface-2 text-sm font-bold text-foreground hover:bg-surface-3 transition-all"
                 >
                   <div className="flex items-center gap-3">
                     <Store className="w-4 h-4 text-accent" />
                     <span>{t('nav.store')}</span>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-zinc-500" />
+                  <ArrowRight className="w-4 h-4 text-muted" />
                 </Link>
 
-                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/10">
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-subtle">
                   <Link
                     href="/login"
                     onClick={() => setMobileNavOpen(false)}
-                    className="flex items-center justify-center gap-2 p-3.5 rounded-xl border border-white/15 bg-white/5 text-white font-bold uppercase text-xs tracking-wider hover:bg-white/10 transition-all text-center"
+                    className="flex items-center justify-center gap-2 p-3.5 rounded-xl border border-strong bg-surface-2 text-primary font-bold uppercase text-xs tracking-wider hover:bg-surface-3 transition-all text-center"
                   >
-                    <LogIn className="w-3.5 h-3.5 text-zinc-300" />
+                    <LogIn className="w-3.5 h-3.5 text-secondary" />
                     <span>Iniciar sesión</span>
                   </Link>
 
                   <Link
                     href="/signup"
                     onClick={() => setMobileNavOpen(false)}
-                    className="flex items-center justify-center gap-2 p-3.5 rounded-xl bg-white text-black font-bold uppercase text-xs tracking-wider hover:bg-zinc-200 transition-all text-center"
+                    className="flex items-center justify-center gap-2 p-3.5 rounded-xl bg-foreground text-background font-bold uppercase text-xs tracking-wider hover:opacity-90 transition-all text-center"
                   >
                     <UserPlus className="w-3.5 h-3.5 text-black" />
                     <span>Crear cuenta</span>
@@ -177,7 +170,7 @@ export const NavigationSection = ({
                 <Link
                   href="/booking"
                   onClick={() => setMobileNavOpen(false)}
-                  className="flex items-center justify-center gap-2 p-4 rounded-xl border border-white/10 bg-white/5 text-zinc-300 font-bold uppercase text-xs tracking-widest hover:bg-white/10 hover:text-white transition-all"
+                  className="flex items-center justify-center gap-2 p-4 rounded-xl border border-subtle bg-surface-2 text-secondary font-bold uppercase text-xs tracking-widest hover:bg-surface-3 hover:text-primary transition-all"
                 >
                   <CalendarPlus className="w-4 h-4 text-accent" />
                   <span>Agendar Cuadrilla</span>

@@ -52,13 +52,13 @@ function BookingForm() {
     setState('idle');
   }
 
-  const inputClass = 'mt-2 w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-sm text-white outline-none transition focus:border-red-400 focus:ring-2 focus:ring-red-500/20';
-  const labelClass = 'block text-xs font-semibold uppercase tracking-[0.14em] text-zinc-300';
+  const inputClass = 'mt-2 w-full rounded-xl border border-strong bg-surface-1 px-4 py-3 text-sm text-primary outline-none transition focus:border-red-400 focus:ring-2 focus:ring-red-500/20';
+  const labelClass = 'block text-xs font-semibold uppercase tracking-[0.14em] text-secondary';
 
   return (
-    <main className="min-h-screen bg-[#0b0b0c] text-white">
+    <main className="min-h-screen bg-surface-0 text-primary">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-6 sm:px-8">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm text-zinc-300 transition hover:text-white">
+        <Link href="/" className="inline-flex items-center gap-2 text-sm text-secondary transition hover:text-primary">
           <ArrowLeft className="size-4" aria-hidden /> Volver al inicio
         </Link>
         <BrandMark size="md" priority />
@@ -70,17 +70,17 @@ function BookingForm() {
             <ShieldCheck className="size-4" aria-hidden /> Solicitud de servicio
           </span>
           <h1 className="mt-6 text-4xl font-semibold tracking-tight sm:text-5xl">Coordinemos una visita.</h1>
-          <p className="mt-5 max-w-xl text-base leading-7 text-zinc-300">
+          <p className="mt-5 max-w-xl text-base leading-7 text-secondary">
             Cuéntanos sobre la propiedad y el servicio que necesitas. Un responsable revisará la información y te contactará para confirmar disponibilidad y alcance.
           </p>
-          <div className="mt-10 space-y-5 border-l border-white/15 pl-5 text-sm text-zinc-300">
+          <div className="mt-10 space-y-5 border-l border-strong pl-5 text-sm text-secondary">
             <p className="flex gap-3"><CheckCircle2 className="mt-0.5 size-4 shrink-0 text-red-300" /> Recibirás una referencia al enviar el formulario.</p>
             <p className="flex gap-3"><CalendarDays className="mt-0.5 size-4 shrink-0 text-red-300" /> La fecha es una preferencia, no una confirmación automática.</p>
             <p className="flex gap-3"><ImagePlus className="mt-0.5 size-4 shrink-0 text-red-300" /> Las fotos son opcionales y se guardan de forma privada.</p>
           </div>
         </div>
 
-        <form ref={formRef} onSubmit={submit} className="rounded-3xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl shadow-black/30 sm:p-8" noValidate>
+        <form ref={formRef} onSubmit={submit} className="rounded-3xl border border-subtle bg-surface-1 p-5 shadow-2xl shadow-black/30 sm:p-8" noValidate>
           <fieldset disabled={state === 'submitting'} className="space-y-8">
             <div>
               <h2 className="text-lg font-semibold">Contacto</h2>
@@ -97,7 +97,7 @@ function BookingForm() {
               </div>
             </div>
 
-            <div className="border-t border-white/10 pt-8">
+            <div className="border-t border-subtle pt-8">
               <h2 className="text-lg font-semibold">Propiedad y necesidad</h2>
               <div className="mt-5 grid gap-5 sm:grid-cols-2">
                 <label className={`${labelClass} sm:col-span-2`}>Dirección
@@ -150,13 +150,13 @@ function BookingForm() {
                   </>
                 ) : selectedService ? (
                   <label className={`${labelClass} sm:col-span-2`}>Superficie aproximada (ft²)
-                    <span className="block text-[11px] font-normal lowercase tracking-normal text-zinc-400 mt-0.5">
+                    <span className="block text-[11px] font-normal lowercase tracking-normal text-secondary mt-0.5">
                       (Para alfombras, tapetes o lavado a presión de pisos y exteriores)
                     </span>
                     <input name="square_feet" type="number" min="1" inputMode="numeric" placeholder="Ej. 1500" className={inputClass} />
                   </label>
                 ) : (
-                  <div className="sm:col-span-2 rounded-xl border border-dashed border-white/15 bg-white/[0.02] p-4 text-center text-xs text-zinc-400">
+                  <div className="sm:col-span-2 rounded-xl border border-dashed border-strong bg-surface-1 p-4 text-center text-xs text-secondary">
                     Selecciona un servicio arriba para especificar ventanas/puertas o superficie aproximada en pies cuadrados (ft²).
                   </div>
                 )}
@@ -164,14 +164,14 @@ function BookingForm() {
                   <textarea name="notes" rows={4} maxLength={2000} className={inputClass} placeholder="Accesos, superficies, prioridad, horarios u otra información útil." />
                 </label>
                 <label className={`${labelClass} sm:col-span-2`}>
-                  Fotos opcionales <span className="normal-case tracking-normal text-zinc-500">(hasta 4 imágenes, 5 MB cada una)</span>
-                  <input name="photos" type="file" accept="image/*" multiple className="mt-2 block w-full cursor-pointer text-sm text-zinc-400 file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-white/15" />
+                  Fotos opcionales <span className="normal-case tracking-normal text-muted">(hasta 4 imágenes, 5 MB cada una)</span>
+                  <input name="photos" type="file" accept="image/*" multiple className="mt-2 block w-full cursor-pointer text-sm text-secondary file:mr-4 file:rounded-lg file:border-0 file:bg-surface-3 file:px-3 file:py-2 file:text-sm file:font-medium file:text-primary hover:file:bg-surface-3" />
                 </label>
               </div>
             </div>
 
-            <label className="flex items-start gap-3 text-sm leading-6 text-zinc-300">
-              <input required name="consent" value="accepted" type="checkbox" className="mt-1 size-4 rounded border-white/30 bg-transparent accent-red-500" />
+            <label className="flex items-start gap-3 text-sm leading-6 text-secondary">
+              <input required name="consent" value="accepted" type="checkbox" className="mt-1 size-4 rounded border-strong bg-transparent accent-red-500" />
               Autorizo a DOGE a usar estos datos exclusivamente para evaluar y gestionar esta solicitud.
             </label>
 
@@ -190,7 +190,7 @@ function BookingForm() {
 export default function BookingPage() {
   return (
     <Suspense fallback={
-      <main className="min-h-screen bg-[#0b0b0c] text-white grid place-items-center">
+      <main className="min-h-screen bg-surface-0 text-primary grid place-items-center">
         <LoaderCircle data-motion="progress" className="size-8 animate-spin text-red-500" />
       </main>
     }>

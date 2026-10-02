@@ -131,7 +131,7 @@ export default function StorePage() {
 
     if (product.sale_type === 'own_stock' && !product.available) {
       return (
-        <span className="bg-zinc-300 text-zinc-600 px-6 py-3 rounded-xl font-black uppercase text-xs tracking-widest shadow-lg font-michroma flex items-center justify-center gap-2 cursor-not-allowed magnetic">
+        <span className="bg-zinc-300 text-muted px-6 py-3 rounded-xl font-black uppercase text-xs tracking-widest shadow-lg font-michroma flex items-center justify-center gap-2 cursor-not-allowed magnetic">
           {pilot ? t('store.pilotUnavailable') : t('store.soldOut')} <ShoppingCart className="w-4 h-4" />
         </span>
       )

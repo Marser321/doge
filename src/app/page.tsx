@@ -14,10 +14,6 @@ import { MapSection } from '@/components/page-sections/MapSection'
 import { CTASection } from '@/components/page-sections/CTASection'
 import { FooterSection } from '@/components/page-sections/FooterSection'
 
-function getInitialTheme(): 'dark' | 'light' {
-  if (typeof window === 'undefined') return 'dark'
-  return localStorage.getItem('doge-theme') === 'light' ? 'light' : 'dark'
-}
 
 function getInitialIsMobile(): boolean {
   if (typeof window === 'undefined') return false
@@ -26,7 +22,6 @@ function getInitialIsMobile(): boolean {
 
 export default function LandingPage() {
   const [isMobile, setIsMobile] = useState(getInitialIsMobile);
-  const [theme, setTheme] = useState<'dark' | 'light'>(getInitialTheme);
   const heroRef = useRef<HTMLElement>(null);
   const { t } = useLanguage();
   const lastScrollYRef = useRef(0);
@@ -64,18 +59,6 @@ export default function LandingPage() {
     };
   }, []);
 
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    localStorage.setItem('doge-theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    document.documentElement.dataset.theme = newTheme;
-    localStorage.setItem('doge-theme', newTheme);
-  };
-
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"]
@@ -88,10 +71,10 @@ export default function LandingPage() {
   const opacityHero = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <div className="min-h-screen font-sans text-foreground selection:bg-accent selection:text-white relative transition-opacity duration-1000 overflow-x-hidden">
+    <div className="min-h-screen font-sans text-foreground selection:bg-accent selection:text-primary relative transition-opacity duration-1000 overflow-x-hidden">
       <div className="bg-noise"></div> {/* Luxury Noise Overlay */}
 
-      <NavigationSection t={t} theme={theme} toggleTheme={toggleTheme} />
+      <NavigationSection t={t} />
 
       <HeroSection
         t={t}
@@ -110,7 +93,7 @@ export default function LandingPage() {
 
       <CTASection t={t} />
 
-      <FooterSection theme={theme} t={t} />
+      <FooterSection t={t} />
 
     </div>
   )
