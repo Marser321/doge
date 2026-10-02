@@ -11,7 +11,7 @@ export const ValuePropositionSection = ({ isMobile, t }: { isMobile: boolean, t:
   return (
     <>
             {/* 3. VALUE PROPOSITION (Titanium Cards + TiltCard 3D) */}
-            <section className="py-12 md:py-16 bg-background relative z-20 transition-colors duration-500 section-blur-divider">
+            <section className="py-12 md:py-16 bg-background relative z-20 transition-colors duration-500 relative">
               {/* Section blur divider — top fade */}
               <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
               <div className="max-w-7xl mx-auto px-6">

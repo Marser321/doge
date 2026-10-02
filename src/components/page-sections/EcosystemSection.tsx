@@ -12,7 +12,7 @@ export const EcosystemSection = ({ t }: { t: any }) => {
   return (
     <>
             {/* 2.6 ECOSYSTEM CONNECTED (Services ↔ Map ↔ Store) */}
-            <section className="py-12 md:py-16 bg-background relative z-20 overflow-hidden transition-colors duration-500 section-blur-divider">
+            <section className="py-12 md:py-16 bg-background relative z-20 overflow-hidden transition-colors duration-500 relative">
               <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
               <div className="max-w-7xl mx-auto px-6">
                 <motion.div

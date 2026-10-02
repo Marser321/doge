@@ -18,7 +18,7 @@ export const SubscriptionsSection = ({ isMobile, t }: { isMobile: boolean, t: (k
   return (
     <>
             {/* 3.2 SUSCRIPCIONES (Noir Memberships) */}
-            <section id="suscripciones" className="py-12 md:py-16 bg-background relative z-20 overflow-hidden transition-colors duration-500 section-blur-divider">
+            <section id="suscripciones" className="py-12 md:py-16 bg-background relative z-20 overflow-hidden transition-colors duration-500 relative">
               {/* Section blur divider — top fade */}
               <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background to-transparent z-30 pointer-events-none" />
               {/* Animated Orbs */}
@@ -58,10 +58,10 @@ export const SubscriptionsSection = ({ isMobile, t }: { isMobile: boolean, t: (k
                             </div>
                           )}
                           <h3 className={`text-2xl md:text-3xl font-black mb-2 uppercase font-michroma ${plan.popular ? 'text-background' : 'text-foreground'}`}>{t(plan.nameKey)}</h3>
-                          <p className={`text-[9px] font-black uppercase tracking-[0.3em] mb-10 ${plan.popular ? 'text-background/70' : 'text-taupe'}`}>{t(plan.freqKey)}</p>
+                          <p className={`text-[9px] font-black uppercase tracking-[0.3em] mb-10 ${plan.popular ? 'text-background/70' : 'text-muted'}`}>{t(plan.freqKey)}</p>
                           <div className="mb-8 border-b border-accent/10 pb-8">
                             <span className="text-4xl font-black text-foreground font-michroma">${plan.price}</span>
-                            <span className={`text-[10px] font-bold ml-2 uppercase tracking-widest ${plan.popular ? 'text-background/70' : 'text-taupe'}`}>{t('mem.perVisit')}</span>
+                            <span className={`text-[10px] font-bold ml-2 uppercase tracking-widest ${plan.popular ? 'text-background/70' : 'text-muted'}`}>{t('mem.perVisit')}</span>
                           </div>
                           <ul className="space-y-4 mb-10 flex-grow">
                             {plan.featureKeys.map((key, i) => (

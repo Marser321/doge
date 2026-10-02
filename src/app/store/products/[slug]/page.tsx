@@ -62,7 +62,7 @@ export default function StoreProductPage() {
   const subcategory = resolveSubcategory(product.category);
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen text-foreground">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 md:px-10">
         <Link href="/store" className="inline-flex items-center gap-2 text-sm text-accent transition hover:text-foreground"><ArrowLeft className="size-4" /> Catálogo</Link>
         <Link href="/booking" className="text-sm font-medium text-accent transition hover:text-foreground">Solicitar servicio</Link>

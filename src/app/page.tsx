@@ -88,7 +88,7 @@ export default function LandingPage() {
   const opacityHero = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <div className="min-h-screen bg-background font-sans text-foreground selection:bg-accent selection:text-white relative transition-opacity duration-1000 overflow-x-hidden">
+    <div className="min-h-screen font-sans text-foreground selection:bg-accent selection:text-white relative transition-opacity duration-1000 overflow-x-hidden">
       <div className="bg-noise"></div> {/* Luxury Noise Overlay */}
 
       <NavigationSection t={t} theme={theme} toggleTheme={toggleTheme} />

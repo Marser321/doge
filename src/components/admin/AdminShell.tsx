@@ -137,7 +137,7 @@ export default function AdminShell({ children, initialUser }: { children: React.
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex font-sans selection:bg-accent/30 selection:text-white">
+    <div className="min-h-screen text-foreground flex font-sans selection:bg-accent/30 selection:text-white">
       
       {/* Sidebar */}
       <aside className="w-64 glass-panel border-r border-white/5 hidden md:flex flex-col">

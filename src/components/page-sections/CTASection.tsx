@@ -16,7 +16,7 @@ export const CTASection = ({ t }: { t: (key: TranslationKey) => string }) => {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="max-w-7xl mx-auto relative rounded-3xl glass-panel p-16 md:p-24 lg:p-32 overflow-hidden shadow-titanium text-center"
+                className="max-w-7xl mx-auto relative rounded-3xl glass-panel p-16 md:p-24 lg:p-32 overflow-hidden shadow-elev-3 text-center"
               >
                 <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-accent/5 via-transparent to-transparent opacity-50 blur-[80px] pointer-events-none"></div>
 

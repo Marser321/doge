@@ -20,7 +20,7 @@ export default function ServicesPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-background transition-colors duration-500 font-sans text-foreground selection:bg-accent/30 overflow-hidden relative">
+    <div className="min-h-screen transition-colors duration-500 font-sans text-foreground selection:bg-accent/30 overflow-hidden relative">
       <div className="bg-noise"></div>
 
       {/* Background Decorative */}

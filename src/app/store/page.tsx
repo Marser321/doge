@@ -149,7 +149,7 @@ export default function StorePage() {
   const getImageUrl = (product: Product) => product.product_images?.find((image) => image.is_primary)?.image_url || product.product_images?.[0]?.image_url || '/products/product-placeholder.svg'
 
   return (
-    <div className="min-h-screen bg-background font-sans text-foreground selection:bg-accent/30 selection:text-foreground relative overflow-hidden transition-colors duration-500">
+    <div className="min-h-screen font-sans text-foreground selection:bg-accent/30 selection:text-foreground relative overflow-hidden transition-colors duration-500">
       <div className="bg-noise"></div>
 
       {/* Fondo Industrial Premium */}

@@ -23,7 +23,7 @@ export const HeroSection = ({
   return (
     <section
       ref={heroRef}
-      className="relative pt-28 pb-16 md:pt-40 md:pb-24 overflow-hidden min-h-[70vh] flex items-center justify-center bg-background transition-colors duration-500"
+      className="relative pt-28 pb-16 md:pt-40 md:pb-24 overflow-hidden min-h-[70vh] flex items-center justify-center transition-colors duration-500"
     >
       {/* Deep Titanium Aurora Ambient Glows (No images) */}
       <motion.div

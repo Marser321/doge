@@ -36,9 +36,27 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} ${michroma.variable} h-full antialiased transition-colors duration-500 overflow-x-hidden`}
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} ${michroma.variable} h-full antialiased overflow-x-hidden`}
     >
-      <body className="min-h-full flex flex-col bg-background font-sans tracking-tight text-foreground transition-colors duration-500">
+      <head>
+        {/*
+          Applies the stored theme before first paint. Without this the theme
+          was only set in a client effect, so every load flashed dark before
+          switching to light. It runs blocking on purpose and is tiny.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('doge-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t}}catch(e){}})()`,
+          }}
+        />
+      </head>
+      {/*
+        No `bg-background` here: an opaque layer on body painted over the
+        ambient gradient that globals.css sets, which is why the page read as
+        one flat black sheet. The colour comes from the `body` rule instead.
+      */}
+      <body className="min-h-full flex flex-col font-sans tracking-tight text-foreground">
         <LanguageProvider>
           <SmoothScroll>
             <AuraCursor />

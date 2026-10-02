@@ -95,8 +95,7 @@ export default function SqueegeeCursor() {
       // Check for glass panels (saturate glow effect)
       const onGlass =
         target.closest('.glass-panel') !== null ||
-        target.closest('.luxury-glass') !== null ||
-        target.closest('.glass-panel-heavy') !== null;
+        target.closest('.luxury-glass') !== null;
 
       setIsOnGlass(onGlass);
     };

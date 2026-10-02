@@ -2,68 +2,154 @@
 
 /* ══════════════════════════════════════════════════════════════════════
    DOGE.S.M LLC — Global Design System (Tailwind CSS v4)
-   ══════════════════════════════════════════════════════════════════════
+   ──────────────────────────────────────────────────────────────────────
    Architecture: CSS Custom Properties → @theme inline → @utility
-   Themes: Titanium Noir (Dark) / Quiet Luxury Ice (Light)
+   Themes: Titanium Noir (dark, default) / Quiet Luxury Ice (light)
+
+   Every colour lives here. A literal hex in a component is a bug: it
+   cannot follow the theme, and the light theme is the half of the system
+   that breaks first when one slips through.
    ══════════════════════════════════════════════════════════════════════ */
 
 /* ─── DESIGN TOKENS ─────────────────────────────────────────────────── */
 
 :root {
-  /* DARK THEME — Crystal Noir (Clean Glass) */
-  --background: #09090b;
-  --bg-radial: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(148, 163, 184, 0.06) 0%, transparent 70%);
-  --foreground: #f4f4f5;
-  --accent: #a1a1aa;
-  --taupe: #71717a;
-  --glass-bg: rgba(9, 9, 11, 0.65);
-  --glass-border: rgba(255, 255, 255, 0.07);
-  --card-bg: rgba(24, 24, 27, 0.4);
-  --silver-gradient: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
-  --footer-bg: #09090b;
-  --noise-opacity: 0.008;
+  /* ── Surfaces ──
+     A four-step elevation scale. The previous system had only "page" and
+     "text", so panels could not separate from the background by value and
+     everything read as one flat sheet of black. Each step must be visible
+     to the eye, not just to the inspector. */
+  --surface-0: #0b0b0f;   /* page base — lifted off pure black, faintly cool */
+  --surface-1: #131318;   /* cards, panels */
+  --surface-2: #1b1b22;   /* raised: hover, selected rows, inputs */
+  --surface-3: #24242d;   /* overlays: popovers, modals, dropdowns */
 
-  /* Strategic Semantic Color Tokens */
+  --background: var(--surface-0);
+  --footer-bg: var(--surface-0);
+
+  /* Ambient depth. Anchored inside the viewport so it is actually seen. */
+  --bg-radial:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(214, 40, 40, 0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 50% at 85% 20%, rgba(148, 163, 184, 0.05) 0%, transparent 60%);
+
+  /* ── Text ── */
+  --text-primary: #f4f4f5;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --foreground: var(--text-primary);
+  --accent: var(--text-secondary);
+
+  /* ── Borders ── */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --glass-border: var(--border-subtle);
+
+  /* ── Glass ──
+     Tinted off the raised surface rather than the page colour, so a panel
+     reads as a panel even where backdrop-filter is unsupported. */
+  --glass-bg: rgba(27, 27, 34, 0.72);
+  --glass-tint: rgba(255, 255, 255, 0.04);
+
+  /* ── Brand ──
+     The logo maroon measures 1.73:1 against the page: below the 3:1 WCAG
+     minimum for graphics, which is why it disappeared. `--brand` is the
+     lifted red used on dark surfaces; `--brand-deep` keeps the original
+     for light backgrounds and print. */
+  --brand: #d62828;
+  --brand-deep: #790302;
+  --brand-contrast: #ffffff;
+
+  /* ── Semantic ── */
   --emerald-accent: #10b981;
   --gold-accent: #f59e0b;
   --sky-accent: #0284c7;
+  --danger: #f87171;
 
-  /* Haptic Motion Tokens */
+  /* ── Elevation ── */
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.6);
+  --shadow-3: 0 24px 48px -16px rgba(0, 0, 0, 0.7);
+
+  --silver-gradient: linear-gradient(135deg, #ffffff 0%, #c4c4cc 100%);
+  --noise-opacity: 0.035;
+
+  /* ── Motion ── */
   --ease-haptic: cubic-bezier(0.32, 0.72, 0, 1);
-  --ease-in-out-haptic: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 450ms;
 }
 
 [data-theme='light'] {
-  /* LIGHT THEME — Crystal Ice (Clean & Airy) */
-  --background: #fafafa;
-  --bg-radial: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(186, 199, 214, 0.12) 0%, transparent 70%);
-  --foreground: #09090b;
-  --accent: #52525b;
-  --taupe: #71717a;
-  --glass-bg: rgba(250, 250, 250, 0.75);
-  --glass-border: rgba(0, 0, 0, 0.08);
-  --card-bg: #f4f4f5;
-  --silver-gradient: linear-gradient(180deg, #18181b 0%, #52525b 100%);
-  --footer-bg: #fafafa;
-  --noise-opacity: 0.005;
+  --surface-0: #f6f6f7;   /* page base — cards lift off it in white */
+  --surface-1: #ffffff;
+  --surface-2: #ffffff;
+  --surface-3: #ffffff;
+
+  --background: var(--surface-0);
+  --footer-bg: var(--surface-0);
+
+  --bg-radial:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(214, 40, 40, 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 50% at 85% 20%, rgba(100, 116, 139, 0.06) 0%, transparent 60%);
+
+  --text-primary: #09090b;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
+
+  --border-subtle: rgba(9, 9, 11, 0.10);
+  --border-strong: rgba(9, 9, 11, 0.20);
+
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-tint: rgba(9, 9, 11, 0.03);
+
+  /* On light surfaces the original maroon has all the contrast it needs. */
+  --brand: #a30d0d;
+  --brand-deep: #790302;
+  --brand-contrast: #ffffff;
 
   --emerald-accent: #059669;
   --gold-accent: #d97706;
   --sky-accent: #0369a1;
+  --danger: #dc2626;
+
+  --shadow-1: 0 1px 2px rgba(9, 9, 11, 0.06);
+  --shadow-2: 0 8px 24px -8px rgba(9, 9, 11, 0.12);
+  --shadow-3: 0 24px 48px -16px rgba(9, 9, 11, 0.18);
+
+  --silver-gradient: linear-gradient(135deg, #18181b 0%, #52525b 100%);
+  --noise-opacity: 0.022;
 }
 
 /* ─── THEME BRIDGE (var → Tailwind v4) ──────────────────────────────── */
-/* `inline` ensures we pass through existing CSS vars without creating
-   duplicate global variables in the compiled output. */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
-  --color-taupe: var(--taupe);
+
+  --color-surface-0: var(--surface-0);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+
+  --color-primary: var(--text-primary);
+  --color-secondary: var(--text-secondary);
+  --color-muted: var(--text-muted);
+
+  --color-subtle: var(--border-subtle);
+  --color-strong: var(--border-strong);
+
+  --color-brand: var(--brand);
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-contrast: var(--brand-contrast);
+
   --color-emerald-accent: var(--emerald-accent);
   --color-gold-accent: var(--gold-accent);
   --color-sky-accent: var(--sky-accent);
+  --color-danger: var(--danger);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-michroma: var(--font-michroma);
@@ -79,19 +165,36 @@
   body {
     background-color: var(--background);
     background-image: var(--bg-radial);
-    background-attachment: fixed;
+    background-repeat: no-repeat;
     color: var(--foreground);
-    transition: background-color 0.6s var(--ease-haptic),
-                color 0.6s var(--ease-haptic);
+    transition: background-color var(--duration-slow) var(--ease-haptic),
+                color var(--duration-slow) var(--ease-haptic);
     overflow-x: hidden;
     font-family: var(--font-geist-sans), ui-sans-serif, system-ui;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Michroma branding for all headings */
-  h1, h2, h3, h4, h5, h6, .font-michroma {
+  /* Michroma is a display face shipped at weight 400 only. Asking for
+     `font-bold` makes the browser synthesise a fake bold, which is a large
+     part of why the headings looked amateur. Display type is reserved for
+     h1/h2 and opted into elsewhere; synthesis is switched off outright. */
+  h1, h2, .font-michroma {
     font-family: var(--font-michroma), var(--font-geist-sans), sans-serif;
+    font-synthesis-weight: none;
+    font-weight: 400;
+  }
+
+  h3, h4, h5, h6 {
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui;
+  }
+
+  /* One visible focus ring for the whole app. Several controls used to
+     reveal themselves on hover only, leaving them invisible to keyboard. */
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 
   @media (pointer: fine) and (hover: hover) {
@@ -101,63 +204,54 @@
     }
   }
 
-  * { scrollbar-width: thin; scrollbar-color: rgba(161, 161, 170, .65) transparent; }
+  * { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(161, 161, 170, .55); border: 3px solid transparent; border-radius: 999px; background-clip: padding-box; }
-  ::-webkit-scrollbar-thumb:hover { background-color: rgba(244, 244, 245, .8); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover { background-color: var(--text-muted); background-clip: padding-box; }
 }
 
 /* ══════════════════════════════════════════════════════════════════════
-   TAILWIND v4 NATIVE UTILITIES (@utility)
-   ──────────────────────────────────────────────────────────────────────
-   These are first-class Tailwind utilities that support all variant
-   pseudo-classes (hover:, md:, dark:, group-hover:, etc.).
+   UTILITIES
    ══════════════════════════════════════════════════════════════════════ */
 
-/* Crystal Sheen Overlay — subtle diagonal light sweep (clean glass feel) */
+/* Film grain. Previously a linear gradient at 0.8% opacity — not noise,
+   and two orders of magnitude below perceptible. This is real turbulence
+   and it is what keeps large dark areas from banding. */
 @utility bg-noise {
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100%;
   pointer-events: none;
-  z-index: 50;
+  z-index: 1;
   opacity: var(--noise-opacity);
-  background: linear-gradient(
-    135deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.03) 25%,
-    transparent 50%,
-    rgba(255, 255, 255, 0.02) 75%,
-    transparent 100%
-  );
-  transition: opacity 0.5s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  transition: opacity var(--duration-slow) ease;
 }
 
-/* Glassmorphism — restrained, readable panels */
 @utility glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  transition: background 0.5s ease, border-color 0.5s ease;
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid var(--border-subtle);
+  transition: background var(--duration-slow) ease, border-color var(--duration-slow) ease;
 }
 
-/* Glassmorphism — heavier variant, reserved for overlays */
-@utility glass-panel-heavy {
-  background: color-mix(in srgb, var(--glass-bg) 88%, black 12%);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid color-mix(in srgb, var(--glass-border) 90%, white 10%);
+/* Heavier glass for high-impact areas. Now tokenised: it used to hardcode
+   white at 5%, which made every panel vanish in the light theme. */
+@utility luxury-glass {
+  background: var(--glass-tint);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid var(--border-subtle);
+  transition: background var(--duration-slow) ease, border-color var(--duration-slow) ease,
+              box-shadow var(--duration-slow) ease;
 }
 
-/* Titanium Gradient — directional metallic sweep */
-@utility titanium-gradient {
-  background: linear-gradient(135deg, #18181b 0%, #3f3f46 50%, #18181b 100%);
-}
-
-/* Silver Text — gradient text clip for luxury headings */
 @utility silver-text {
   background: var(--silver-gradient);
   -webkit-background-clip: text;
@@ -165,165 +259,90 @@
   background-clip: text;
 }
 
-/* Matte Border — subtle themed border */
-@utility matte-border {
-  border: 1px solid var(--glass-border);
+@utility shadow-elev-1 { box-shadow: var(--shadow-1); }
+@utility shadow-elev-2 { box-shadow: var(--shadow-2); }
+@utility shadow-elev-3 { box-shadow: var(--shadow-3); }
+
+/* The brand mark is dark-on-dark by nature; a soft halo separates it from
+   the surface without turning it into an ornament. */
+@utility brand-glow {
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.28))
+          drop-shadow(0 2px 10px rgba(214, 40, 40, 0.35));
 }
 
-/* Titanium Shadow — deep, expensive-looking box shadow */
-@utility shadow-titanium {
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
-}
-
-/* Edge Fade Mask — horizontal fade for marquees / carousels */
-@utility mask-fade-edges {
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
-}
-
-/* Safe Area Padding — iOS home indicator spacing */
 @utility pb-safe {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* Cursor Hover Target — haptic transition for interactive elements */
+/* Marker class the custom cursor looks for; also carries the transition
+   that hover effects on these elements animate with. */
 @utility cursor-hover-target {
-  transition: transform 0.3s var(--ease-haptic), filter 0.3s var(--ease-haptic);
+  transition: transform var(--duration-base) var(--ease-haptic),
+              filter var(--duration-base) var(--ease-haptic);
 }
 
-/* ══════════════════════════════════════════════════════════════════════
-   PREMIUM LUXURY UTILITIES (Agency Agents Injected)
-   ──────────────────────────────────────────────────────────────────────
-   Source: engineering-senior-developer.md + design-whimsy-injector.md
-   Patterns: luxury-glass, magnetic, btn-whimsy, celebrations
-   ══════════════════════════════════════════════════════════════════════ */
-
-/* Luxury Glass — restrained glassmorphism
-   Use for hero nav, feature sections, premium CTAs only.
-   Heavier than glass-panel — reserve for high-impact areas. */
-@utility luxury-glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(16px) saturate(120%);
-  -webkit-backdrop-filter: blur(16px) saturate(120%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: background 0.5s ease, border-color 0.5s ease,
-              box-shadow 0.5s ease;
-}
-
-/* Magnetic Element — Premium hover with cubic-bezier(0.16, 1, 0.3, 1)
-   Scale 1.05× + lift 2px — the "expensive feel" */
 @utility magnetic {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-base) var(--ease-out-expo),
+              box-shadow var(--duration-base) var(--ease-out-expo);
 }
 
-/* Button Whimsy — Container for shimmer sweep effect
-   Requires a ::before pseudo-element for the actual light sweep.
-   Apply this class + add shimmer-sweep-pseudo in component styles. */
 @utility btn-whimsy {
   position: relative;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: all var(--duration-base) var(--ease-out-expo);
 }
 
-/* Ring Pulse — Selection confirmation animation for plan cards */
-@utility ring-pulse {
-  animation: ring-pulse-kf 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* ─── WHIMSY KEYFRAMES ──────────────────────────────────────────────── */
-
-/* Sparkle — micro-celebration on form validation / success states */
-@keyframes sparkle {
-  0%, 100% { transform: scale(1); opacity: 0; }
-  50% { transform: scale(1.3); opacity: 1; }
-}
-
-/* Celebrate — emoji pop for booking confirmation */
-@keyframes celebrate {
-  0% { transform: translateY(0) scale(0); opacity: 0; }
-  40% { transform: translateY(-30px) scale(1.4); opacity: 1; }
-  100% { transform: translateY(-50px) scale(1); opacity: 0; }
-}
-
-/* Shimmer Sweep — diagonal light pass for premium buttons */
-@keyframes shimmer-sweep {
-  0% { transform: translateX(-100%) skewX(-15deg); }
-  100% { transform: translateX(200%) skewX(-15deg); }
-}
-
-/* Float Up — confetti particle rise for celebrations */
-@keyframes float-up {
-  0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
-  100% { transform: translateY(-100vh) rotate(720deg) scale(0); opacity: 0; }
-}
-
-/* Ring Pulse — expanding ring on plan selection */
-@keyframes ring-pulse-kf {
-  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
-  100% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* ══════════════════════════════════════════════════════════════════════
-   CINEMATIC LUXURY EFFECTS (Master Prompts Injected)
-   ──────────────────────────────────────────────────────────────────────
-   Source: Apple Refinement + Tactical Execution Prompts
-   Patterns: CTA Glow, Tilt Cards, Section Blur Dividers
-   ══════════════════════════════════════════════════════════════════════ */
-
-/* CTA Glow — Gradient shift + shadow bloom on hover
-   Creates the "premium button" effect with animated gradient
-   and expanding soft glow on interaction. */
 @utility cta-glow {
   position: relative;
   overflow: hidden;
-  transition: box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: box-shadow var(--duration-slow) var(--ease-out-expo),
+              transform var(--duration-base) var(--ease-out-expo);
 }
 
-/* Tilt Card Container — 3D perspective for kinetic tilt effect
-   Used by the TiltCard React component. Sets up the 3D space. */
+@utility ring-pulse {
+  animation: ring-pulse-kf 0.6s var(--ease-out-expo);
+}
+
 @utility tilt-card {
   perspective: 1000px;
   transform-style: preserve-3d;
 }
 
-/* Section Blur Divider — Cinematic blur fade between sections
-   Apply to sections to create a smooth depth-of-field transition. */
-@utility section-blur-divider {
-  position: relative;
+/* ─── KEYFRAMES ─────────────────────────────────────────────────────── */
+
+@keyframes ring-pulse-kf {
+  0% { box-shadow: 0 0 0 0 var(--border-strong); }
+  100% { box-shadow: 0 0 0 20px transparent; }
 }
 
-/* ─── CINEMATIC KEYFRAMES ───────────────────────────────────────────── */
-
-/* Glow Pulse — Subtle shadow bloom pulsation for CTAs */
-@keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 20px 0 rgba(255, 255, 255, 0.05); }
-  50% { box-shadow: 0 0 40px 8px rgba(255, 255, 255, 0.12); }
+/* Placeholder sheen while media loads, so a frame is never a dead box. */
+@keyframes skeleton-sweep {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-/* Gradient Shift — Animated gradient movement for premium buttons */
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+@utility skeleton {
+  background-image: linear-gradient(
+    90deg,
+    var(--surface-1) 0%,
+    var(--surface-2) 50%,
+    var(--surface-1) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sweep 1.6s ease-in-out infinite;
 }
 
-/* ─── REDUCED MOTION SAFETY ─────────────────────────────────────────── */
+/* ─── REDUCED MOTION ────────────────────────────────────────────────── */
 
+/* Progress indicators are exempt: flattening their duration froze every
+   spinner in the app into a static arc, which reads as a hung screen. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *:not([data-motion='progress']),
+  *:not([data-motion='progress'])::before,
+  *:not([data-motion='progress'])::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
 }

@@ -101,7 +101,7 @@ export function ServiceEstimateForm({ service }: { service: ServiceDefinition })
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-background transition-colors duration-500 font-sans text-foreground flex items-center justify-center relative overflow-hidden">
+      <div className="min-h-screen transition-colors duration-500 font-sans text-foreground flex items-center justify-center relative overflow-hidden">
         <div className="bg-noise"></div>
         <motion.div
           initial={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
@@ -142,7 +142,7 @@ export function ServiceEstimateForm({ service }: { service: ServiceDefinition })
   }
 
   return (
-    <div className="min-h-screen bg-background transition-colors duration-500 font-sans text-foreground selection:bg-accent/30 overflow-hidden relative">
+    <div className="min-h-screen transition-colors duration-500 font-sans text-foreground selection:bg-accent/30 overflow-hidden relative">
       <div className="bg-noise"></div>
 
       {/* Background Decorative */}

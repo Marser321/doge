@@ -15,7 +15,7 @@ export default function LicensesPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-background transition-colors duration-500 font-sans text-foreground selection:bg-accent/30 overflow-hidden relative">
+    <div className="min-h-screen transition-colors duration-500 font-sans text-foreground selection:bg-accent/30 overflow-hidden relative">
       <div className="bg-noise"></div>
       <div className="absolute top-[-10%] right-[-10%] w-[min(600px,60vw)] h-[min(600px,60vw)] bg-accent/5 rounded-full blur-[120px] pointer-events-none"></div>
 
