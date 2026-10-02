@@ -188,7 +188,7 @@ export default function SubscriptionsDashboard() {
                         ) : sub.status !== 'Cancelled' ? (
                           <button disabled={busy === sub.id} onClick={() => changeStatus(sub, 'Active')} aria-label="Activar suscripción" className="p-2 hover:bg-surface-3 rounded-lg text-emerald-400 disabled:opacity-40"><PlayCircle className="w-4 h-4" /></button>
                         ) : null}
-                        {sub.status !== 'Cancelled' && <button disabled={busy === sub.id} onClick={() => changeStatus(sub, 'Cancelled')} aria-label="Cancelar suscripción" className="p-2 hover:bg-red-500/10 rounded-lg text-red-400 disabled:opacity-40"><XCircle className="w-4 h-4" /></button>}
+                        {sub.status !== 'Cancelled' && <button disabled={busy === sub.id} onClick={() => changeStatus(sub, 'Cancelled')} aria-label="Cancelar suscripción" className="p-2 hover:bg-red-500/10 rounded-lg text-tone-danger disabled:opacity-40"><XCircle className="w-4 h-4" /></button>}
                       </div>
                     </td>
                   </tr>

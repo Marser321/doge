@@ -185,7 +185,7 @@ export default function CeoOnboardingTour({
               <Icon className="size-6" />
             </div>
             <div>
-              <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-red-400">
+              <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-tone-danger">
                 {step.badge}
               </span>
               <h2 className="text-xl sm:text-2xl font-semibold text-primary tracking-tight">

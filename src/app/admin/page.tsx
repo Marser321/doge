@@ -59,7 +59,7 @@ export default function AdminDashboard() {
           <section className="rounded-2xl border border-subtle bg-surface-1">
             <div className="flex items-center justify-between border-b border-subtle px-5 py-4">
               <h2 className="font-semibold text-primary">Solicitudes recientes</h2>
-              <Link href="/admin/requests" className="text-sm text-red-300 hover:text-red-200">Ver pipeline</Link>
+              <Link href="/admin/requests" className="text-sm text-tone-danger hover:text-red-200">Ver pipeline</Link>
             </div>
             {summary.recent_requests.length ? (
               <div className="divide-y divide-subtle">

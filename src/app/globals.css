@@ -35,7 +35,10 @@
   /* ── Text ── */
   --text-primary: #f4f4f5;
   --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
+  /* Measured at 3.54:1 against --surface-1 as zinc-500, below the 4.5:1 AA
+     minimum for small text. Lifted until it passes with margin while staying
+     a visible step below --text-secondary. */
+  --text-muted: #8a8a93;
   --foreground: var(--text-primary);
   --accent: var(--text-secondary);
 
@@ -64,6 +67,14 @@
   --gold-accent: #f59e0b;
   --sky-accent: #0284c7;
   --danger: #f87171;
+
+  /* Status tones. The -300/-400 Tailwind steps the badges used are pastels:
+     fine on dark, unreadable on light. These flip with the theme. */
+  --tone-info: #7dd3fc;
+  --tone-success: #6ee7b7;
+  --tone-warning: #fcd34d;
+  --tone-danger: #fca5a5;
+  --tone-brand: #93c5fd;
 
   /* ── Elevation ── */
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -114,6 +125,12 @@
   --sky-accent: #0369a1;
   --danger: #dc2626;
 
+  --tone-info: #075985;
+  --tone-success: #065f46;
+  --tone-warning: #854d0e;
+  --tone-danger: #991b1b;
+  --tone-brand: #1e40af;
+
   --shadow-1: 0 1px 2px rgba(9, 9, 11, 0.06);
   --shadow-2: 0 8px 24px -8px rgba(9, 9, 11, 0.12);
   --shadow-3: 0 24px 48px -16px rgba(9, 9, 11, 0.18);
@@ -149,6 +166,11 @@
   --color-gold-accent: var(--gold-accent);
   --color-sky-accent: var(--sky-accent);
   --color-danger: var(--danger);
+  --color-tone-info: var(--tone-info);
+  --color-tone-success: var(--tone-success);
+  --color-tone-warning: var(--tone-warning);
+  --color-tone-danger: var(--tone-danger);
+  --color-tone-brand: var(--tone-brand);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);

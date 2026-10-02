@@ -113,7 +113,7 @@ export default function StaffPage() {
     <div className="mx-auto max-w-6xl space-y-7 pb-20">
       <CrmPageIntro eyebrow="Administración · acceso interno" title="Equipo y roles" description="Las cuentas se crean exclusivamente por invitación y los privilegios se verifican en servidor." />
       {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
-      {message && <p className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">{message}</p>}
+      {message && <p className="rounded-xl border border-tone-success/30 bg-tone-success/10 px-4 py-3 text-sm text-tone-success">{message}</p>}
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <section className="overflow-hidden rounded-2xl border border-subtle bg-surface-1">
           {staff.length === 0 && (
@@ -132,13 +132,13 @@ export default function StaffPage() {
               <select disabled={current?.role !== 'owner' || profile.id === current?.id} aria-label={`Rol de ${profile.email}`} value={profile.role} onChange={(event) => update(profile.id, { role: event.target.value })} className="rounded-xl border border-subtle bg-surface-0 px-3 py-2 text-sm text-primary disabled:opacity-50">
                 {roles.map((role) => <option key={role} value={role}>{role}</option>)}
               </select>
-              <button disabled={current?.role !== 'owner' || profile.id === current?.id} onClick={() => update(profile.id, { is_active: !profile.is_active })} className={`rounded-xl border px-3 py-2 text-xs transition disabled:opacity-40 ${profile.is_active ? 'border-emerald-400/20 text-emerald-300' : 'border-red-400/20 text-red-300'}`}>{profile.is_active ? 'Activo' : 'Inactivo'}</button>
+              <button disabled={current?.role !== 'owner' || profile.id === current?.id} onClick={() => update(profile.id, { is_active: !profile.is_active })} className={`rounded-xl border px-3 py-2 text-xs transition disabled:opacity-40 ${profile.is_active ? 'border-tone-success/25 text-tone-success' : 'border-tone-danger/25 text-tone-danger'}`}>{profile.is_active ? 'Activo' : 'Inactivo'}</button>
             </article>
           ))}
         </section>
         <form onSubmit={invite} className="h-fit space-y-4 rounded-2xl border border-subtle bg-surface-1 p-5 lg:sticky lg:top-24">
-          <div className="flex items-center gap-2"><MailPlus className="size-5 text-red-300" /><h2 className="font-semibold">Invitar personal</h2></div>
-          {current?.role !== 'owner' && <p className="rounded-xl bg-amber-500/10 p-3 text-xs text-amber-200">Solo el owner puede enviar invitaciones.</p>}
+          <div className="flex items-center gap-2"><MailPlus className="size-5 text-tone-danger" /><h2 className="font-semibold">Invitar personal</h2></div>
+          {current?.role !== 'owner' && <p className="rounded-xl bg-tone-warning/10 p-3 text-xs text-tone-warning">Solo el owner puede enviar invitaciones.</p>}
           <label className="block text-sm text-secondary">Nombre<input required name="display_name" maxLength={120} className="mt-2 w-full rounded-xl border border-subtle bg-surface-0 px-3 py-3 text-primary" /></label>
           <label className="block text-sm text-secondary">Email<input required name="email" type="email" maxLength={254} className="mt-2 w-full rounded-xl border border-subtle bg-surface-0 px-3 py-3 text-primary" /></label>
           <label className="block text-sm text-secondary">Rol<select required name="role" defaultValue="crew" className="mt-2 w-full rounded-xl border border-subtle bg-surface-0 px-3 py-3 text-primary">{roles.filter((role) => role !== 'owner').map((role) => <option key={role} value={role}>{role}</option>)}</select></label>

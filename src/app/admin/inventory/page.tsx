@@ -100,7 +100,7 @@ export default function InventoryPage() {
       )}
 
       {successMessage && (
-        <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200 animate-in fade-in">
+        <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-tone-success/10 px-4 py-3 text-sm text-tone-success animate-in fade-in">
           <CheckCircle2 className="size-4 shrink-0 text-emerald-400" />
           <span>{successMessage}</span>
         </div>
@@ -130,7 +130,7 @@ export default function InventoryPage() {
           <button
             type="button"
             onClick={() => setFilter('low')}
-            className={`flex items-center gap-1 rounded-lg px-3 py-2 font-medium transition ${filter === 'low' ? 'bg-orange-500 text-white font-semibold' : 'border border-orange-500/20 text-orange-400 hover:bg-orange-500/10'}`}
+            className={`flex items-center gap-1 rounded-lg px-3 py-2 font-medium transition ${filter === 'low' ? 'bg-orange-500 text-white font-semibold' : 'border border-tone-warning/25 text-tone-warning hover:bg-tone-warning/10'}`}
           >
             <AlertTriangle className="size-3" />
             Stock bajo ({lowStockCount})
@@ -138,7 +138,7 @@ export default function InventoryPage() {
           <button
             type="button"
             onClick={() => setFilter('available')}
-            className={`rounded-lg px-3 py-2 font-medium transition ${filter === 'available' ? 'bg-emerald-600 text-white font-semibold' : 'border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10'}`}
+            className={`rounded-lg px-3 py-2 font-medium transition ${filter === 'available' ? 'bg-emerald-600 text-white font-semibold' : 'border border-emerald-500/20 text-emerald-400 hover:bg-tone-success/10'}`}
           >
             Disponible ({inventory.length - lowStockCount})
           </button>
@@ -179,7 +179,7 @@ export default function InventoryPage() {
                       <span>Mín: {threshold}</span>
                     </div>
                   </div>
-                  <span className={`font-mono text-lg font-bold text-right ${low ? 'text-orange-400' : 'text-primary'}`}>
+                  <span className={`font-mono text-lg font-bold text-right ${low ? 'text-tone-warning' : 'text-primary'}`}>
                     {row.on_hand}
                   </span>
                   <CrmStatusPill tone={low ? 'warning' : 'success'}>
@@ -204,7 +204,7 @@ export default function InventoryPage() {
             <div className="rounded-2xl border border-subtle bg-surface-1 p-5 shadow-lg">
               <div className="flex items-start justify-between gap-3 border-b border-subtle pb-4">
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-red-400 font-michroma">Producto seleccionado</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-tone-danger font-michroma">Producto seleccionado</span>
                   <h3 className="font-bold text-primary text-base mt-0.5">{selected.product?.name}</h3>
                   <p className="font-mono text-xs text-muted mt-0.5">{selected.product?.slug}</p>
                 </div>
@@ -232,7 +232,7 @@ export default function InventoryPage() {
 
           <form onSubmit={adjust} className="space-y-4 rounded-2xl border border-subtle bg-surface-1 p-5 shadow-lg">
             <div className="flex items-center gap-2">
-              <PackagePlus className="size-5 text-red-400" />
+              <PackagePlus className="size-5 text-tone-danger" />
               <h2 className="font-bold text-primary">Registrar movimiento</h2>
             </div>
             <p className="text-xs text-secondary">

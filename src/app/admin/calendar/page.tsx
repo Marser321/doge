@@ -186,7 +186,7 @@ function CalendarContent() {
       )}
 
       {successMessage && (
-        <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200 animate-in fade-in">
+        <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-tone-success/10 px-4 py-3 text-sm text-tone-success animate-in fade-in">
           <CheckCircle2 className="size-4 shrink-0 text-emerald-400" />
           <span>{successMessage}</span>
         </div>
@@ -221,21 +221,21 @@ function CalendarContent() {
           <button
             type="button"
             onClick={() => setStatusFilter('scheduled')}
-            className={`rounded-lg px-3 py-1.5 font-medium transition ${statusFilter === 'scheduled' ? 'bg-sky-600 text-white font-semibold' : 'border border-sky-500/20 text-sky-300 hover:bg-sky-500/10'}`}
+            className={`rounded-lg px-3 py-1.5 font-medium transition ${statusFilter === 'scheduled' ? 'bg-sky-600 text-white font-semibold' : 'border border-tone-info/25 text-tone-info hover:bg-tone-info/10'}`}
           >
             Programadas
           </button>
           <button
             type="button"
             onClick={() => setStatusFilter('in_progress')}
-            className={`rounded-lg px-3 py-1.5 font-medium transition ${statusFilter === 'in_progress' ? 'bg-amber-600 text-white font-semibold' : 'border border-amber-500/20 text-amber-300 hover:bg-amber-500/10'}`}
+            className={`rounded-lg px-3 py-1.5 font-medium transition ${statusFilter === 'in_progress' ? 'bg-amber-600 text-white font-semibold' : 'border border-tone-warning/25 text-tone-warning hover:bg-tone-warning/10'}`}
           >
             En curso
           </button>
           <button
             type="button"
             onClick={() => setStatusFilter('completed')}
-            className={`rounded-lg px-3 py-1.5 font-medium transition ${statusFilter === 'completed' ? 'bg-emerald-600 text-white font-semibold' : 'border border-emerald-500/20 text-emerald-300 hover:bg-emerald-500/10'}`}
+            className={`rounded-lg px-3 py-1.5 font-medium transition ${statusFilter === 'completed' ? 'bg-emerald-600 text-white font-semibold' : 'border border-tone-success/25 text-tone-success hover:bg-tone-success/10'}`}
           >
             Completadas
           </button>
@@ -308,7 +308,7 @@ function CalendarContent() {
         {/* Schedule Form */}
         <form onSubmit={schedule} className="h-fit space-y-4 rounded-2xl border border-subtle bg-surface-1 p-5 shadow-lg lg:sticky lg:top-24">
           <div className="flex items-center gap-2 border-b border-subtle pb-3">
-            <Plus className="size-5 text-red-400" />
+            <Plus className="size-5 text-tone-danger" />
             <h2 className="font-bold text-primary text-base">Programar visita</h2>
           </div>
 
@@ -399,7 +399,7 @@ function CalendarContent() {
           <form onSubmit={reschedule} className="w-full max-w-lg space-y-4 rounded-3xl border border-subtle bg-surface-0 p-6 shadow-2xl">
             <div className="flex items-start justify-between border-b border-subtle pb-4">
               <div>
-                <p className="text-xs uppercase tracking-wide text-red-400 font-michroma">Agenda operativa</p>
+                <p className="text-xs uppercase tracking-wide text-tone-danger font-michroma">Agenda operativa</p>
                 <h2 className="mt-1 text-xl font-bold text-primary">Reprogramar visita</h2>
                 <p className="text-xs text-secondary mt-0.5">
                   {rescheduling.service_request?.service_name_snapshot || 'Servicio DOGE'} · {rescheduling.property?.address}

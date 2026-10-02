@@ -49,11 +49,11 @@ function PropertyForm() {
   return (
     <div className="mx-auto max-w-3xl pb-20">
       <Link href="/admin/subscriptions/new" className="inline-flex items-center gap-2 text-sm text-secondary"><ArrowLeft className="size-4" /> Volver</Link>
-      <div className="mt-5"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Clientes</p><h1 className="mt-2 text-3xl font-semibold">Registrar propiedad</h1></div>
+      <div className="mt-5"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-tone-danger">Clientes</p><h1 className="mt-2 text-3xl font-semibold">Registrar propiedad</h1></div>
       {error && <p role="alert" className="mt-5 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
       {loading ? <div className="grid min-h-96 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin" /></div> : (
         <form onSubmit={submit} className="mt-7 space-y-5 rounded-2xl border border-subtle bg-surface-1 p-6">
-          <div className="flex items-center gap-2 border-b border-subtle pb-4"><Building2 className="size-5 text-red-300" /><h2 className="font-semibold">Ubicación y acceso</h2></div>
+          <div className="flex items-center gap-2 border-b border-subtle pb-4"><Building2 className="size-5 text-tone-danger" /><h2 className="font-semibold">Ubicación y acceso</h2></div>
           <label className="block text-sm text-secondary">Cliente<select required name="client_id" defaultValue={params.get('clientId') || ''} className={input}><option value="">Selecciona un cliente</option>{clients.map((client) => <option key={client.id} value={client.id}>{client.name}</option>)}</select></label>
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="text-sm text-secondary sm:col-span-2">Etiqueta<input name="label" placeholder="Residencia principal" className={input} /></label>

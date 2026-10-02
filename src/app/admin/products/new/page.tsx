@@ -196,7 +196,7 @@ export default function NewProductForm() {
        </div>
 
        {error && (
-         <div className="mb-8 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm font-medium">
+         <div className="mb-8 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-tone-danger text-sm font-medium">
            {error}
          </div>
        )}
@@ -425,7 +425,7 @@ export default function NewProductForm() {
                        className="flex-1 bg-surface-0/60 border border-subtle rounded-xl px-4 py-2.5 text-primary text-sm focus:outline-none focus:border-strong" 
                        placeholder="Ej. 240 AW / Motor V15" 
                      />
-                     <button type="button" onClick={() => removeSpec(index)} aria-label="Eliminar especificación" className="p-2.5 text-zinc-500 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors">
+                     <button type="button" onClick={() => removeSpec(index)} aria-label="Eliminar especificación" className="p-2.5 text-muted hover:text-tone-danger hover:bg-red-500/10 rounded-xl transition-colors">
                        <Trash2 className="w-4 h-4" />
                      </button>
                   </div>

@@ -34,9 +34,9 @@ export default function ClientsDashboard() {
   const getStatusStyles = (status: string) => {
     switch(status) {
       case 'VIP':
-         return 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+         return 'bg-tone-warning/10 text-tone-warning border-tone-warning/25'
       case 'Corporate':
-         return 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+         return 'bg-tone-info/10 text-tone-info border-blue-500/20'
       default:
          return 'bg-zinc-500/10 text-secondary border-zinc-500/20'
     }
@@ -127,7 +127,7 @@ export default function ClientsDashboard() {
               
               {/* Highlight gradient on VIP */}
               {client.status === 'VIP' && (
-                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 blur-[40px] rounded-full translate-x-1/2 -translate-y-1/2 group-hover:bg-amber-500/20 transition-colors"></div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-tone-warning/10 blur-[40px] rounded-full translate-x-1/2 -translate-y-1/2 group-hover:bg-amber-500/20 transition-colors"></div>
               )}
 
               <div className="flex justify-between items-start mb-4 relative">

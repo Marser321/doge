@@ -106,7 +106,7 @@ export default function OrdersPage() {
       {showForm && (
         <div className="fixed inset-0 z-[70] grid place-items-center bg-black/75 p-4 backdrop-blur-sm">
           <form onSubmit={create} className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-subtle bg-surface-0 p-6">
-            <div className="flex items-start justify-between"><div><p className="text-xs uppercase tracking-wide text-red-300">Orden interna</p><h2 className="mt-1 text-xl font-semibold">Venta asistida</h2></div><button type="button" onClick={() => setShowForm(false)} className="rounded-lg p-2 text-muted hover:bg-surface-2"><X className="size-5" /></button></div>
+            <div className="flex items-start justify-between"><div><p className="text-xs uppercase tracking-wide text-tone-danger">Orden interna</p><h2 className="mt-1 text-xl font-semibold">Venta asistida</h2></div><button type="button" onClick={() => setShowForm(false)} className="rounded-lg p-2 text-muted hover:bg-surface-2"><X className="size-5" /></button></div>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <label className="text-sm text-secondary sm:col-span-2">Cliente registrado<select name="client_id" defaultValue="" className="mt-2 w-full rounded-xl border border-subtle bg-surface-0 px-3 py-3 text-primary"><option value="">Venta sin cliente vinculado</option>{clients.map((client) => <option key={client.id} value={client.id}>{client.name}</option>)}</select></label>
               <label className="text-sm text-secondary">Nombre<input name="customer_name" placeholder="Se completa desde el cliente o como venta concierge" className="mt-2 w-full rounded-xl border border-subtle bg-surface-2 px-3 py-3 text-primary" /></label>

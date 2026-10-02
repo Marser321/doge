@@ -219,7 +219,7 @@ export default function RequestsPage() {
 
       {/* Floating Toast Notification */}
       {toast && (
-        <div className="fixed top-6 right-6 z-50 flex items-center gap-2 rounded-2xl border border-emerald-500/30 bg-emerald-950/90 px-4 py-3 text-sm text-emerald-200 shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-300">
+        <div className="fixed top-6 right-6 z-50 flex items-center gap-2 rounded-2xl border border-emerald-500/30 bg-emerald-950/90 px-4 py-3 text-sm text-tone-success shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-300">
           <CheckCircle2 className="size-4 text-emerald-400 shrink-0" />
           <span>{toast}</span>
         </div>
@@ -233,12 +233,12 @@ export default function RequestsPage() {
 
       {/* Quote link copied banner */}
       {generatedApprovalUrl && (
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-200">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl border border-tone-warning/30 bg-tone-warning/10 p-4 text-sm text-tone-warning">
           <div className="flex items-center gap-2.5">
             <CheckCircle2 className="size-5 text-amber-400 shrink-0" />
             <div>
               <p className="font-semibold text-primary">Enlace de aprobación listo para el cliente</p>
-              <p className="text-xs text-amber-300/80 mt-0.5 truncate max-w-md">{generatedApprovalUrl}</p>
+              <p className="text-xs text-tone-warning/80 mt-0.5 truncate max-w-md">{generatedApprovalUrl}</p>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -255,7 +255,7 @@ export default function RequestsPage() {
             </button>
             <button
               onClick={() => setGeneratedApprovalUrl(null)}
-              className="p-1.5 text-amber-300 hover:text-primary"
+              className="p-1.5 text-tone-warning hover:text-primary"
             >
               <X className="size-4" />
             </button>
@@ -335,7 +335,7 @@ export default function RequestsPage() {
               {/* Header */}
               <div className="flex items-start justify-between gap-4 pb-4 border-b border-subtle">
                 <div>
-                  <p className="font-mono text-xs text-red-300 font-semibold tracking-wider">
+                  <p className="font-mono text-xs text-tone-danger font-semibold tracking-wider">
                     {selected.reference_code}
                   </p>
                   <h2 className="mt-1 text-xl font-bold text-primary tracking-tight">
@@ -362,7 +362,7 @@ export default function RequestsPage() {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center justify-center gap-2 w-full rounded-xl border border-emerald-500/30 bg-emerald-500/10 py-2.5 px-4 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/20 transition-all"
+                  className="flex items-center justify-center gap-2 w-full rounded-xl border border-emerald-500/30 bg-tone-success/10 py-2.5 px-4 text-xs font-semibold text-tone-success hover:bg-emerald-500/20 transition-all"
                 >
                   <MessageSquare className="size-4" />
                   Abrir chat en WhatsApp
@@ -487,7 +487,7 @@ export default function RequestsPage() {
                         {c.label}
                       </option>
                     ))}
-                    <option value="cancelled" className="bg-surface-1 text-red-400">Cancelada</option>
+                    <option value="cancelled" className="bg-surface-1 text-tone-danger">Cancelada</option>
                   </select>
                 </div>
 
@@ -495,7 +495,7 @@ export default function RequestsPage() {
                   <button 
                     disabled={busy} 
                     onClick={cancel} 
-                    className="w-full min-h-9 rounded-xl border border-red-400/20 px-4 text-xs text-red-300 transition hover:bg-red-500/10 mt-1"
+                    className="w-full min-h-9 rounded-xl border border-red-400/20 px-4 text-xs text-tone-danger transition hover:bg-red-500/10 mt-1"
                   >
                     Cancelar solicitud
                   </button>
@@ -512,7 +512,7 @@ export default function RequestsPage() {
           <form onSubmit={submitQuote} className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-strong bg-surface-0 p-6 sm:p-8 shadow-2xl">
             <div className="flex items-start justify-between pb-4 border-b border-subtle">
               <div>
-                <p className="text-xs uppercase tracking-wider text-red-400 font-bold">Generador de Cotizaciones</p>
+                <p className="text-xs uppercase tracking-wider text-tone-danger font-bold">Generador de Cotizaciones</p>
                 <h2 className="mt-1 text-xl font-bold text-primary">Conceptos, precios y condiciones</h2>
               </div>
               <button type="button" onClick={() => setQuoteOpen(false)} className="rounded-lg p-2 text-secondary hover:bg-surface-3 hover:text-primary">
@@ -557,7 +557,7 @@ export default function RequestsPage() {
                     aria-label="Eliminar concepto" 
                     disabled={items.length === 1} 
                     onClick={() => setItems((current) => current.filter((candidate) => candidate.key !== item.key))} 
-                    className="rounded-lg p-2 text-muted hover:text-red-300 disabled:opacity-30"
+                    className="rounded-lg p-2 text-muted hover:text-tone-danger disabled:opacity-30"
                   >
                     <X className="size-4" />
                   </button>
@@ -566,7 +566,7 @@ export default function RequestsPage() {
               <button 
                 type="button" 
                 onClick={() => setItems((current) => [...current, { key: crypto.randomUUID(), description: '', quantity: 1, unit_price_cents: 0 }])} 
-                className="inline-flex items-center gap-2 text-xs text-red-400 hover:text-red-300 font-semibold mt-1"
+                className="inline-flex items-center gap-2 text-xs text-tone-danger hover:text-tone-danger font-semibold mt-1"
               >
                 <Plus className="size-3.5" /> Añadir otro concepto
               </button>

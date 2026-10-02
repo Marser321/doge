@@ -70,11 +70,11 @@ export default function ProductsDashboard() {
   const getSaleTypeInfo = (type: string) => {
     switch(type) {
       case 'own_stock': 
-        return { label: 'Stock propio', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20' }
+        return { label: 'Stock propio', style: 'bg-tone-info/10 text-tone-info border-blue-500/20' }
       case 'amazon_affiliate': 
-        return { label: 'Afiliado Amazon', style: 'bg-amber-500/10 text-amber-400 border-amber-500/20' }
+        return { label: 'Afiliado Amazon', style: 'bg-tone-warning/10 text-tone-warning border-tone-warning/25' }
       case 'whatsapp_concierge': 
-        return { label: 'Concierge WhatsApp', style: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' }
+        return { label: 'Concierge WhatsApp', style: 'bg-tone-success/10 text-tone-success border-emerald-500/20' }
       default: 
         return { label: type.replace('_', ' '), style: 'bg-zinc-500/10 text-secondary border-zinc-500/20' }
     }
@@ -131,7 +131,7 @@ export default function ProductsDashboard() {
             </div>
           </div>
           <div className="glass-panel p-4 rounded-xl border border-sky-400/10 flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-sky-400/10 text-sky-200 border border-sky-400/10">
+            <div className="p-3 rounded-lg bg-sky-400/10 text-tone-info border border-sky-400/10">
               <Star className="w-5 h-5" />
             </div>
             <div>
@@ -149,7 +149,7 @@ export default function ProductsDashboard() {
             </div>
           </div>
           <div className="glass-panel p-4 rounded-xl border border-subtle flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-orange-500/10 text-orange-400 border border-orange-500/20">
+            <div className="p-3 rounded-lg bg-tone-warning/10 text-tone-warning border border-tone-warning/25">
               <AlertTriangle className="w-5 h-5" />
             </div>
             <div>
@@ -185,21 +185,21 @@ export default function ProductsDashboard() {
            <button
              type="button"
              onClick={() => setChannelFilter('own_stock')}
-             className={`rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'own_stock' ? 'bg-blue-600 text-white font-semibold' : 'border border-blue-500/20 text-blue-400 hover:bg-blue-500/10'}`}
+             className={`rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'own_stock' ? 'bg-blue-600 text-white font-semibold' : 'border border-tone-info/25 text-tone-info hover:bg-blue-500/10'}`}
            >
              Stock propio
            </button>
            <button
              type="button"
              onClick={() => setChannelFilter('amazon_affiliate')}
-             className={`rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'amazon_affiliate' ? 'bg-amber-600 text-white font-semibold' : 'border border-amber-500/20 text-amber-400 hover:bg-amber-500/10'}`}
+             className={`rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'amazon_affiliate' ? 'bg-amber-600 text-white font-semibold' : 'border border-tone-warning/25 text-tone-warning hover:bg-tone-warning/10'}`}
            >
              Afiliados
            </button>
            <button
              type="button"
              onClick={() => setChannelFilter('pilot')}
-             className={`rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'pilot' ? 'bg-sky-600 text-white font-semibold' : 'border border-sky-500/20 text-sky-300 hover:bg-sky-500/10'}`}
+             className={`rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'pilot' ? 'bg-sky-600 text-white font-semibold' : 'border border-tone-info/25 text-tone-info hover:bg-tone-info/10'}`}
            >
              Piloto
            </button>
@@ -207,7 +207,7 @@ export default function ProductsDashboard() {
              <button
                type="button"
                onClick={() => setChannelFilter('low_stock')}
-               className={`flex items-center gap-1 rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'low_stock' ? 'bg-orange-500 text-white font-semibold' : 'border border-orange-500/20 text-orange-400 hover:bg-orange-500/10'}`}
+               className={`flex items-center gap-1 rounded-lg px-3 py-2 font-medium transition ${channelFilter === 'low_stock' ? 'bg-orange-500 text-white font-semibold' : 'border border-tone-warning/25 text-tone-warning hover:bg-tone-warning/10'}`}
              >
                <AlertTriangle className="size-3" /> Stock bajo ({lowStockCount})
              </button>
@@ -250,7 +250,7 @@ export default function ProductsDashboard() {
                              <p className="font-bold text-primary text-sm">{p.name}</p>
                              <p className="text-[10px] text-muted font-mono tracking-tighter">{p.slug}</p>
                              {isCatalogPilot(p) && (
-                               <span className="mt-1 inline-flex rounded-full border border-sky-400/20 bg-sky-400/5 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-sky-200">
+                               <span className="mt-1 inline-flex rounded-full border border-tone-info/25 bg-tone-info/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-tone-info">
                                  Catálogo piloto
                                </span>
                              )}
@@ -275,11 +275,11 @@ export default function ProductsDashboard() {
                       <td className="p-4">
                         {p.sale_type === 'own_stock' ? (
                           <div className="flex items-center gap-2">
-                             <span className={`text-sm font-medium ${p.stock_quantity <= p.low_stock_threshold ? 'text-orange-400' : 'text-secondary'}`}>
+                             <span className={`text-sm font-medium ${p.stock_quantity <= p.low_stock_threshold ? 'text-tone-warning' : 'text-secondary'}`}>
                                {p.stock_quantity} unidades
                              </span>
                              {p.stock_quantity <= p.low_stock_threshold && (
-                               <AlertTriangle className="w-3.5 h-3.5 text-orange-400" />
+                               <AlertTriangle className="w-3.5 h-3.5 text-tone-warning" />
                              )}
                           </div>
                         ) : (

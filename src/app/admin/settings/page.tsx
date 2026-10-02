@@ -16,7 +16,7 @@ export default async function AdminSettingsPage() {
     <div className="mx-auto max-w-5xl space-y-7 pb-20">
       <CrmPageIntro eyebrow="Administración · sistema" title="Configuración y seguridad" description="Estado de las protecciones operativas del proyecto." />
       <section className="grid gap-4 sm:grid-cols-2">
-        {checks.map(({ label, detail, icon: Icon }) => <article key={label} className="rounded-2xl border border-subtle bg-surface-1 p-5"><Icon className="size-5 text-red-300" /><h2 className="mt-4 font-semibold text-primary">{label}</h2><p className="mt-2 text-sm leading-6 text-secondary">{detail}</p></article>)}
+        {checks.map(({ label, detail, icon: Icon }) => <article key={label} className="rounded-2xl border border-subtle bg-surface-1 p-5"><Icon className="size-5 text-tone-danger" /><h2 className="mt-4 font-semibold text-primary">{label}</h2><p className="mt-2 text-sm leading-6 text-secondary">{detail}</p></article>)}
       </section>
       <section className="rounded-2xl border border-subtle bg-surface-1 p-5">
         <div className="flex items-start gap-3"><ScrollText className="mt-0.5 size-5 text-muted" /><div><h2 className="font-semibold text-primary">Trazabilidad</h2><p className="mt-1 text-sm text-secondary">Consulta cambios de estado, inventario, órdenes y acciones sensibles.</p><Link href="/admin/audit" className="mt-4 inline-flex rounded-xl border border-subtle px-4 py-2 text-sm text-zinc-200 transition hover:bg-surface-2">Abrir auditoría</Link></div></div>

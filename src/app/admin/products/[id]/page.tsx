@@ -79,17 +79,17 @@ export default function ProductEditorPage() {
   }
 
   if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-muted" /></div>;
-  if (!product) return <div className="space-y-5"><CrmPageIntro eyebrow="Catálogo" title="Producto no encontrado" description="El producto pudo haber sido archivado o no estar disponible para tu rol." /><Link href="/admin/products" className="inline-flex text-sm text-sky-200 hover:text-primary">Volver al catálogo</Link></div>;
+  if (!product) return <div className="space-y-5"><CrmPageIntro eyebrow="Catálogo" title="Producto no encontrado" description="El producto pudo haber sido archivado o no estar disponible para tu rol." /><Link href="/admin/products" className="inline-flex text-sm text-tone-info hover:text-primary">Volver al catálogo</Link></div>;
 
   return (
     <div className="mx-auto max-w-5xl space-y-7 pb-20">
       <CrmPageIntro eyebrow="Catálogo" title={`Editar · ${product.name}`} description="Actualiza la ficha pública o sustituye su imagen principal sin perder el historial de media." actions={<Link href="/admin/products" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-subtle px-4 text-sm text-secondary transition hover:bg-surface-2"><ArrowLeft className="size-4" /> Catálogo</Link>} />
-      {error && <p role="alert" className="rounded-xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">{error}</p>}
+      {error && <p role="alert" className="rounded-xl border border-tone-danger/30 bg-tone-danger/10 px-4 py-3 text-sm text-tone-danger">{error}</p>}
       <form onSubmit={save} className="grid gap-7 lg:grid-cols-[0.75fr_1.25fr]">
         <aside className="h-fit space-y-4 rounded-2xl border border-subtle bg-surface-1 p-5 lg:sticky lg:top-24">
           <div className="relative aspect-square overflow-hidden rounded-xl border border-subtle bg-surface-0/40"><Image src={imageFor(product)} alt={product.product_images?.find((image) => image.is_primary)?.alt_text || product.name} fill sizes="(min-width: 1024px) 320px, 100vw" className="object-contain p-5" /></div>
           <label className="block text-xs font-medium text-secondary">Texto alternativo<input value={imageAlt} onChange={(event) => setImageAlt(event.target.value)} maxLength={300} placeholder={product.name} className="mt-2 w-full rounded-xl border border-subtle bg-surface-0 px-3 py-2.5 text-sm text-primary" /></label>
-          <label className="inline-flex min-h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-sky-400/20 bg-sky-400/5 px-4 text-sm font-medium text-sky-100 transition hover:bg-sky-400/10"><ImagePlus className="size-4" /> {uploading ? 'Subiendo…' : 'Sustituir imagen'}<input disabled={uploading} onChange={replaceImage} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" /></label>
+          <label className="inline-flex min-h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-tone-info/25 bg-tone-info/10 px-4 text-sm font-medium text-tone-info transition hover:bg-sky-400/10"><ImagePlus className="size-4" /> {uploading ? 'Subiendo…' : 'Sustituir imagen'}<input disabled={uploading} onChange={replaceImage} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" /></label>
           <p className="text-xs leading-5 text-muted">La nueva imagen se vuelve principal; la anterior se conserva como historial.</p>
         </aside>
         <section className="space-y-5 rounded-2xl border border-subtle bg-surface-1 p-6">

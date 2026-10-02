@@ -127,7 +127,7 @@ export default function AdminShell({ children, initialUser }: { children: React.
                 : 'border-transparent text-secondary hover:border-subtle hover:bg-surface-2 hover:text-primary'
               }`}
             >
-              <Icon className={`size-4.5 ${isActive ? 'text-sky-200' : 'text-muted'}`} />
+              <Icon className={`size-4.5 ${isActive ? 'text-tone-info' : 'text-muted'}`} />
               {item.name}
             </Link>
           )
@@ -166,9 +166,9 @@ export default function AdminShell({ children, initialUser }: { children: React.
          <div className="p-4 border-t border-subtle shrink-0">
             <button 
               onClick={handleSignOut}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all w-full text-left text-sm font-medium group"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-secondary hover:text-tone-danger hover:bg-red-500/10 transition-all w-full text-left text-sm font-medium group"
             >
-              <LogOut className="w-5 h-5 text-muted group-hover:text-red-400 transition-colors" />
+              <LogOut className="w-5 h-5 text-muted group-hover:text-tone-danger transition-colors" />
               Cerrar sesión
             </button>
          </div>
@@ -209,7 +209,7 @@ export default function AdminShell({ children, initialUser }: { children: React.
             <div className="p-4 border-t border-subtle shrink-0">
                <button 
                  onClick={handleSignOut}
-                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all w-full text-left text-sm font-medium"
+                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-secondary hover:text-tone-danger hover:bg-red-500/10 transition-all w-full text-left text-sm font-medium"
                >
                  <LogOut className="w-5 h-5 text-muted" />
                  Cerrar sesión
@@ -242,7 +242,7 @@ export default function AdminShell({ children, initialUser }: { children: React.
            <div className="flex items-center gap-3 md:gap-5">
               <button
                 onClick={() => setIsTourOpen(true)}
-                className="inline-flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-semibold text-amber-200 transition-all hover:border-amber-400/50 hover:bg-amber-500/20 hover:text-white"
+                className="inline-flex items-center gap-2 rounded-xl border border-tone-warning/30 bg-tone-warning/10 px-3 py-1.5 text-xs font-semibold text-tone-warning transition-all hover:border-amber-400/50 hover:bg-amber-500/20 hover:text-white"
                 title="Abrir guía interactiva para el CEO"
               >
                 <Sparkles className={`size-3.5 text-amber-400 ${hasSeenTour ? "" : "animate-pulse"}`} />
@@ -278,7 +278,7 @@ export default function AdminShell({ children, initialUser }: { children: React.
                      </div>
                      <button
                        onClick={() => { setIsTourOpen(true); setIsProfileMenuOpen(false); }}
-                       className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-amber-300 hover:text-amber-200 hover:bg-amber-500/10 transition-colors"
+                       className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-tone-warning hover:text-tone-warning hover:bg-tone-warning/10 transition-colors"
                      >
                        <Sparkles className="w-4 h-4 text-amber-400" />
                        Abrir guía CEO
@@ -286,7 +286,7 @@ export default function AdminShell({ children, initialUser }: { children: React.
                      <div className="h-px bg-surface-2 my-1" />
                      <button
                        onClick={handleSignOut}
-                       className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-zinc-300 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                       className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-secondary hover:text-tone-danger hover:bg-red-500/10 transition-colors"
                      >
                        <LogOut className="w-4 h-4" />
                        Cerrar sesión

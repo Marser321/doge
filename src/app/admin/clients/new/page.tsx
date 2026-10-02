@@ -85,7 +85,7 @@ export default function NewClientForm() {
       </div>
 
       {error && (
-        <div className="mb-8 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium">
+        <div className="mb-8 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-tone-danger text-sm font-medium">
           {error}
         </div>
       )}
@@ -93,7 +93,7 @@ export default function NewClientForm() {
       <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-2xl border border-subtle space-y-6">
         <fieldset disabled={loading} className="group/fieldset contents">
           <div className="flex items-center gap-3 border-b border-subtle pb-4 mb-6">
-            <User className="w-5 h-5 text-red-400" />
+            <User className="w-5 h-5 text-tone-danger" />
             <h2 className="text-base font-bold font-michroma text-primary">Información del Cliente</h2>
           </div>
 

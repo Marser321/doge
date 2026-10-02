@@ -75,7 +75,7 @@ export default function OffersDashboard() {
   return (
     <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out space-y-8">
       {actionError && (
-        <p role="alert" className="rounded-xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">{actionError}</p>
+        <p role="alert" className="rounded-xl border border-tone-danger/30 bg-tone-danger/10 px-4 py-3 text-sm text-tone-danger">{actionError}</p>
       )}
        
        <CrmPageIntro eyebrow="Comercio · promociones" title="Ofertas y promociones" description="Gestiona ventas cruzadas, incentivos y códigos de descuento." actions={<>
@@ -102,7 +102,7 @@ export default function OffersDashboard() {
                     <div className="flex items-center gap-3 mb-1">
                       <h3 className={`font-bold text-lg ${offer.status === 'Active' ? 'text-primary' : 'text-muted'}`}>{offer.title}</h3>
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                        offer.status === 'Active' ? 'bg-green-500/20 text-green-400' : 'bg-surface-2 text-secondary'
+                        offer.status === 'Active' ? 'bg-tone-success/10 text-tone-success' : 'bg-surface-2 text-secondary'
                       }`}>
                         {offer.status}
                       </span>
@@ -142,7 +142,7 @@ export default function OffersDashboard() {
                     </button>
                     <button 
                       onClick={() => handleDelete(offer.id)}
-                      className="p-2 bg-surface-2 hover:bg-red-500/20 hover:text-red-400 rounded-lg text-muted transition-colors" 
+                      className="p-2 bg-surface-2 hover:bg-red-500/20 hover:text-tone-danger rounded-lg text-muted transition-colors" 
                       title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />

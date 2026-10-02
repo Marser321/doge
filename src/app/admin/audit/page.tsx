@@ -27,7 +27,7 @@ export default function AuditPage() {
   if (loading) return <div className="grid min-h-96 place-items-center"><LoaderCircle data-motion="progress" className="size-6 animate-spin text-muted" /></div>;
   return (
     <div className="mx-auto max-w-6xl space-y-7 pb-20">
-      <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-300">Seguridad</p><h1 className="mt-2 text-3xl font-semibold text-primary">Auditoría</h1><p className="mt-2 text-sm text-secondary">Eventos inmutables de las operaciones sensibles.</p></div>
+      <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-tone-danger">Seguridad</p><h1 className="mt-2 text-3xl font-semibold text-primary">Auditoría</h1><p className="mt-2 text-sm text-secondary">Eventos inmutables de las operaciones sensibles.</p></div>
       {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">{error}</p>}
       <section className="overflow-hidden rounded-2xl border border-subtle bg-surface-1">
         {events.length ? <div className="divide-y divide-subtle">{events.map((event) => (
