@@ -62,7 +62,7 @@ select is(
 );
 
 select is(
-  has_function_privilege('anon', 'public.create_public_service_request(jsonb,text[])', 'EXECUTE'),
+  has_function_privilege('anon', 'public.create_public_service_request(jsonb,text[],uuid)', 'EXECUTE'),
   false,
   'anon cannot invoke public intake RPC directly'
 );
@@ -77,7 +77,7 @@ select is(
   'BFF service role can use distributed rate limiting'
 );
 select is(
-  has_function_privilege('service_role', 'public.create_public_service_request(jsonb,text[])', 'EXECUTE'),
+  has_function_privilege('service_role', 'public.create_public_service_request(jsonb,text[],uuid)', 'EXECUTE'),
   true,
   'BFF service role can create a validated public request'
 );

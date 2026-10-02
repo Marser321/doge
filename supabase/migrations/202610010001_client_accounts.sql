@@ -36,6 +36,10 @@ $$;
 -- The foundation already grants UPDATE on all of `clients`, which would let a
 -- customer promote their own `segment` to 'vip' through PostgREST. A trigger is
 -- the only place that distinction can be enforced.
+-- Security definer so it can reach the `private` schema, which `authenticated`
+-- has no USAGE on. The caller is identified by the JWT role claim rather than
+-- `current_user`, because inside a security-definer function `current_user` is
+-- the function owner. Same mechanism `private.current_role()` already uses.
 create or replace function private.guard_client_self_update()
 returns trigger
 language plpgsql
@@ -43,10 +47,11 @@ security definer
 set search_path = ''
 as $$
 begin
-  -- Only PostgREST sessions run as `authenticated`. Service-role calls and
-  -- security-definer RPCs (signup linking, booking adoption) run as another
-  -- role and must pass through untouched, or account linking breaks.
-  if current_user <> 'authenticated' then
+  -- Pin only for PostgREST sessions acting as `authenticated`. A service-role
+  -- call or a direct connection (migrations, signup linking, booking adoption)
+  -- carries a different claim or none at all and must pass through, otherwise
+  -- account linking silently stops working.
+  if coalesce((select auth.jwt() ->> 'role'), '') <> 'authenticated' then
     return new;
   end if;
   if private.has_any_role(array['owner','manager','dispatcher']::public.staff_role[]) then
