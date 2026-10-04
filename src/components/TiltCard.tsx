@@ -44,6 +44,8 @@ export function TiltCard({
   const springConfig = { stiffness: 300, damping: 30, mass: 0.5 };
   const smoothRotateX = useSpring(rotateX, springConfig);
   const smoothRotateY = useSpring(rotateY, springConfig);
+  // A hook: it must run on every render, before the mobile early return below.
+  const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.10) 0%, transparent 60%)`;
 
   useEffect(() => {
     // Check for mobile
@@ -104,8 +106,6 @@ export function TiltCard({
   if (isMobile || prefersReducedMotion) {
     return <div className={className}>{children}</div>;
   }
-
-  const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.10) 0%, transparent 60%)`;
 
   return (
     <motion.div
