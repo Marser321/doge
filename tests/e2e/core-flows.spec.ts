@@ -11,7 +11,7 @@ test('public booking request produces a reference after API confirmation', async
   await page.getByLabel('Dirección').fill('1 Ocean Drive');
   await page.getByLabel('Ciudad').fill('Miami');
   await page.getByLabel('Tipo de propiedad').selectOption({ label: 'Residencial' });
-  await page.getByLabel('Servicio').selectOption({ label: 'Limpieza profunda' });
+  await page.getByLabel('Servicio').selectOption({ label: 'Limpieza de alfombras' });
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Enviar solicitud' }).click();
   await expect(page).toHaveURL(/booking\/success\?reference=DOGE-TEST-001/);
@@ -45,7 +45,8 @@ test('unauthenticated visitors are redirected away from admin and CRM rejects th
 test('mobile catalogue and service navigation stay reachable', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('navigation').last()).toBeVisible();
-  await page.locator('a[href="/booking"]').first().click();
+  // Whichever booking link is visible at this viewport (header or bottom tabs).
+  await page.locator('a[href="/booking"]:visible').first().click();
   await expect(page).toHaveURL(/\/booking/);
 });
 
@@ -57,7 +58,8 @@ test('service catalogue uses local visual posters', async ({ page }) => {
     images.map((image) => image.getAttribute('src') || ''),
   );
 
-  expect(posterSources).toHaveLength(4);
+  // One poster per launch service: window cleaning, pressure washing, carpet cleaning.
+  expect(posterSources).toHaveLength(3);
   expect(posterSources.every((src) => src.includes('services'))).toBe(true);
   expect(posterSources.some((src) => src.includes('unsplash'))).toBe(false);
 });

@@ -1,5 +1,6 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { expect, test } from '@playwright/test';
+import sharp from 'sharp';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const secretKey = process.env.SUPABASE_SECRET_KEY;
@@ -16,12 +17,15 @@ let dispatcherId = '';
 let managerId = '';
 let teamId = '';
 let productId = '';
+// A real image: the booking endpoint re-encodes uploads with sharp and rejects malformed files.
+let photoPng: Buffer;
 
 test.describe('@backend Supabase operational flows', () => {
   test.describe.configure({ mode: 'serial' });
   test.skip(!configured, 'Requires a running Supabase project.');
 
   test.beforeAll(async () => {
+    photoPng = await sharp({ create: { width: 4, height: 4, channels: 3, background: '#ffffff' } }).png().toBuffer();
     admin = createClient(supabaseUrl!, secretKey!, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
@@ -81,21 +85,27 @@ test.describe('@backend Supabase operational flows', () => {
     if (managerId) await admin.auth.admin.deleteUser(managerId);
   });
 
-  test('manager login is held at MFA enrollment', async ({ page }) => {
+  // MFA is opt-in (202607260003_opt_in_mfa_roles): it only gates managers
+  // when ENFORCE_MFA=true, otherwise they land straight in the admin.
+  test('manager login follows the MFA policy', async ({ page }) => {
     await page.goto('/login');
     await page.getByLabel('Email').fill(managerEmail);
     await page.getByLabel('Contraseña').fill(password);
-    await page.getByRole('button', { name: 'Ingresar' }).click();
-    await expect(page).toHaveURL(/\/login\/mfa\?next=/);
-    await expect(page.getByRole('heading', { name: 'Verificación en dos pasos' })).toBeVisible();
+    await page.getByRole('button', { name: 'Iniciar sesión' }).click();
+    if (process.env.ENFORCE_MFA === 'true') {
+      await expect(page).toHaveURL(/\/login\/mfa\?next=/, { timeout: 30_000 });
+      await expect(page.getByRole('heading', { name: 'Verificación en dos pasos' })).toBeVisible();
+    } else {
+      await expect(page).toHaveURL(/\/admin/, { timeout: 30_000 });
+    }
   });
 
   test('booking, quote decision and dispatch overlap are enforced end-to-end', async ({ page }) => {
     await page.goto('/login');
     await page.getByLabel('Email').fill(dispatcherEmail);
     await page.getByLabel('Contraseña').fill(password);
-    await page.getByRole('button', { name: 'Ingresar' }).click();
-    await expect(page).toHaveURL(/\/admin/);
+    await page.getByRole('button', { name: 'Iniciar sesión' }).click();
+    await expect(page).toHaveURL(/\/admin/, { timeout: 30_000 });
 
     const bookingKey = crypto.randomUUID();
     const booking = await page.request.post('/api/bookings', {
@@ -113,7 +123,7 @@ test.describe('@backend Supabase operational flows', () => {
         photos: {
           name: 'property.png',
           mimeType: 'image/png',
-          buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2nZ0AAAAASUVORK5CYII=', 'base64'),
+          buffer: photoPng,
         },
       },
     });
@@ -136,7 +146,7 @@ test.describe('@backend Supabase operational flows', () => {
         photos: {
           name: 'property.png',
           mimeType: 'image/png',
-          buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2nZ0AAAAASUVORK5CYII=', 'base64'),
+          buffer: photoPng,
         },
       },
     });
@@ -218,7 +228,7 @@ test.describe('@backend Supabase operational flows', () => {
     await page.goto('/login');
     await page.getByLabel('Email').fill(dispatcherEmail);
     await page.getByLabel('Contraseña').fill(password);
-    await page.getByRole('button', { name: 'Ingresar' }).click();
+    await page.getByRole('button', { name: 'Iniciar sesión' }).click();
 
     const orderKey = crypto.randomUUID();
     const order = await page.request.post('/api/crm/orders', {
@@ -262,7 +272,7 @@ test.describe('@backend Supabase operational flows', () => {
     await page.goto('/login');
     await page.getByLabel('Email').fill(dispatcherEmail);
     await page.getByLabel('Contraseña').fill(password);
-    await page.getByRole('button', { name: 'Ingresar' }).click();
+    await page.getByRole('button', { name: 'Iniciar sesión' }).click();
 
     const forbidden = await page.request.post('/api/crm/products', {
       headers: mutationHeaders(),
