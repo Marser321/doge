@@ -76,7 +76,8 @@ test.describe('@backend customer guide and change requests', () => {
     await login(page, customerEmail);
     await expect(page).toHaveURL(/\/account/, { timeout: 30_000 });
 
-    await expect(page.getByRole('heading', { name: 'Te damos la bienvenida a tu panel' })).toBeVisible();
+    // The panel waits for its account data and the guide before greeting.
+    await expect(page.getByRole('heading', { name: 'Te damos la bienvenida a tu panel' })).toBeVisible({ timeout: 20_000 });
     await page.getByRole('button', { name: 'Empezar recorrido' }).click();
     await expect(page.getByText(/Paso 1 de \d/)).toBeVisible();
     await page.keyboard.press('Escape');
