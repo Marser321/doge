@@ -92,7 +92,7 @@ export default function MembershipPage() {
           body: JSON.stringify({
             plan_id: chosen.id,
             property_id: propertyId,
-            notes: `${chosen.name} · ${chosen.cadence_days} ${lang === 'es' ? 'días' : 'days'}`,
+            notes: `${chosen?.name ?? ''} · ${chosen.cadence_days} ${lang === 'es' ? 'días' : 'days'}`,
           }),
         })
         const payload = await response.json().catch(() => ({}))
@@ -158,8 +158,8 @@ export default function MembershipPage() {
           </h2>
           <p className="text-accent text-lg font-medium leading-relaxed mb-12">
             {lang === 'es'
-              ? `Tu solicitud de membresía ${chosen.name} ha sido enviada. Nuestro equipo te contactará para confirmar tu suscripción.`
-              : `Your ${chosen.name} membership application has been sent. Our team will contact you to confirm your subscription.`}
+              ? `Tu solicitud de membresía ${chosen?.name ?? ''} ha sido enviada. Nuestro equipo te contactará para confirmar tu suscripción.`
+              : `Your ${chosen?.name ?? ''} membership application has been sent. Our team will contact you to confirm your subscription.`}
           </p>
           {reference && <p className="mb-8 font-mono text-sm text-accent">{reference}</p>}
           <Link href={accountPath ? '/account' : '/'} className="inline-flex py-5 px-12 bg-foreground text-background rounded-2xl font-black uppercase tracking-[0.2em] shadow-2xl font-michroma">
