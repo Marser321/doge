@@ -797,3 +797,56 @@ export async function crewAppointments(profileId: string) {
 export function dbForTests(client: SupabaseClient) {
   return { assertResult, client };
 }
+
+const CHANGE_SELECT = '*, client:clients(id,name,email,phone),'
+  + ' service_request:service_requests(id,reference_code,service_name_snapshot,status,required_team_size,'
+  + ' property:properties(address,city)),'
+  + ' appointment:appointments(id,starts_at,ends_at,team_id,status)';
+
+/** Pending changes first, then the last resolved ones for context. */
+export async function listAppointmentChanges() {
+  const db = await staffDb();
+  return assertResult(await db.from('appointment_change_requests')
+    .select(CHANGE_SELECT)
+    .order('status', { ascending: true })
+    .order('created_at', { ascending: false })
+    .limit(100));
+}
+
+export async function resolveAppointmentChange(id: string, input: {
+  decision: 'approved' | 'declined';
+  note?: string;
+  teamId?: string;
+  startsAt?: string;
+  endsAt?: string;
+}) {
+  const db = await staffDb();
+  return assertResult(await db.rpc('resolve_appointment_change', {
+    p_change_id: id,
+    p_decision: input.decision,
+    p_note: input.note || null,
+    p_team_id: input.teamId || null,
+    p_starts_at: input.startsAt || null,
+    p_ends_at: input.endsAt || null,
+  }));
+}
+
+export async function listRequestAreas(requestId: string) {
+  const db = await staffDb();
+  const request = assertResult(await db.from('service_requests')
+    .select('id, property_id, areas:service_request_areas(property_area_id)')
+    .eq('id', requestId)
+    .maybeSingle(), 'Solicitud no encontrada') as { property_id: string; areas: Array<{ property_area_id: string }> | null };
+  const areas = assertResult(await db.from('property_areas')
+    .select('id, label, area_type_code, last_cleaned_at')
+    .eq('property_id', request.property_id)
+    .is('archived_at', null)
+    .order('created_at'));
+  const linked = new Set((request.areas ?? []).map((row) => row.property_area_id));
+  return areas.map((area) => ({ ...area, linked: linked.has(String(area.id)) }));
+}
+
+export async function linkRequestAreas(requestId: string, areaIds: string[]) {
+  const db = await staffDb();
+  return assertResult(await db.rpc('link_request_areas', { p_request_id: requestId, p_area_ids: areaIds }));
+}

@@ -13,7 +13,49 @@ export type { Client, Offer, Product, Subscription } from './types';
 const admin = <T>(path: string, init?: Parameters<typeof apiRequest<T>>[1]) =>
   apiRequest<T>(path, { ...init, auth: 'required' });
 
+export type AppointmentChange = {
+  id: string;
+  kind: 'schedule' | 'reschedule' | 'cancel';
+  status: 'pending' | 'approved' | 'declined' | 'withdrawn';
+  preferred_date: string | null;
+  preferred_window: 'morning' | 'afternoon' | 'flexible' | null;
+  reason: string | null;
+  resolution_note: string | null;
+  created_at: string;
+  resolved_at: string | null;
+  client: { id: string; name: string; email: string | null; phone: string | null } | null;
+  service_request: {
+    id: string;
+    reference_code: string;
+    service_name_snapshot: string;
+    status: string;
+    required_team_size: number;
+    property: { address: string; city: string } | null;
+  } | null;
+  appointment: { id: string; starts_at: string; ends_at: string; team_id: string; status: string } | null;
+};
+
+export type RequestArea = { id: string; label: string; area_type_code: string; last_cleaned_at: string | null; linked: boolean };
+
+export type ChangeResolution = {
+  decision: 'approved' | 'declined';
+  note?: string;
+  teamId?: string;
+  startsAt?: string;
+  endsAt?: string;
+};
+
 export const db = {
+  appointmentChanges: {
+    getAll: () => resultOf(() => admin<AppointmentChange[]>('/api/crm/appointment-changes')),
+    resolve: (id: string, payload: ChangeResolution) =>
+      resultOf(() => admin<AppointmentChange>(`/api/crm/appointment-changes/${id}`, { method: 'POST', body: payload })),
+  },
+  requestAreas: {
+    get: (requestId: string) => resultOf(() => admin<RequestArea[]>(`/api/crm/request-areas/${requestId}`)),
+    set: (requestId: string, areaIds: string[]) =>
+      resultOf(() => admin<{ linked: number }>(`/api/crm/request-areas/${requestId}`, { method: 'PUT', body: { areaIds } })),
+  },
   clients: {
     getAll: () => resultOf(() => admin<Client[]>('/api/crm/clients')),
     getById: (id: string) => resultOf(() => admin<ClientDetail>(`/api/crm/clients/${id}`)),

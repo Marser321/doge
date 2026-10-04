@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Sparkles, Store, Search, CalendarPlus, Home } from 'lucide-react'
+import { Sparkles, Store, Search, CalendarPlus, Home, UserRound } from 'lucide-react'
 import { useLanguage } from './LanguageProvider'
 import SearchModal from './SearchModal'
 
@@ -26,7 +26,8 @@ export default function BottomNav() {
     { name: t('bnav.home'), href: '/', icon: Home, disabled: false, isSearch: false },
     { name: t('bnav.search'), href: '', icon: Search, disabled: false, isSearch: true },
     { name: t('bnav.store'), href: '/store', icon: Store, disabled: false, isSearch: false },
-    { name: t('bnav.booking'), href: '/booking', icon: CalendarPlus, disabled: false, isSearch: false }
+    { name: t('bnav.booking'), href: '/booking', icon: CalendarPlus, disabled: false, isSearch: false },
+    { name: t('bnav.account'), href: '/account', icon: UserRound, disabled: false, isSearch: false },
   ];
 
   return (

@@ -16,6 +16,7 @@
     "db:lint": "supabase db lint --local --level warning",
     "db:test": "supabase test db",
     "db:types": "node scripts/generate-database-types.mjs",
+    "demo:customer": "node --env-file=.env.local scripts/create-demo-customer.mjs",
     "test:all": "npm run db:test && npm test && npm run lint && npm run build && npm run test:e2e"
   },
   "dependencies": {

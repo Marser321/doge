@@ -31,6 +31,10 @@ const copy = {
     decision: 'Registramos tu decisión',
     areaReminder: 'Es momento de renovar',
     areaBody: 'Según nuestro registro, este espacio se acerca al punto en que conviene una limpieza.',
+    changeReceived: 'Recibimos tu pedido de cambio',
+    changeReceivedBody: 'Nuestro equipo de coordinación lo revisará y te confirmará el nuevo horario.',
+    changeApproved: 'Tu cambio fue aprobado',
+    changeDeclined: 'No pudimos aplicar tu cambio',
     footer: 'DOGE · Servicio operativo en Miami y South Florida',
   },
   en: {
@@ -47,6 +51,10 @@ const copy = {
     decision: 'We recorded your decision',
     areaReminder: 'Time for a refresh',
     areaBody: 'Based on our records, this space is approaching the point where a cleaning is worthwhile.',
+    changeReceived: 'We received your change request',
+    changeReceivedBody: 'Our dispatch team will review it and confirm the new time with you.',
+    changeApproved: 'Your change was approved',
+    changeDeclined: 'We could not apply your change',
     footer: 'DOGE · Operations in Miami and South Florida',
   },
 };
@@ -59,6 +67,12 @@ export function emailSubject(template: string, locale: 'es' | 'en', payload: Rec
   if (template === 'request-cancelled') return locale === 'es' ? `Servicio cancelado${reference}` : `Service cancelled${reference}`;
   if (template === 'quote-ready') return locale === 'es' ? `Propuesta DOGE${reference}` : `DOGE proposal${reference}`;
   if (template === 'quote-decision') return locale === 'es' ? `Decisión registrada${reference}` : `Decision recorded${reference}`;
+  if (template === 'appointment-change-received') return locale === 'es' ? `Pedido de cambio recibido${reference}` : `Change request received${reference}`;
+  if (template === 'appointment-change-resolved') {
+    const approved = payload.decision === 'approved';
+    if (locale === 'es') return `${approved ? 'Cambio aprobado' : 'Cambio no aplicado'}${reference}`;
+    return `${approved ? 'Change approved' : 'Change not applied'}${reference}`;
+  }
   if (template === 'area-reminder') {
     const area = typeof payload.area === 'string' ? payload.area : '';
     return locale === 'es' ? `Es momento de renovar${area ? ` · ${area}` : ''}` : `Time for a refresh${area ? ` · ${area}` : ''}`;
@@ -84,7 +98,11 @@ export default function TransactionalEmail({ template, locale, payload }: Props)
   const percent = typeof payload.percent === 'number' ? payload.percent : null;
   const daysSince = typeof payload.daysSince === 'number' ? payload.daysSince : null;
 
+  const note = typeof payload.note === 'string' ? payload.note : '';
+
   const heading = template === 'area-reminder' ? text.areaReminder
+    : template === 'appointment-change-received' ? text.changeReceived
+    : template === 'appointment-change-resolved' ? (payload.decision === 'approved' ? text.changeApproved : text.changeDeclined)
     : template === 'request-received' ? text.requestReceived
     : template === 'appointment-scheduled' ? text.appointment
       : template === 'appointment-rescheduled' ? text.rescheduled
@@ -97,6 +115,8 @@ export default function TransactionalEmail({ template, locale, payload }: Props)
       percent === null ? '' : `${percent}%`,
       daysSince === null ? '' : (locale === 'es' ? `hace ${daysSince} días` : `${daysSince} days ago`),
     ].filter(Boolean).join(' · ') + `. ${text.areaBody}`
+    : template === 'appointment-change-received' ? `${service}. ${text.changeReceivedBody}`
+    : template === 'appointment-change-resolved' ? [service, note].filter(Boolean).join(' · ')
     : template === 'request-received' ? text.requestBody
     : template === 'quote-ready' ? text.quoteBody
       : ['appointment-scheduled', 'appointment-rescheduled'].includes(template) ? `${service} · ${startsAt}`

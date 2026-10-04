@@ -31,6 +31,25 @@ export type AccountProperty = {
   created_at: string
 }
 
+export type AccountAppointment = {
+  id: string
+  starts_at: string
+  ends_at: string
+  status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled'
+}
+
+export type AccountChange = {
+  id: string
+  kind: 'schedule' | 'reschedule' | 'cancel'
+  status: 'pending' | 'approved' | 'declined' | 'withdrawn'
+  preferred_date: string | null
+  preferred_window: 'morning' | 'afternoon' | 'flexible' | null
+  reason: string | null
+  resolution_note: string | null
+  created_at: string
+  resolved_at: string | null
+}
+
 export type AccountRequest = {
   id: string
   reference_code: string
@@ -39,7 +58,17 @@ export type AccountRequest = {
   preferred_date: string | null
   created_at: string
   property: { id: string; label: string | null; address: string; city: string } | null
+  appointments: AccountAppointment[]
+  areas: { property_area_id: string }[]
+  changes: AccountChange[]
 }
+
+/** The live appointment of a request, ignoring cancelled ones. */
+export const activeAppointment = (request: AccountRequest) =>
+  request.appointments?.find((appointment) => appointment.status !== 'cancelled') ?? null
+
+export const pendingChange = (request: AccountRequest) =>
+  request.changes?.find((change) => change.status === 'pending') ?? null
 
 export type AccountSubscription = {
   id: string

@@ -7,7 +7,9 @@ import { useSearchParams } from 'next/navigation';
 import { BrandMark } from '@/components/brand/BrandMark';
 
 function BookingConfirmation() {
-  const reference = useSearchParams().get('reference');
+  const params = useSearchParams();
+  const reference = params.get('reference');
+  const fromAccount = params.get('account') === '1';
 
   return (
     <main className="grid min-h-screen place-items-center bg-surface-0 px-5 text-primary">
@@ -21,6 +23,9 @@ function BookingConfirmation() {
           <p className="mt-5 text-secondary">Recibimos la solicitud. Te contactaremos para confirmar los próximos pasos.</p>
         )}
         <p className="mt-4 text-sm leading-6 text-secondary">La fecha indicada es una preferencia. Un responsable verificará alcance y disponibilidad antes de confirmar el servicio.</p>
+        {fromAccount && (
+          <Link href="/account" className="mr-3 mt-8 inline-flex rounded-xl bg-red-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-600">Ver mis limpiezas</Link>
+        )}
         <Link href="/" className="mt-8 inline-flex rounded-xl border border-strong px-5 py-3 text-sm font-medium text-primary transition hover:border-strong hover:bg-surface-2">Volver al inicio</Link>
       </section>
     </main>
