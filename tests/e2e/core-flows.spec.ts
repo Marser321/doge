@@ -47,7 +47,8 @@ test('mobile catalogue and service navigation stay reachable', async ({ page }) 
   await expect(page.getByRole('navigation').last()).toBeVisible();
   // Whichever booking link is visible at this viewport (header or bottom tabs).
   await page.locator('a[href="/booking"]:visible').first().click();
-  await expect(page).toHaveURL(/\/booking/);
+  // First visit compiles /booking on the dev server.
+  await expect(page).toHaveURL(/\/booking/, { timeout: 30_000 });
 });
 
 test('service catalogue uses local visual posters', async ({ page }) => {

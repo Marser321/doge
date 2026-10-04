@@ -21,7 +21,8 @@ let productId = '';
 let photoPng: Buffer;
 
 test.describe('@backend Supabase operational flows', () => {
-  test.describe.configure({ mode: 'serial' });
+  // Login plus first compile of /admin or /account can exceed the 30 s default.
+  test.describe.configure({ mode: 'serial', timeout: 90_000 });
   test.skip(!configured, 'Requires a running Supabase project.');
 
   test.beforeAll(async () => {
@@ -229,6 +230,7 @@ test.describe('@backend Supabase operational flows', () => {
     await page.getByLabel('Email').fill(dispatcherEmail);
     await page.getByLabel('Contraseña').fill(password);
     await page.getByRole('button', { name: 'Iniciar sesión' }).click();
+    await expect(page).toHaveURL(/\/admin/, { timeout: 30_000 });
 
     const orderKey = crypto.randomUUID();
     const order = await page.request.post('/api/crm/orders', {
@@ -273,6 +275,7 @@ test.describe('@backend Supabase operational flows', () => {
     await page.getByLabel('Email').fill(dispatcherEmail);
     await page.getByLabel('Contraseña').fill(password);
     await page.getByRole('button', { name: 'Iniciar sesión' }).click();
+    await expect(page).toHaveURL(/\/admin/, { timeout: 30_000 });
 
     const forbidden = await page.request.post('/api/crm/products', {
       headers: mutationHeaders(),

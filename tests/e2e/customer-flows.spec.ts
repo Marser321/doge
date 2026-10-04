@@ -28,7 +28,8 @@ async function login(page: Page, email: string) {
 }
 
 test.describe('@backend customer guide and change requests', () => {
-  test.describe.configure({ mode: 'serial' });
+  // Login plus first compile of /admin or /account can exceed the 30 s default.
+  test.describe.configure({ mode: 'serial', timeout: 90_000 });
   test.skip(!configured, 'Requires a running Supabase project.');
 
   test.beforeAll(async () => {
