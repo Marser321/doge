@@ -50,7 +50,11 @@ minimum_password_length = 10
 password_requirements = "lower_upper_letters_digits"
 
 [auth.email]
-enable_signup = false
+# Must stay true: in the Supabase CLI `false` here disables the whole email
+# provider ("Email logins are disabled"), not just signups. Public signups are
+# already blocked by `[auth] enable_signup = false`; accounts are created
+# server-side through the admin API (src/app/api/auth/signup/route.ts).
+enable_signup = true
 double_confirm_changes = true
 enable_confirmations = true
 secure_password_change = true
