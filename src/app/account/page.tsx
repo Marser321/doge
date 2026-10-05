@@ -6,8 +6,16 @@ import { useRouter } from 'next/navigation'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, LogOut, Plus } from 'lucide-react'
 
+import { AccountSummary, dueAreas } from '@/components/account/AccountSummary'
 import { AreaCard } from '@/components/account/AreaCard'
-import { AreaForm } from '@/components/account/AreaForm'
+import { AreaForm, type AreaPayload } from '@/components/account/AreaForm'
+import { CleaningsList } from '@/components/account/CleaningsList'
+import { PropertyForm, type PropertyPayload } from '@/components/account/PropertyForm'
+import { GuideChecklist, type GuideAction } from '@/components/account/guide/GuideChecklist'
+import { GuideHelpMenu } from '@/components/account/guide/GuideHelpMenu'
+import { GuideTour, type TourStop } from '@/components/account/guide/GuideTour'
+import { GuideWelcome } from '@/components/account/guide/GuideWelcome'
+import { useGuide } from '@/components/account/guide/useGuide'
 import type {
   AccountProperty,
   AccountRequest,
@@ -16,10 +24,14 @@ import type {
   PropertyArea,
 } from '@/components/account/types'
 import { useLanguage } from '@/components/LanguageProvider'
+import type { GuideStep } from '@/lib/guide'
 import { getBrowserSupabase } from '@/lib/supabase/client'
 
 type Me = { client_id: string; name: string; email: string | null; locale: 'es' | 'en' }
 type Tab = 'home' | 'spaces' | 'requests' | 'membership'
+
+const TABS: Tab[] = ['home', 'spaces', 'requests', 'membership']
+const OPEN_REQUEST = new Set(['new', 'reviewing', 'quoted', 'approved', 'scheduled', 'in_progress'])
 
 async function getJson<T>(url: string): Promise<T> {
   const response = await fetch(url, { credentials: 'same-origin', cache: 'no-store' })
@@ -28,6 +40,18 @@ async function getJson<T>(url: string): Promise<T> {
     throw new Error(body.error || 'No fue posible cargar tus datos.')
   }
   return response.json() as Promise<T>
+}
+
+async function send<T>(url: string, method: string, body: unknown): Promise<T> {
+  const response = await fetch(url, {
+    method,
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  const payload = await response.json().catch(() => ({}))
+  if (!response.ok) throw new Error(payload.error || 'No fue posible guardar los cambios.')
+  return payload as T
 }
 
 export default function AccountPage() {
@@ -45,9 +69,13 @@ export default function AccountPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [adding, setAdding] = useState(false)
+  const [addingProperty, setAddingProperty] = useState(false)
+  const [editing, setEditing] = useState<PropertyArea | null>(null)
+  const [tourAt, setTourAt] = useState<number | null>(null)
+  const [welcomeDismissed, setWelcomeDismissed] = useState(false)
 
-  const load = useCallback(async () => {
-    setLoading(true)
+  const load = useCallback(async (quiet = false) => {
+    if (!quiet) setLoading(true)
     setError('')
     try {
       const [profile, areaList, propertyList, requestList, sub, types] = await Promise.all([
@@ -73,23 +101,44 @@ export default function AccountPage() {
 
   useEffect(() => { void load() }, [load])
 
-  const addArea = useCallback(async (payload: Parameters<Parameters<typeof AreaForm>[0]['onSubmit']>[0]) => {
-    const response = await fetch('/api/me/areas', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        property_id: payload.property_id,
-        area_type_code: payload.area_type_code,
-        label: payload.label,
-        measurement_value: payload.measurement_value || null,
-        requirements: payload.requirements || null,
-      }),
+  const facts = useMemo(() => (loading ? null : {
+    properties: properties.length,
+    areas: areas.length,
+    requests: requests.length,
+    hasMembership: Boolean(subscription && subscription.status !== 'cancelled'),
+  }), [loading, properties.length, areas.length, requests.length, subscription])
+  const guide = useGuide(facts)
+
+  const addArea = useCallback(async (payload: AreaPayload) => {
+    const created = await send<PropertyArea>('/api/me/areas', 'POST', {
+      property_id: payload.property_id,
+      area_type_code: payload.area_type_code,
+      label: payload.label,
+      measurement_value: payload.measurement_value || null,
+      requirements: payload.requirements || null,
     })
-    const body = await response.json().catch(() => ({}))
-    if (!response.ok) throw new Error(body.error || 'No fue posible guardar el espacio.')
-    setAreas((prev) => [...prev, body as PropertyArea])
+    setAreas((prev) => [...prev, created])
     setAdding(false)
+  }, [])
+
+  const updateArea = useCallback(async (payload: AreaPayload) => {
+    if (!editing) return
+    const updated = await send<Partial<PropertyArea>>(`/api/me/areas/${editing.id}`, 'PATCH', {
+      label: payload.label,
+      measurement_value: payload.measurement_value || null,
+      requirements: payload.requirements || null,
+    })
+    setAreas((prev) => prev.map((area) => (area.id === editing.id ? { ...area, ...updated } : area)))
+    setEditing(null)
+  }, [editing])
+
+  const addProperty = useCallback(async (payload: PropertyPayload) => {
+    const created = await send<AccountProperty>('/api/me/properties', 'POST', payload)
+    setProperties((prev) => [...prev, created])
+    setAddingProperty(false)
+    // The natural next step: describe the first space right away.
+    setTab('spaces')
+    setAdding(true)
   }, [])
 
   const removeArea = useCallback(async (id: string) => {
@@ -106,22 +155,72 @@ export default function AccountPage() {
     router.refresh()
   }, [router])
 
-  const dueCount = useMemo(
-    () => areas.filter((area) => {
-      const decay = area.area_type?.decay_days ?? 30
-      if (!area.last_cleaned_at) return false
-      const elapsed = (Date.now() - new Date(area.last_cleaned_at).getTime()) / 86_400_000
-      return 100 - (elapsed / decay) * 100 <= 30
-    }).length,
-    [areas],
-  )
+  const dueCount = useMemo(() => dueAreas(areas).length, [areas])
 
-  const TABS: { id: Tab; label: string }[] = [
-    { id: 'home', label: t('panel.tabHome') },
-    { id: 'spaces', label: t('panel.tabSpaces') },
-    { id: 'requests', label: t('panel.tabRequests') },
-    { id: 'membership', label: t('panel.tabMembership') },
-  ]
+  // Each area shows the open request that already covers it, if any.
+  const scheduledByArea = useMemo(() => {
+    const map = new Map<string, { reference: string }>()
+    for (const request of requests) {
+      if (!OPEN_REQUEST.has(request.status)) continue
+      for (const row of request.areas ?? []) {
+        if (!map.has(row.property_area_id)) map.set(row.property_area_id, { reference: request.reference_code })
+      }
+    }
+    return map
+  }, [requests])
+
+  const tourStops = useMemo<TourStop[]>(() => [
+    { target: 'summary', title: 'tour.summaryTitle', body: 'tour.summaryBody', tab: 'home' },
+    { target: 'add-space', title: 'tour.addSpaceTitle', body: 'tour.addSpaceBody', tab: 'spaces' },
+    ...(areas.length ? [
+      { target: 'meter', title: 'tour.meterTitle', body: 'tour.meterBody', tab: 'spaces' },
+      { target: 'schedule', title: 'tour.scheduleTitle', body: 'tour.scheduleBody', tab: 'spaces' },
+    ] satisfies TourStop[] : []),
+    { target: 'cleanings', title: 'tour.cleaningsTitle', body: 'tour.cleaningsBody', tab: 'requests' },
+    { target: 'membership', title: 'tour.membershipTitle', body: 'tour.membershipBody', tab: 'membership' },
+    { target: 'help', title: 'tour.helpTitle', body: 'tour.helpBody' },
+  ], [areas.length])
+
+  const startTour = useCallback((target?: string) => {
+    setAdding(false)
+    setEditing(null)
+    setAddingProperty(false)
+    const index = target ? tourStops.findIndex((stop) => stop.target === target) : 0
+    setTourAt(Math.max(0, index))
+  }, [tourStops])
+
+  const closeTour = useCallback((finished: boolean) => {
+    setTourAt(null)
+    setTab('home')
+    // Walking the tour to the end is how the cleanliness step gets learned.
+    void (finished ? guide.complete('tour', 'cleanliness') : guide.complete('tour'))
+  }, [guide])
+
+  const actionFor = useCallback((step: GuideStep): GuideAction => {
+    switch (step) {
+      case 'property':
+        return { kind: 'callback', label: 'guide.doIt', run: () => { setTab('spaces'); setAddingProperty(true) } }
+      case 'space':
+        return { kind: 'callback', label: 'guide.doIt', run: () => { setTab('spaces'); setAdding(true) } }
+      case 'cleanliness':
+        return areas.length
+          ? { kind: 'callback', label: 'guide.showMe', run: () => startTour('meter') }
+          : { kind: 'callback', label: 'guide.gotIt', run: () => void guide.complete('cleanliness') }
+      case 'schedule':
+        return areas.length
+          ? { kind: 'callback', label: 'guide.showMe', run: () => startTour('schedule') }
+          : { kind: 'link', label: 'guide.doIt', href: '/booking' }
+      case 'membership':
+        return { kind: 'link', label: 'guide.doIt', href: '/membership' }
+    }
+  }, [areas.length, guide, startTour])
+
+  const tabLabel: Record<Tab, string> = {
+    home: t('panel.tabHome'),
+    spaces: t('panel.tabSpaces'),
+    requests: t('panel.tabRequests'),
+    membership: t('panel.tabMembership'),
+  }
 
   if (loading) {
     return (
@@ -131,23 +230,37 @@ export default function AccountPage() {
     )
   }
 
+  const showGuide = guide.loaded && guide.enabled
+  const showWelcome = showGuide && !guide.progress.tour && !welcomeDismissed && tourAt === null && !error
+
   return (
     <main className="min-h-screen font-sans text-foreground">
-      <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-7">
+      <nav className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-7">
         <Link href="/" className="inline-flex items-center gap-2 text-accent transition-colors hover:text-foreground">
           <ArrowLeft className="h-4 w-4" />
           <span className="text-[10px] font-black uppercase tracking-[0.3em]">{lang === 'es' ? 'Inicio' : 'Home'}</span>
         </Link>
-        <button
-          type="button"
-          onClick={logout}
-          className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent transition-colors hover:text-foreground"
-        >
-          <LogOut className="h-4 w-4" /> {t('account.logout')}
-        </button>
+        <div className="flex items-center gap-6">
+          {guide.loaded && (
+            <GuideHelpMenu
+              enabled={guide.enabled}
+              t={t}
+              onToggle={(value) => void guide.setEnabled(value)}
+              onStartTour={() => startTour()}
+              onRestart={() => { setWelcomeDismissed(false); void guide.restart() }}
+            />
+          )}
+          <button
+            type="button"
+            onClick={logout}
+            className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent transition-colors hover:text-foreground"
+          >
+            <LogOut className="h-4 w-4" /> <span className="hidden sm:inline">{t('account.logout')}</span>
+          </button>
+        </div>
       </nav>
 
-      <div className="mx-auto max-w-5xl px-6 pb-24">
+      <div className="mx-auto max-w-5xl px-6 pb-28">
         <motion.header
           initial={reduceMotion ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -167,61 +280,97 @@ export default function AccountPage() {
           </div>
         )}
 
-        <div role="tablist" aria-label={t('account.title2')} className="mb-10 flex flex-wrap gap-2 border-b border-accent/10 pb-4">
-          {TABS.map((item) => (
+        <div role="tablist" aria-label={t('account.title2')} className="mb-10 flex gap-2 overflow-x-auto border-b border-accent/10 pb-4">
+          {TABS.map((id) => (
             <button
-              key={item.id}
+              key={id}
               role="tab"
-              aria-selected={tab === item.id}
-              onClick={() => setTab(item.id)}
-              className={`rounded-full px-4 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all ${
-                tab === item.id ? 'bg-foreground text-background' : 'text-accent hover:text-foreground'
+              aria-selected={tab === id}
+              onClick={() => setTab(id)}
+              className={`shrink-0 rounded-full px-4 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all ${
+                tab === id ? 'bg-foreground text-background' : 'text-accent hover:text-foreground'
               }`}
             >
-              {item.label}
-              {item.id === 'home' && dueCount > 0 && (
+              {tabLabel[id]}
+              {id === 'spaces' && dueCount > 0 && (
                 <span className="ml-2 rounded-full bg-red-400/20 px-1.5 text-red-300">{dueCount}</span>
               )}
             </button>
           ))}
         </div>
 
-        {(tab === 'home' || tab === 'spaces') && (
+        {tab === 'home' && (
+          <>
+            {showGuide && (
+              <GuideChecklist
+                steps={guide.steps}
+                next={guide.next}
+                completion={guide.completion}
+                t={t}
+                actionFor={actionFor}
+                onHide={() => void guide.setEnabled(false)}
+              />
+            )}
+            <AccountSummary
+              areas={areas}
+              requests={requests}
+              subscription={subscription}
+              lang={lang}
+              t={t}
+              onViewSpaces={() => setTab('spaces')}
+            />
+          </>
+        )}
+
+        {tab === 'spaces' && (
           <section aria-label={t('panel.tabSpaces')}>
             <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
               <div>
                 <h2 className="font-michroma text-xl uppercase tracking-tight">{t('panel.cleanliness')}</h2>
                 <p className="mt-2 max-w-md text-sm font-medium leading-relaxed text-accent">{t('panel.cleanlinessHint')}</p>
               </div>
-              {properties.length > 0 && !adding && (
-                <button
-                  type="button"
-                  onClick={() => setAdding(true)}
-                  className="inline-flex items-center gap-2 rounded-xl border border-accent/20 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-accent transition-colors hover:border-accent/50 hover:text-foreground"
-                >
-                  <Plus className="h-3.5 w-3.5" /> {t('panel.addSpace')}
-                </button>
+              {!adding && !editing && !addingProperty && (
+                <div className="flex flex-wrap gap-2">
+                  {properties.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setAddingProperty(true)}
+                      className="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-[10px] font-black uppercase tracking-widest text-accent/70 transition-colors hover:text-foreground"
+                    >
+                      <Plus className="h-3.5 w-3.5" /> {t('panel.addProperty')}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    data-guide="add-space"
+                    onClick={() => (properties.length ? setAdding(true) : setAddingProperty(true))}
+                    className="inline-flex items-center gap-2 rounded-xl border border-accent/20 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-accent transition-colors hover:border-accent/50 hover:text-foreground"
+                  >
+                    <Plus className="h-3.5 w-3.5" /> {properties.length ? t('panel.addSpace') : t('panel.addProperty')}
+                  </button>
+                </div>
               )}
             </div>
 
-            {properties.length === 0 ? (
-              <div className="rounded-[28px] border border-accent/10 bg-foreground/5 p-8 text-center">
-                <p className="text-sm font-medium text-accent">{t('panel.noProperty')}</p>
-                <Link href="/booking" className="mt-5 inline-block rounded-xl bg-foreground px-6 py-3 text-[10px] font-black uppercase tracking-widest text-background">
-                  {t('panel.newRequest')}
-                </Link>
-              </div>
+            {addingProperty || properties.length === 0 ? (
+              <PropertyForm
+                t={t}
+                onSubmit={addProperty}
+                onCancel={properties.length ? () => setAddingProperty(false) : undefined}
+              />
             ) : (
               <>
-                {adding && (
+                {(adding || editing) && (
                   <div className="mb-6">
                     <AreaForm
+                      key={editing?.id ?? 'new'}
                       areaTypes={areaTypes}
                       properties={properties}
                       lang={lang}
                       t={t}
-                      onCancel={() => setAdding(false)}
-                      onSubmit={addArea}
+                      editing={editing ?? undefined}
+                      onCancel={() => { setAdding(false); setEditing(null) }}
+                      onSubmit={editing ? updateArea : addArea}
                     />
                   </div>
                 )}
@@ -233,7 +382,18 @@ export default function AccountPage() {
                 ) : (
                   <div className="grid gap-5 md:grid-cols-2">
                     {areas.map((area, index) => (
-                      <AreaCard key={area.id} area={area} lang={lang} t={t} onRemove={removeArea} index={index} />
+                      <AreaCard
+                        key={area.id}
+                        area={area}
+                        lang={lang}
+                        t={t}
+                        index={index}
+                        onRemove={removeArea}
+                        onEdit={(target) => { setAdding(false); setEditing(target) }}
+                        showTips={showGuide}
+                        scheduled={scheduledByArea.get(area.id) ?? null}
+                        guideAnchor={index === 0}
+                      />
                     ))}
                   </div>
                 )}
@@ -243,40 +403,18 @@ export default function AccountPage() {
         )}
 
         {tab === 'requests' && (
-          <section aria-label={t('panel.tabRequests')}>
-            {requests.length === 0 ? (
-              <div className="rounded-[28px] border border-accent/10 bg-foreground/5 p-8 text-center">
-                <p className="text-sm font-medium text-accent">{t('panel.requestsEmpty')}</p>
-                <Link href="/booking" className="mt-5 inline-block rounded-xl bg-foreground px-6 py-3 text-[10px] font-black uppercase tracking-widest text-background">
-                  {t('panel.newRequest')}
-                </Link>
-              </div>
-            ) : (
-              <ul className="space-y-3">
-                {requests.map((request) => (
-                  <li key={request.id} className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-accent/10 bg-foreground/5 p-5">
-                    <div className="min-w-0">
-                      <p className="font-michroma text-sm uppercase tracking-tight">{request.service_name_snapshot}</p>
-                      <p className="mt-1 text-xs text-accent">
-                        {t('panel.requestReference')} <span className="font-mono">{request.reference_code}</span>
-                      </p>
-                    </div>
-                    <span className="rounded-full border border-accent/20 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-accent">
-                      {request.status}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
+          <section aria-label={t('panel.tabRequests')} data-guide="cleanings">
+            <CleaningsList requests={requests} areas={areas} lang={lang} t={t} onChanged={() => void load(true)} />
           </section>
         )}
 
         {tab === 'membership' && (
-          <section aria-label={t('panel.tabMembership')}>
+          <section aria-label={t('panel.tabMembership')} data-guide="membership">
             {subscription ? (
               <div className="rounded-[28px] border border-accent/10 bg-foreground/5 p-8">
                 <p className="font-michroma text-2xl uppercase tracking-tight">{subscription.plan?.name ?? '—'}</p>
-                <dl className="mt-6 grid gap-5 sm:grid-cols-2">
+                {subscription.plan?.description && <p className="mt-2 max-w-lg text-sm text-accent">{subscription.plan.description}</p>}
+                <dl className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                   <div>
                     <dt className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">{t('panel.membershipStatus')}</dt>
                     <dd className="mt-1 text-sm text-foreground">
@@ -284,6 +422,17 @@ export default function AccountPage() {
                         : subscription.status === 'paused' ? t('panel.membershipPaused')
                           : subscription.status === 'cancelled' ? t('panel.membershipCancelled')
                             : t('panel.membershipPending')}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">{t('panel.membershipCadence')}</dt>
+                    <dd className="mt-1 text-sm text-foreground">{t('panel.membershipEvery').replace('{n}', String(subscription.cadence_days))}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">{t('panel.membershipValue')}</dt>
+                    <dd className="mt-1 text-sm text-foreground">
+                      {new Intl.NumberFormat(lang === 'es' ? 'es-US' : 'en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
+                        .format(subscription.monthly_value_cents / 100)}
                     </dd>
                   </div>
                   {subscription.next_occurrence_date && (
@@ -295,8 +444,17 @@ export default function AccountPage() {
                 </dl>
               </div>
             ) : (
-              <div className="rounded-[28px] border border-accent/10 bg-foreground/5 p-8 text-center">
-                <p className="mx-auto max-w-md text-sm font-medium leading-relaxed text-accent">{t('panel.membershipNone')}</p>
+              <div className="rounded-[28px] border border-accent/10 bg-foreground/5 p-8">
+                <p className="max-w-md text-sm font-medium leading-relaxed text-accent">{t('panel.membershipNone')}</p>
+                <h3 className="mt-6 text-[10px] font-black uppercase tracking-[0.3em] text-accent">{t('panel.membershipHowTitle')}</h3>
+                <ol className="mt-3 space-y-2">
+                  {(['panel.membershipHow1', 'panel.membershipHow2', 'panel.membershipHow3'] as const).map((key, position) => (
+                    <li key={key} className="flex items-start gap-3 text-sm">
+                      <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-foreground/10 text-[11px] font-black">{position + 1}</span>
+                      {t(key)}
+                    </li>
+                  ))}
+                </ol>
                 <Link href="/membership" className="mt-6 inline-block rounded-xl bg-foreground px-6 py-3 text-[10px] font-black uppercase tracking-widest text-background">
                   {t('panel.membershipCta')}
                 </Link>
@@ -305,6 +463,24 @@ export default function AccountPage() {
           </section>
         )}
       </div>
+
+      {showWelcome && (
+        <GuideWelcome
+          name={me?.name ?? ''}
+          t={t}
+          onStart={() => { setWelcomeDismissed(true); startTour() }}
+          onLater={() => setWelcomeDismissed(true)}
+        />
+      )}
+      {tourAt !== null && (
+        <GuideTour
+          stops={tourStops}
+          startAt={tourAt}
+          t={t}
+          onStop={(stop) => { if (stop.tab) setTab(stop.tab as Tab) }}
+          onClose={closeTour}
+        />
+      )}
     </main>
   )
 }

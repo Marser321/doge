@@ -12,6 +12,7 @@ export const runtime = 'nodejs';
 
 const MAX_IMAGES = 4;
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 function text(form: FormData, key: string, max = 2_000) {
   const value = form.get(key);
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
@@ -67,7 +68,12 @@ export async function POST(request: Request) {
       notes: consolidatedNotes,
       locale: text(form, 'locale', 2) === 'en' ? 'en' : 'es',
       consent: form.get('consent') === 'accepted',
+      // Honoured only for a signed-in owner; the RPC ignores it otherwise.
+      property_id: UUID.test(text(form, 'property_id', 40)) ? text(form, 'property_id', 40) : null,
     };
+    const areaIds = form.getAll('area_ids')
+      .filter((value): value is string => typeof value === 'string' && UUID.test(value))
+      .slice(0, 50);
     const validationError = validateBookingFields(input);
     if (validationError) return badRequest(validationError);
     if (input.preferred_date && (!/^\d{4}-\d{2}-\d{2}$/.test(input.preferred_date) || input.preferred_date < newYorkDate(new Date()))) {
@@ -120,6 +126,7 @@ export async function POST(request: Request) {
       'public',
       JSON.stringify({
         ...input,
+        areaIds,
         files: normalizedFiles.map((file) => ({
           name: file.name,
           bytes: file.data.byteLength,
@@ -134,7 +141,15 @@ export async function POST(request: Request) {
           if (error) throw new Error(`No fue posible adjuntar ${file.name}.`);
           uploaded.push(key);
         }
-        const booking = await createBooking(input, uploaded, authUserId);
+        const booking = await createBooking(input, uploaded, authUserId) as { requestId?: string };
+        // Linking the chosen spaces is what lets completion reset their
+        // cleanliness. It runs as the customer, so the RPC re-checks ownership;
+        // a failure must not lose an otherwise valid booking.
+        if (authUserId && areaIds.length && booking.requestId) {
+          const { error } = await (await createUserSupabase())
+            .rpc('link_request_areas', { p_request_id: booking.requestId, p_area_ids: areaIds });
+          if (error) console.error('[DOGE API] link_request_areas', error.message);
+        }
         await dispatchEmailOutbox(1).catch(() => undefined);
         return booking;
       },

@@ -2,7 +2,7 @@
 
 import { FormEvent, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, CalendarDays, CheckCircle2, ImagePlus, LoaderCircle, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, CalendarDays, CheckCircle2, ImagePlus, LoaderCircle, ShieldCheck, Sparkles } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { SERVICES } from '@/content/services';
 import { newYorkDate } from '@/lib/domain';
@@ -10,10 +10,53 @@ import { BrandMark } from '@/components/brand/BrandMark';
 
 type SubmissionState = 'idle' | 'submitting' | 'error';
 
+type Prefill = {
+  name: string;
+  email: string;
+  phone: string;
+  property?: { id: string; address: string; city: string; property_type: string };
+  area?: { id: string; label: string };
+};
+
+/**
+ * A signed-in customer arriving from a space card (`?area=`) books against
+ * that space's property, and the space is linked to the request so its
+ * cleanliness resets when the visit is completed. Anonymous visitors get the
+ * same form as always.
+ */
+async function loadPrefill(areaId: string): Promise<Prefill | null> {
+  const get = async <T,>(url: string) => {
+    const response = await fetch(url, { credentials: 'same-origin', cache: 'no-store' });
+    if (!response.ok) throw new Error(String(response.status));
+    return response.json() as Promise<T>;
+  };
+  try {
+    const me = await get<{ name: string; email: string | null; phone: string | null }>('/api/me');
+    const prefill: Prefill = { name: me.name, email: me.email ?? '', phone: me.phone ?? '' };
+    if (areaId) {
+      const [areas, properties] = await Promise.all([
+        get<Array<{ id: string; label: string; property_id: string }>>('/api/me/areas'),
+        get<Array<{ id: string; address: string; city: string; property_type: string }>>('/api/me/properties'),
+      ]);
+      const area = areas.find((item) => item.id === areaId);
+      const property = area && properties.find((item) => item.id === area.property_id);
+      if (area && property) {
+        prefill.area = { id: area.id, label: area.label };
+        prefill.property = property;
+      }
+    }
+    return prefill;
+  } catch {
+    return null;
+  }
+}
+
 function BookingForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const serviceQuery = searchParams.get('service') || '';
+  const areaQuery = searchParams.get('area') || '';
+  const [prefill, setPrefill] = useState<Prefill | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const idempotencyKey = useRef<string | null>(null);
   const [state, setState] = useState<SubmissionState>('idle');
@@ -26,6 +69,12 @@ function BookingForm() {
       setSelectedService(serviceQuery);
     }
   }, [serviceQuery]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void loadPrefill(areaQuery).then((value) => { if (!cancelled) setPrefill(value); });
+    return () => { cancelled = true; };
+  }, [areaQuery]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -43,7 +92,7 @@ function BookingForm() {
       if (!response.ok || !payload.reference) throw new Error(payload.error || 'No pudimos registrar tu solicitud.');
       formRef.current?.reset();
       idempotencyKey.current = null;
-      router.push(`/booking/success?reference=${encodeURIComponent(payload.reference)}`);
+      router.push(`/booking/success?reference=${encodeURIComponent(payload.reference)}${prefill ? '&account=1' : ''}`);
     } catch (cause) {
       setState('error');
       setError(cause instanceof Error ? cause.message : 'No pudimos registrar tu solicitud.');
@@ -80,19 +129,30 @@ function BookingForm() {
           </div>
         </div>
 
-        <form ref={formRef} onSubmit={submit} className="rounded-3xl border border-subtle bg-surface-1 p-5 shadow-2xl shadow-black/30 sm:p-8" noValidate>
+        <form key={prefill ? 'prefilled' : 'blank'} ref={formRef} onSubmit={submit} className="rounded-3xl border border-subtle bg-surface-1 p-5 shadow-2xl shadow-black/30 sm:p-8" noValidate>
           <fieldset disabled={state === 'submitting'} className="space-y-8">
+            {prefill?.area && prefill.property && (
+              <div className="flex items-start gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/10 p-4 text-sm text-emerald-100">
+                <Sparkles className="mt-0.5 size-4 shrink-0" aria-hidden />
+                <p>
+                  Programando limpieza para <strong>{prefill.area.label}</strong> en {prefill.property.address}.
+                  Cuando la completemos, este espacio vuelve al 100%.
+                </p>
+                <input type="hidden" name="property_id" value={prefill.property.id} />
+                <input type="hidden" name="area_ids" value={prefill.area.id} />
+              </div>
+            )}
             <div>
               <h2 className="text-lg font-semibold">Contacto</h2>
               <div className="mt-5 grid gap-5 sm:grid-cols-2">
                 <label className={labelClass}>Nombre completo
-                  <input required name="name" autoComplete="name" className={inputClass} />
+                  <input required name="name" autoComplete="name" defaultValue={prefill?.name} className={inputClass} />
                 </label>
                 <label className={labelClass}>Teléfono
-                  <input required name="phone" type="tel" autoComplete="tel" className={inputClass} />
+                  <input required name="phone" type="tel" autoComplete="tel" defaultValue={prefill?.phone} className={inputClass} />
                 </label>
                 <label className={`${labelClass} sm:col-span-2`}>Email
-                  <input required name="email" type="email" autoComplete="email" className={inputClass} />
+                  <input required name="email" type="email" autoComplete="email" defaultValue={prefill?.email} className={inputClass} />
                 </label>
               </div>
             </div>
@@ -101,13 +161,13 @@ function BookingForm() {
               <h2 className="text-lg font-semibold">Propiedad y necesidad</h2>
               <div className="mt-5 grid gap-5 sm:grid-cols-2">
                 <label className={`${labelClass} sm:col-span-2`}>Dirección
-                  <input required name="address" autoComplete="street-address" className={inputClass} />
+                  <input required name="address" autoComplete="street-address" defaultValue={prefill?.property?.address} className={inputClass} />
                 </label>
                 <label className={labelClass}>Ciudad
-                  <input required name="city" autoComplete="address-level2" className={inputClass} />
+                  <input required name="city" autoComplete="address-level2" defaultValue={prefill?.property?.city} className={inputClass} />
                 </label>
                 <label className={labelClass}>Tipo de propiedad
-                  <select required name="property_type" className={inputClass} defaultValue="">
+                  <select required name="property_type" className={inputClass} defaultValue={prefill?.property?.property_type ?? ''}>
                     <option value="" disabled>Selecciona una opción</option>
                     <option>Residencial</option>
                     <option>Condominio</option>

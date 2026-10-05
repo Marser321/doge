@@ -26,9 +26,11 @@ values ('42000000-0000-0000-0000-000000000001', '32000000-0000-0000-0000-0000000
         'bedroom', 'Dormitorio', now() - interval '1 day');
 
 -- ── The sweep queues both thresholds for the stale area only ──────────
-select is(public.sweep_area_reminders(), 2, 'sweep queues one email per crossed threshold');
+-- Counts are scoped to this test's recipient: a shared database (staging)
+-- may hold other customers' areas that the sweep also processes.
+select cmp_ok(public.sweep_area_reminders(), '>=', 2, 'sweep queues one email per crossed threshold');
 select is(
-  (select count(*) from public.email_outbox where template = 'area-reminder'),
+  (select count(*) from public.email_outbox where template = 'area-reminder' and recipient = 'cycle@test.doge'),
   2::bigint,
   'both reminders landed in the outbox'
 );
@@ -42,7 +44,7 @@ select is(
 -- ── Running it again must not re-send ─────────────────────────────────
 select is(public.sweep_area_reminders(), 0, 'a second sweep queues nothing');
 select is(
-  (select count(*) from public.email_outbox where template = 'area-reminder'),
+  (select count(*) from public.email_outbox where template = 'area-reminder' and recipient = 'cycle@test.doge'),
   2::bigint,
   'and the outbox did not grow'
 );

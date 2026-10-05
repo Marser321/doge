@@ -16,7 +16,7 @@ export function errorResponse(error: unknown, fallback = 'No fue posible complet
           ? 401
           : /no encontrad|cotización no está disponible/i.test(message)
             ? 404
-            : /stock insuficiente|transición .*no válida|no admite|ya no está disponible|no se puede reprogramar|conflict|exclusion|duplicate key|unique constraint/i.test(message)
+            : /stock insuficiente|transición .*no válida|no admite|ya no está disponible|no se puede (?:reprogramar|solicitar|enviar)|conflict|exclusion|duplicate key|unique constraint/i.test(message)
               ? 409
               : 500;
   const expected = /^(MFA_REQUIRED|No autorizado|No tienes permiso|.*(?:no encontrad|no está disponible|no admite|inválid|requiere|insuficiente|no tiene capacidad|no tiene suficientes|no se puede|no pertenece|no pudo registrar su idempotencia))/i.test(message);

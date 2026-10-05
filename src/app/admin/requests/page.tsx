@@ -17,7 +17,9 @@ import {
 
 import { db } from '@/lib/db';
 import type { QuoteItem, RequestStatus, ServiceRequest } from '@/lib/types';
+import { ChangeRequestsInbox } from '@/components/admin/ChangeRequestsInbox';
 import { CrmPageIntro, CrmStatusPill } from '@/components/admin/CrmPrimitives';
+import { RequestAreasEditor } from '@/components/admin/RequestAreasEditor';
 
 const columns: Array<{ status: RequestStatus; label: string; dotBg: string; borderAccent: string }> = [
   { status: 'new', label: 'Nuevas', dotBg: 'bg-amber-400', borderAccent: 'hover:border-amber-400/40' },
@@ -231,6 +233,8 @@ export default function RequestsPage() {
         </p>
       )}
 
+      <ChangeRequestsInbox onResolved={() => void load()} />
+
       {/* Quote link copied banner */}
       {generatedApprovalUrl && (
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl border border-tone-warning/30 bg-tone-warning/10 p-4 text-sm text-tone-warning">
@@ -436,6 +440,12 @@ export default function RequestsPage() {
                   </div>
                 )}
               </dl>
+
+              <RequestAreasEditor
+                key={selected.id}
+                requestId={selected.id}
+                locked={['completed', 'cancelled'].includes(selected.status)}
+              />
 
               {/* Status Transition & Actions */}
               <div className="pt-4 border-t border-subtle space-y-3">

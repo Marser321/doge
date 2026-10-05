@@ -318,6 +318,7 @@ export const TRANSLATIONS = {
   'bnav.search': { es: 'Búsqueda', en: 'Search' },
   'bnav.store': { es: 'Tienda', en: 'Store' },
   'bnav.booking': { es: 'Solicitud', en: 'Request' },
+  'bnav.account': { es: 'Cuenta', en: 'Account' },
 
   // ── Account Page ──────────────────────────────
   'account.title': { es: 'Mi', en: 'My' },
@@ -364,7 +365,7 @@ export const TRANSLATIONS = {
   'panel.greeting': { es: 'Hola', en: 'Hi' },
   'panel.tabHome': { es: 'Inicio', en: 'Home' },
   'panel.tabSpaces': { es: 'Mis espacios', en: 'My spaces' },
-  'panel.tabRequests': { es: 'Solicitudes', en: 'Requests' },
+  'panel.tabRequests': { es: 'Limpiezas', en: 'Cleanings' },
   'panel.tabMembership': { es: 'Membresía', en: 'Membership' },
   'panel.loading': { es: 'Cargando tu cuenta…', en: 'Loading your account…' },
   'panel.retry': { es: 'Reintentar', en: 'Retry' },
@@ -381,7 +382,7 @@ export const TRANSLATIONS = {
   'panel.bandFresh': { es: 'Impecable', en: 'Spotless' },
   'panel.bandFading': { es: 'Se está ensuciando', en: 'Getting dirty' },
   'panel.bandDue': { es: 'Toca limpieza', en: 'Cleaning due' },
-  'panel.rebook': { es: 'Reagendar limpieza', en: 'Book a cleaning' },
+  'panel.rebook': { es: 'Programar limpieza', en: 'Schedule cleaning' },
   'panel.restock': { es: 'Reponer insumos', en: 'Restock supplies' },
   'panel.restockHint': {
     es: 'Insumos que suelen hacer falta en este espacio.',
@@ -442,6 +443,246 @@ export const TRANSLATIONS = {
   'panel.membershipActive': { es: 'Activa', en: 'Active' },
   'panel.membershipPaused': { es: 'En pausa', en: 'Paused' },
   'panel.membershipCancelled': { es: 'Cancelada', en: 'Cancelled' },
+
+  // Summary
+  'panel.summaryAverage': { es: 'Limpieza promedio', en: 'Average cleanliness' },
+  'panel.summaryDue': { es: 'Por atender', en: 'Need care' },
+  'panel.summaryNext': { es: 'Próxima limpieza', en: 'Next cleaning' },
+  'panel.summaryNone': { es: 'Sin agendar', en: 'Not scheduled' },
+  'panel.summaryNoMembership': { es: 'Sin membresía', en: 'No membership' },
+  'panel.summarySpaces': { es: 'Espacios', en: 'Spaces' },
+  'panel.attention': { es: 'Necesitan atención', en: 'Need attention' },
+  'panel.allGood': {
+    es: 'Todo en orden: ningún espacio está por debajo del 30%.',
+    en: 'All good: no space is below 30%.',
+  },
+  'panel.viewSpaces': { es: 'Ver espacios', en: 'View spaces' },
+  'panel.noMeasureYet': {
+    es: 'Sin limpiezas registradas todavía: el promedio aparece después de la primera visita.',
+    en: 'No cleanings on record yet: the average shows up after the first visit.',
+  },
+
+  // Property form
+  'panel.propertyIntro': {
+    es: 'Empecemos por la dirección. Después le sumás los espacios que querés que cuidemos.',
+    en: 'Let us start with the address. Then you add the spaces you want us to look after.',
+  },
+  'panel.propertyAccess': { es: 'Notas de acceso (opcional)', en: 'Access notes (optional)' },
+  'panel.propertyAccessHint': { es: 'Portería, código, estacionamiento…', en: 'Front desk, gate code, parking…' },
+  'panel.ptResidential': { es: 'Residencial', en: 'Residential' },
+  'panel.ptCondo': { es: 'Condominio', en: 'Condominium' },
+  'panel.ptCommercial': { es: 'Comercial', en: 'Commercial' },
+  'panel.ptHospitality': { es: 'Hospitalidad', en: 'Hospitality' },
+
+  // Space wizard
+  'panel.next': { es: 'Siguiente', en: 'Next' },
+  'panel.back': { es: 'Atrás', en: 'Back' },
+  'panel.edit': { es: 'Editar', en: 'Edit' },
+  'panel.editSpace': { es: 'Editar espacio', en: 'Edit space' },
+  'panel.wizardStepType': { es: 'Tipo', en: 'Type' },
+  'panel.wizardStepSize': { es: 'Medida', en: 'Size' },
+  'panel.wizardStepDetails': { es: 'Detalles', en: 'Details' },
+  'panel.wizardTypeQuestion': { es: '¿Qué espacio querés agregar?', en: 'Which space do you want to add?' },
+  'panel.wizardSizeQuestion': { es: '¿Qué tamaño tiene?', en: 'How big is it?' },
+  'panel.wizardSizeHintSqft': {
+    es: 'Una estimación alcanza: nos ayuda a calcular el tiempo de la visita.',
+    en: 'An estimate is enough: it helps us size the visit.',
+  },
+  'panel.wizardSizeHintWindows': {
+    es: 'Contá los paños de vidrio que querés que limpiemos.',
+    en: 'Count the glass panes you want us to clean.',
+  },
+  'panel.wizardSizeHintUnit': { es: 'Cantidad de unidades a limpiar.', en: 'Number of units to clean.' },
+  'panel.wizardSizeOptional': { es: 'Opcional: podés completarlo después.', en: 'Optional: you can fill it in later.' },
+  'panel.wizardDetailsQuestion': { es: 'Ponele un nombre', en: 'Give it a name' },
+  'panel.wizardCycle': {
+    es: 'Ciclo recomendado: baja de 100% a 0% en {n} días.',
+    en: 'Recommended cycle: goes from 100% to 0% in {n} days.',
+  },
+  'panel.confirmRemove': {
+    es: '¿Quitar este espacio? Su historial se conserva.',
+    en: 'Remove this space? Its history is kept.',
+  },
+
+  // Meter help
+  'panel.meterHelpFresh': { es: 'Recién limpio. No hace falta nada por ahora.', en: 'Freshly cleaned. Nothing needed for now.' },
+  'panel.meterHelpFading': {
+    es: 'Va perdiendo nivel. Buen momento para planificar la próxima visita.',
+    en: 'Losing level. A good time to plan the next visit.',
+  },
+  'panel.meterHelpDue': {
+    es: 'Está por debajo del 30%. Te recomendamos programar una limpieza.',
+    en: 'Below 30%. We recommend scheduling a cleaning.',
+  },
+  'panel.meterHelpNever': {
+    es: 'Todavía no lo limpiamos. Programá la primera visita y empezamos a medir.',
+    en: 'Not cleaned yet. Schedule the first visit and we start measuring.',
+  },
+
+  // Cleanings
+  'panel.upcoming': { es: 'En curso y próximas', en: 'Open and upcoming' },
+  'panel.history': { es: 'Historial', en: 'History' },
+  'panel.statusNew': { es: 'Recibida', en: 'Received' },
+  'panel.statusReviewing': { es: 'En revisión', en: 'Reviewing' },
+  'panel.statusQuoted': { es: 'Cotizada', en: 'Quoted' },
+  'panel.statusApproved': { es: 'Aprobada', en: 'Approved' },
+  'panel.statusScheduled': { es: 'Agendada', en: 'Scheduled' },
+  'panel.statusInProgress': { es: 'En curso', en: 'In progress' },
+  'panel.statusCompleted': { es: 'Completada', en: 'Completed' },
+  'panel.statusCancelled': { es: 'Cancelada', en: 'Cancelled' },
+  'panel.preferredDate': { es: 'Fecha preferida', en: 'Preferred date' },
+  'panel.confirmedFor': { es: 'Confirmada para', en: 'Confirmed for' },
+  'panel.awaitingSchedule': {
+    es: 'Coordinación está confirmando el horario.',
+    en: 'Dispatch is confirming the time.',
+  },
+  'panel.coveredSpaces': { es: 'Espacios incluidos', en: 'Spaces included' },
+  'panel.requestChange': { es: 'Solicitar cambio', en: 'Request a change' },
+  'panel.changePending': { es: 'Cambio pendiente', en: 'Change pending' },
+  'panel.changePendingMove': { es: 'Pediste moverla al {date} ({window}).', en: 'You asked to move it to {date} ({window}).' },
+  'panel.changePendingCancel': { es: 'Pediste cancelar esta limpieza.', en: 'You asked to cancel this cleaning.' },
+  'panel.changeWithdraw': { es: 'Retirar pedido', en: 'Withdraw request' },
+  'panel.changeApproved': { es: 'Último cambio aprobado', en: 'Last change approved' },
+  'panel.changeDeclined': { es: 'Último cambio rechazado', en: 'Last change declined' },
+  'panel.changeTitle': { es: 'Solicitar un cambio', en: 'Request a change' },
+  'panel.changeIntro': {
+    es: 'Elegí qué necesitás. Coordinación revisa el pedido y te confirma por email.',
+    en: 'Choose what you need. Dispatch reviews it and confirms by email.',
+  },
+  'panel.changeKindMove': { es: 'Cambiar fecha', en: 'Change date' },
+  'panel.changeKindCancel': { es: 'Cancelar visita', en: 'Cancel visit' },
+  'panel.changeDate': { es: 'Nueva fecha preferida', en: 'New preferred date' },
+  'panel.changeWindow': { es: 'Franja', en: 'Time window' },
+  'panel.windowMorning': { es: 'Mañana (8–12)', en: 'Morning (8–12)' },
+  'panel.windowAfternoon': { es: 'Tarde (12–17)', en: 'Afternoon (12–5)' },
+  'panel.windowFlexible': { es: 'Flexible', en: 'Flexible' },
+  'panel.changeReason': { es: 'Motivo', en: 'Reason' },
+  'panel.changeReasonOptional': { es: 'Motivo (opcional)', en: 'Reason (optional)' },
+  'panel.changeSubmit': { es: 'Enviar pedido', en: 'Send request' },
+  'panel.changeSent': {
+    es: 'Pedido enviado. Te avisamos cuando esté confirmado.',
+    en: 'Request sent. We will let you know once it is confirmed.',
+  },
+  'panel.changeRule': {
+    es: 'Los cambios se piden con al menos 24 h de anticipación.',
+    en: 'Changes need at least 24 hours of notice.',
+  },
+  'panel.changeTooLate': {
+    es: 'Faltan menos de 24 h para la visita. Para cambios urgentes escribinos.',
+    en: 'The visit is less than 24 hours away. For urgent changes, contact us.',
+  },
+  'panel.close': { es: 'Cerrar', en: 'Close' },
+
+  // Membership detail
+  'panel.membershipCadence': { es: 'Frecuencia', en: 'Frequency' },
+  'panel.membershipEvery': { es: 'Cada {n} días', en: 'Every {n} days' },
+  'panel.membershipValue': { es: 'Valor mensual', en: 'Monthly value' },
+  'panel.membershipHowTitle': { es: 'Cómo funciona', en: 'How it works' },
+  'panel.membershipHow1': { es: 'Elegís un plan y la propiedad.', en: 'You pick a plan and the property.' },
+  'panel.membershipHow2': {
+    es: 'Coordinación confirma el plan y el día de visita.',
+    en: 'Dispatch confirms the plan and the visit day.',
+  },
+  'panel.membershipHow3': {
+    es: 'Las visitas se generan solas y tus espacios vuelven al 100%.',
+    en: 'Visits are generated automatically and your spaces go back to 100%.',
+  },
+
+  // ── Customer guide ────────────────────────────
+  'guide.title': { es: 'Primeros pasos', en: 'Getting started' },
+  'guide.subtitle': {
+    es: 'Cinco pasos para sacarle todo el provecho a tu panel.',
+    en: 'Five steps to get the most out of your panel.',
+  },
+  'guide.progress': { es: '{n}% completado', en: '{n}% complete' },
+  'guide.stepPropertyTitle': { es: 'Registrá tu propiedad', en: 'Register your property' },
+  'guide.stepPropertyBody': {
+    es: 'Es la dirección donde trabajamos. Todos tus espacios cuelgan de ella.',
+    en: 'The address where we work. All your spaces belong to it.',
+  },
+  'guide.stepSpaceTitle': { es: 'Agregá tu primer espacio', en: 'Add your first space' },
+  'guide.stepSpaceBody': {
+    es: 'Cocina, baño, ventanales… Cada espacio tiene su propio nivel de limpieza.',
+    en: 'Kitchen, bathroom, window walls… Each space has its own cleanliness level.',
+  },
+  'guide.stepCleanlinessTitle': { es: 'Entendé tu % de limpieza', en: 'Understand your cleanliness %' },
+  'guide.stepCleanlinessBody': {
+    es: 'Vuelve al 100% cuando limpiamos y baja con los días. Te avisamos al llegar al 30%.',
+    en: 'It returns to 100% when we clean and drops over time. We alert you at 30%.',
+  },
+  'guide.stepScheduleTitle': { es: 'Programá una limpieza', en: 'Schedule a cleaning' },
+  'guide.stepScheduleBody': {
+    es: 'Elegí el espacio, una fecha preferida y la franja. Coordinación confirma el horario.',
+    en: 'Pick the space, a preferred date and a window. Dispatch confirms the time.',
+  },
+  'guide.stepMembershipTitle': { es: 'Pedí una membresía', en: 'Request a membership' },
+  'guide.stepMembershipBody': {
+    es: 'Visitas recurrentes con tarifa congelada. Nuestro equipo confirma tu plan.',
+    en: 'Recurring visits at a frozen rate. Our team confirms your plan.',
+  },
+  'guide.showMe': { es: 'Mostrame', en: 'Show me' },
+  'guide.doIt': { es: 'Hacerlo ahora', en: 'Do it now' },
+  'guide.gotIt': { es: 'Entendido', en: 'Got it' },
+  'guide.allDone': {
+    es: '¡Listo! Tu panel está configurado. Podés repetir el recorrido desde Ayuda.',
+    en: 'Done! Your panel is set up. You can replay the tour from Help.',
+  },
+  'guide.hide': { es: 'Ocultar guía', en: 'Hide guide' },
+  'guide.help': { es: 'Ayuda', en: 'Help' },
+  'guide.toggleLabel': { es: 'Guía interactiva', en: 'Interactive guide' },
+  'guide.toggleHint': {
+    es: 'Muestra la lista de primeros pasos y los consejos en pantalla.',
+    en: 'Shows the getting-started list and on-screen tips.',
+  },
+  'guide.restart': { es: 'Reiniciar tutorial', en: 'Restart tutorial' },
+  'guide.startTour': { es: 'Ver recorrido guiado', en: 'Take the guided tour' },
+  'guide.next': { es: 'Siguiente', en: 'Next' },
+  'guide.back': { es: 'Anterior', en: 'Back' },
+  'guide.skip': { es: 'Saltar recorrido', en: 'Skip tour' },
+  'guide.finish': { es: 'Terminar', en: 'Finish' },
+  'guide.stepOf': { es: 'Paso {n} de {total}', en: 'Step {n} of {total}' },
+  'guide.welcomeTitle': { es: 'Te damos la bienvenida a tu panel', en: 'Welcome to your panel' },
+  'guide.welcomeBody': {
+    es: 'En un minuto te mostramos cómo cargar tus espacios, leer su nivel de limpieza y programar visitas.',
+    en: 'In one minute we show you how to add your spaces, read their cleanliness and schedule visits.',
+  },
+  'guide.welcomeStart': { es: 'Empezar recorrido', en: 'Start the tour' },
+  'guide.welcomeLater': { es: 'Más tarde', en: 'Later' },
+  'tour.summaryTitle': { es: 'Tu resumen', en: 'Your summary' },
+  'tour.summaryBody': {
+    es: 'De un vistazo: limpieza promedio, espacios que necesitan atención, tu próxima visita y tu membresía.',
+    en: 'At a glance: average cleanliness, spaces needing care, your next visit and your membership.',
+  },
+  'tour.addSpaceTitle': { es: 'Agregá espacios', en: 'Add spaces' },
+  'tour.addSpaceBody': {
+    es: 'Con este botón sumás cocina, baño, ventanales… en tres pasos simples.',
+    en: 'Use this button to add a kitchen, bathroom, window walls… in three simple steps.',
+  },
+  'tour.meterTitle': { es: 'El % de limpieza', en: 'The cleanliness %' },
+  'tour.meterBody': {
+    es: 'Verde: impecable. Ámbar: se está ensuciando. Rojo: toca limpieza. Te avisamos por email al llegar al 30%.',
+    en: 'Green: spotless. Amber: getting dirty. Red: cleaning due. We email you when it reaches 30%.',
+  },
+  'tour.scheduleTitle': { es: 'Programá desde el espacio', en: 'Schedule from the space' },
+  'tour.scheduleBody': {
+    es: 'Pedí una limpieza para este espacio. Cuando la completamos, vuelve al 100%.',
+    en: 'Request a cleaning for this space. Once we complete it, it goes back to 100%.',
+  },
+  'tour.cleaningsTitle': { es: 'Tus limpiezas', en: 'Your cleanings' },
+  'tour.cleaningsBody': {
+    es: 'Seguí cada solicitud, mirá la fecha confirmada y pedí cambios con 24 h de anticipación.',
+    en: 'Follow each request, see the confirmed date and request changes with 24 hours of notice.',
+  },
+  'tour.membershipTitle': { es: 'Membresía', en: 'Membership' },
+  'tour.membershipBody': {
+    es: 'Visitas recurrentes con tarifa congelada. Pedila acá y la confirmamos.',
+    en: 'Recurring visits at a frozen rate. Request it here and we confirm it.',
+  },
+  'tour.helpTitle': { es: 'Siempre a mano', en: 'Always at hand' },
+  'tour.helpBody': {
+    es: 'Desde Ayuda podés repetir este recorrido o desactivar la guía cuando quieras.',
+    en: 'From Help you can replay this tour or turn the guide off at any time.',
+  },
 
   // ── Search Modal ──────────────────────────────
   'search.title': { es: 'Buscar', en: 'Search' },

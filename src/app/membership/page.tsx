@@ -40,6 +40,7 @@ export default function MembershipPage() {
   const [plans, setPlans] = useState<DbPlan[]>([])
   const [signedIn, setSignedIn] = useState(false)
   const [myProperties, setMyProperties] = useState<{ id: string; label: string | null; address: string }[]>([])
+  const [propertyId, setPropertyId] = useState('')
 
   useEffect(() => {
     let active = true
@@ -58,7 +59,11 @@ export default function MembershipPage() {
       if (meResponse?.ok) {
         setSignedIn(true)
         const propertyResponse = await fetch('/api/me/properties', { credentials: 'same-origin', cache: 'no-store' }).catch(() => null)
-        if (active && propertyResponse?.ok) setMyProperties(await propertyResponse.json())
+        if (active && propertyResponse?.ok) {
+          const list: { id: string; label: string | null; address: string }[] = await propertyResponse.json()
+          setMyProperties(list)
+          setPropertyId((current) => current || list[0]?.id || '')
+        }
       }
     })()
     return () => { active = false }
@@ -66,7 +71,11 @@ export default function MembershipPage() {
 
   const chosen = plans.find((plan) => plan.id === selectedPlan) || plans[0] || null
 
-  const isValid = name.trim() && email.trim() && phone.trim() && address.trim() && city.trim() && consent
+  // A signed-in customer with a property already gave us everything else.
+  const accountPath = signedIn && myProperties.length > 0
+  const isValid = accountPath
+    ? Boolean(chosen && propertyId)
+    : Boolean(name.trim() && email.trim() && phone.trim() && address.trim() && city.trim() && consent)
 
   const handleSubmit = async () => {
     if (!isValid || loading) return
@@ -74,7 +83,7 @@ export default function MembershipPage() {
     setError('')
     // Signed in with a property on file: create a real pending membership
     // instead of a service request with the plan written into the notes.
-    if (signedIn && chosen && myProperties.length > 0) {
+    if (accountPath && chosen) {
       try {
         const response = await fetch('/api/me/membership', {
           method: 'POST',
@@ -82,8 +91,8 @@ export default function MembershipPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             plan_id: chosen.id,
-            property_id: myProperties[0].id,
-            notes: `${chosen.name} · ${chosen.cadence_days} ${lang === 'es' ? 'días' : 'days'}`,
+            property_id: propertyId,
+            notes: `${chosen?.name ?? ''} · ${chosen.cadence_days} ${lang === 'es' ? 'días' : 'days'}`,
           }),
         })
         const payload = await response.json().catch(() => ({}))
@@ -149,12 +158,14 @@ export default function MembershipPage() {
           </h2>
           <p className="text-accent text-lg font-medium leading-relaxed mb-12">
             {lang === 'es'
-              ? `Tu solicitud de membresía ${chosen.name} ha sido enviada. Nuestro equipo te contactará para confirmar tu suscripción.`
-              : `Your ${chosen.name} membership application has been sent. Our team will contact you to confirm your subscription.`}
+              ? `Tu solicitud de membresía ${chosen?.name ?? ''} ha sido enviada. Nuestro equipo te contactará para confirmar tu suscripción.`
+              : `Your ${chosen?.name ?? ''} membership application has been sent. Our team will contact you to confirm your subscription.`}
           </p>
           {reference && <p className="mb-8 font-mono text-sm text-accent">{reference}</p>}
-          <Link href="/" className="inline-flex py-5 px-12 bg-foreground text-background rounded-2xl font-black uppercase tracking-[0.2em] shadow-2xl font-michroma">
-            {lang === 'es' ? 'Volver al Inicio' : 'Back to Home'}
+          <Link href={accountPath ? '/account' : '/'} className="inline-flex py-5 px-12 bg-foreground text-background rounded-2xl font-black uppercase tracking-[0.2em] shadow-2xl font-michroma">
+            {accountPath
+              ? (lang === 'es' ? 'Ver mi panel' : 'Open my panel')
+              : (lang === 'es' ? 'Volver al Inicio' : 'Back to Home')}
           </Link>
         </motion.div>
       </div>
@@ -259,79 +270,104 @@ export default function MembershipPage() {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="lg:col-span-2 space-y-6"
           >
-            <div>
-              <label htmlFor="membership-name" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
-                {t('membership.nameLabel')}
-              </label>
-              <input
-                id="membership-name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder={lang === 'es' ? 'Tu nombre completo' : 'Your full name'}
-                className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
-              />
-            </div>
+            {accountPath ? (
+              <div>
+                <label htmlFor="membership-property" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                  {lang === 'es' ? 'Propiedad' : 'Property'}
+                </label>
+                <select
+                  id="membership-property"
+                  value={propertyId}
+                  onChange={(e) => setPropertyId(e.target.value)}
+                  className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors"
+                >
+                  {myProperties.map((property) => (
+                    <option key={property.id} value={property.id}>{property.label || property.address}</option>
+                  ))}
+                </select>
+                <p className="mt-3 text-sm leading-relaxed text-accent">
+                  {lang === 'es'
+                    ? 'Usamos los datos de tu cuenta. Coordinación confirma el plan y el día de visita.'
+                    : 'We use your account details. Dispatch confirms the plan and the visit day.'}
+                </p>
+              </div>
+            ) : (
+              <>
+              <div>
+                <label htmlFor="membership-name" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                  {t('membership.nameLabel')}
+                </label>
+                <input
+                  id="membership-name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder={lang === 'es' ? 'Tu nombre completo' : 'Your full name'}
+                  className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
+                />
+              </div>
 
-            <div>
-              <label htmlFor="membership-email" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
-                Email
-              </label>
-              <input
-                id="membership-email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="nombre@ejemplo.com"
-                className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
-              />
-            </div>
+              <div>
+                <label htmlFor="membership-email" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                  Email
+                </label>
+                <input
+                  id="membership-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="nombre@ejemplo.com"
+                  className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
+                />
+              </div>
 
-            <div>
-              <label htmlFor="membership-phone" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
-                {lang === 'es' ? 'Teléfono' : 'Phone'}
-              </label>
-              <input
-                id="membership-phone"
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+1 305 000 0000"
-                className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
-              />
-            </div>
+              <div>
+                <label htmlFor="membership-phone" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                  {lang === 'es' ? 'Teléfono' : 'Phone'}
+                </label>
+                <input
+                  id="membership-phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+1 305 000 0000"
+                  className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
+                />
+              </div>
 
-            <div>
-              <label htmlFor="membership-address" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
-                {t('membership.addressLabel')}
-              </label>
-              <input
-                id="membership-address"
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder={lang === 'es' ? 'Dirección de la propiedad' : 'Property address'}
-                className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
-              />
-            </div>
+              <div>
+                <label htmlFor="membership-address" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                  {t('membership.addressLabel')}
+                </label>
+                <input
+                  id="membership-address"
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder={lang === 'es' ? 'Dirección de la propiedad' : 'Property address'}
+                  className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors placeholder:text-accent/30"
+                />
+              </div>
 
-            <div>
-              <label htmlFor="membership-city" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
-                {lang === 'es' ? 'Ciudad' : 'City'}
-              </label>
-              <input
-                id="membership-city"
-                type="text"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors"
-              />
-            </div>
+              <div>
+                <label htmlFor="membership-city" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                  {lang === 'es' ? 'Ciudad' : 'City'}
+                </label>
+                <input
+                  id="membership-city"
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="w-full bg-foreground/5 border border-accent/10 rounded-2xl px-6 py-4 text-foreground font-medium text-base outline-none focus:border-accent/40 transition-colors"
+                />
+              </div>
 
-            <label className="flex items-start gap-3 text-sm text-accent">
-              <input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} className="mt-1" />
-              <span>{lang === 'es' ? 'Autorizo a DOGE a contactarme sobre esta solicitud de servicio recurrente.' : 'I authorize DOGE to contact me about this recurring service request.'}</span>
-            </label>
+              <label className="flex items-start gap-3 text-sm text-accent">
+                <input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} className="mt-1" />
+                <span>{lang === 'es' ? 'Autorizo a DOGE a contactarme sobre esta solicitud de servicio recurrente.' : 'I authorize DOGE to contact me about this recurring service request.'}</span>
+              </label>
+              </>
+            )}
             {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">{error}</p>}
 
             {/* Submit */}

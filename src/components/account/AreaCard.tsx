@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
-import { ShoppingBag, Sparkles, Trash2 } from 'lucide-react'
+import { CalendarClock, Info, Pencil, ShoppingBag, Sparkles, Trash2 } from 'lucide-react'
 
 import { CleanlinessMeter } from '@/components/account/CleanlinessMeter'
 import { areaTypeName, type PropertyArea } from '@/components/account/types'
@@ -15,7 +15,14 @@ type Props = {
   lang: Lang
   t: (key: TranslationKey) => string
   onRemove: (id: string) => void
+  onEdit: (area: PropertyArea) => void
   index: number
+  /** Show the "what does this mean" line under the meter. */
+  showTips: boolean
+  /** Open request covering this area, if any. */
+  scheduled?: { reference: string } | null
+  /** First card carries the tour anchors. */
+  guideAnchor?: boolean
 }
 
 /** Maps a consumable slug to the department that holds it, for a /store link. */
@@ -25,7 +32,7 @@ function departmentFor(slug: string) {
   )
 }
 
-export function AreaCard({ area, lang, t, onRemove, index }: Props) {
+export function AreaCard({ area, lang, t, onRemove, onEdit, index, showTips, scheduled, guideAnchor }: Props) {
   const reduceMotion = useReducedMotion()
   const decayDays = area.area_type?.decay_days ?? 30
   const percent = cleanlinessPercent(area.last_cleaned_at, decayDays)
@@ -39,6 +46,16 @@ export function AreaCard({ area, lang, t, onRemove, index }: Props) {
       : band === 'due'
         ? t('panel.bandDue')
         : t('panel.neverCleaned')
+
+  const tip = band === 'fresh'
+    ? t('panel.meterHelpFresh')
+    : band === 'fading'
+      ? t('panel.meterHelpFading')
+      : band === 'due'
+        ? t('panel.meterHelpDue')
+        : t('panel.meterHelpNever')
+
+  const scheduleHref = `/booking?area=${encodeURIComponent(area.id)}${area.area_type?.service_code ? `&service=${encodeURIComponent(area.area_type.service_code)}` : ''}`
 
   const since = days === null
     ? t('panel.neverCleaned')
@@ -66,19 +83,35 @@ export function AreaCard({ area, lang, t, onRemove, index }: Props) {
             {area.measurement_value ? ` · ${area.measurement_value}${area.area_type?.measurement_kind === 'sqft' ? ' ft²' : ''}` : ''}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => onRemove(area.id)}
-          aria-label={`${t('panel.remove')} ${area.label}`}
-          className="shrink-0 rounded-lg p-2 text-accent/50 transition-colors hover:bg-red-500/10 hover:text-red-300"
-        >
-          <Trash2 className="h-4 w-4" />
-        </button>
+        <div className="flex shrink-0 gap-1">
+          <button
+            type="button"
+            onClick={() => onEdit(area)}
+            aria-label={`${t('panel.edit')} ${area.label}`}
+            className="rounded-lg p-2 text-accent/50 transition-colors hover:bg-foreground/5 hover:text-foreground"
+          >
+            <Pencil className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => { if (window.confirm(t('panel.confirmRemove'))) onRemove(area.id) }}
+            aria-label={`${t('panel.remove')} ${area.label}`}
+            className="rounded-lg p-2 text-accent/50 transition-colors hover:bg-red-500/10 hover:text-red-300"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
       </header>
 
-      <CleanlinessMeter percent={percent} label={bandLabel} />
-
-      <p className="text-xs font-medium text-accent/70">{since}</p>
+      <div data-guide={guideAnchor ? 'meter' : undefined}>
+        <CleanlinessMeter percent={percent} label={bandLabel} />
+        <p className="mt-2 text-xs font-medium text-accent/70">{since}</p>
+        {showTips && (
+          <p className="mt-3 flex gap-2 text-xs leading-relaxed text-accent">
+            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden /> {tip}
+          </p>
+        )}
+      </div>
 
       {area.requirements && (
         <p className="rounded-xl border border-accent/10 bg-foreground/5 p-3 text-xs leading-relaxed text-accent">
@@ -87,12 +120,19 @@ export function AreaCard({ area, lang, t, onRemove, index }: Props) {
       )}
 
       <div className="mt-auto flex flex-wrap gap-2 pt-1">
-        <Link
-          href={area.area_type?.service_code ? `/services/${area.area_type.service_code}` : '/booking'}
-          className="inline-flex items-center gap-2 rounded-xl bg-foreground px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-background transition-opacity hover:opacity-90"
-        >
-          <Sparkles className="h-3.5 w-3.5" /> {t('panel.rebook')}
-        </Link>
+        {scheduled ? (
+          <span data-guide={guideAnchor ? 'schedule' : undefined} className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-emerald-200">
+            <CalendarClock className="h-3.5 w-3.5" /> {scheduled.reference}
+          </span>
+        ) : (
+          <Link
+            href={scheduleHref}
+            data-guide={guideAnchor ? 'schedule' : undefined}
+            className="inline-flex items-center gap-2 rounded-xl bg-foreground px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-background transition-opacity hover:opacity-90"
+          >
+            <Sparkles className="h-3.5 w-3.5" /> {t('panel.rebook')}
+          </Link>
+        )}
         {consumables.map(({ slug, department }) => (
           <Link
             key={slug}
