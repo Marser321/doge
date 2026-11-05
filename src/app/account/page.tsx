@@ -45,6 +45,8 @@ export default function AccountPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [adding, setAdding] = useState(false)
+  // Fijo al abrir la página: el nivel de limpieza no debe cambiar entre renders.
+  const [now] = useState(() => Date.now())
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -110,10 +112,10 @@ export default function AccountPage() {
     () => areas.filter((area) => {
       const decay = area.area_type?.decay_days ?? 30
       if (!area.last_cleaned_at) return false
-      const elapsed = (Date.now() - new Date(area.last_cleaned_at).getTime()) / 86_400_000
+      const elapsed = (now - new Date(area.last_cleaned_at).getTime()) / 86_400_000
       return 100 - (elapsed / decay) * 100 <= 30
     }).length,
-    [areas],
+    [areas, now],
   )
 
   const TABS: { id: Tab; label: string }[] = [
