@@ -100,12 +100,14 @@ export function TiltCard({
     glareY.set(50);
   }, [rotateX, rotateY, glareX, glareY]);
 
+  // Every hook has to run on every render: a hook after the early return below
+  // crashes the whole page as soon as isMobile or prefersReducedMotion turns true.
+  const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.10) 0%, transparent 60%)`;
+
   // If mobile or reduced motion, render without tilt
   if (isMobile || prefersReducedMotion) {
     return <div className={className}>{children}</div>;
   }
-
-  const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.10) 0%, transparent 60%)`;
 
   return (
     <motion.div
